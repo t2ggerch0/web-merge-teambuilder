@@ -28,7 +28,7 @@ const User = require("./models/User");
 
 /**
  * unicoop 서버 빌드 테스트 텍스트를 반환합니다.
- * 사용법: https://port-0-unicoop-testserver-6g2llfj8xhxu.sel3.cloudtype.app/
+ * 사용법: https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/
  */
 app.get("/", function (req, res) {
     res.send("unicoop 서버 빌드 테스트")
@@ -36,7 +36,7 @@ app.get("/", function (req, res) {
 
 /**
  * name를 query로 받고 User테이블을 Create합니다.
- * 사용법: https://port-0-unicoop-testserver-6g2llfj8xhxu.sel3.cloudtype.app/user?id={id}
+ * 사용법: https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/user?id={id}
  */
 app.get("/user", function (req, res) {
     const name = req.query.name;
