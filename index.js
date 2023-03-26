@@ -1,0 +1,56 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// LIFE CYCLE /////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// express
+const express = require("express");
+const app = express();
+const port = 1398;
+app.listen(port, () => {
+    console.log(`listening on port ${port}`)
+});
+
+// cors
+const cors = require("cors");
+app.use(cors());
+
+// DB
+const mongoose = require("mongoose");
+const MONGODB_URL = "mongodb+srv://root:1398@cluster0.4edtyez.mongodb.net/?retryWrites=true&w=majority";
+mongoose.connect(MONGODB_URL);
+const User = require("./models/User");
+
+
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// API ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * unicoop 서버 빌드 테스트 텍스트를 반환합니다.
+ * 사용법: https://port-0-unicoop-testserver-6g2llfj8xhxu.sel3.cloudtype.app/
+ */
+app.get("/", function (req, res) {
+    res.send("unicoop 서버 빌드 테스트")
+});
+
+/**
+ * name를 query로 받고 User테이블을 Create합니다.
+ * 사용법: https://port-0-unicoop-testserver-6g2llfj8xhxu.sel3.cloudtype.app/user?id={id}
+ */
+app.get("/user", function (req, res) {
+    const name = req.query.name;
+    const newUser = new User();
+    newUser.email = "default";
+    newUser.name = name;
+    newUser.save()
+        .then((user) => {
+            console.log(user);
+            res.send(user);
+        })
+});
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// HELPER ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
