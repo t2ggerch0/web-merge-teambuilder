@@ -6,19 +6,29 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    password:{
+    password: {
         type: String,
         required: true
     },
-    department:String,
-    studentId:String,
-    name:String,
-    teamID:[Number],
-    isProf:Boolean
+    userType: {
+        type: String,
+        enum: ["professor", "student"],
+        required: true,
+    },
+    classes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Class"
+        }
+    ],
+    name: String,
+    studentId: String,
+    major: String,
+    desirablePosition: String
 },
-{
-    timestamps: true
-});
+    {
+        timestamps: true
+    }
+);
 
 module.exports = mongoos.model("User", userSchema);
-
