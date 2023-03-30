@@ -53,25 +53,23 @@ app.get("/", function (req, res) {
  *   post:
  *     tags:
  *       - user
- *     summary: 회원가입합니다. application/json 타입으로 패킷 보내주시면 됩니다.
+ *     summary: 회원가입
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: email
- *         description: 이메일
+ *       - name: body
  *         in: body
+ *         description: application/json 타입으로 패킷 보내주시면 됩니다.
  *         required: true
- *         type: string
- *       - name: password
- *         description: 비밀번호
- *         in: body
- *         required: true
- *         type: string
- *       - name: userType
- *         description: 유저 유형. professor 혹은 student
- *         in: body
- *         required: true
- *         type: string
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             userType:
+ *               type: string
  *     responses:
  *       200:
  *         description: 회원가입 성공
