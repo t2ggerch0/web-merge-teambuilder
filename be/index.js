@@ -164,6 +164,7 @@ router.post('/register', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
     try {
+        const jwt = require('jsonwebtoken');
         const { email, password } = req.body;
 
         // Check if user exists
