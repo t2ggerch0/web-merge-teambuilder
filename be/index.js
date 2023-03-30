@@ -22,6 +22,7 @@ const bcrypt = require("bcryptjs");
 // cors
 const cors = require("cors");
 app.use(cors());
+router.use(cors());
 
 // DB
 const mongoose = require("mongoose");
