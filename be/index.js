@@ -52,14 +52,14 @@ app.get("/", function (req, res) {
  * /register:
  *   post:
  *     tags:
- *       - user
+ *       - auth
  *     summary: 회원가입
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: body
  *         in: body
- *         description: application/json 타입으로 패킷 보내주시면 됩니다.
+ *         description: application/json 타입으로 패킷 보내주시면 됩니다. userType은 반드시 professor 혹은 student 입니다.
  *         required: true
  *         schema:
  *           type: object
@@ -111,6 +111,77 @@ router.post('/register', async (req, res) => {
         await User.create({ email, password: hashedPassword, userType });
 
         return res.status(200).json({ code: 1 });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: 로그인
+ *     tags:
+ *       - auth
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: 로그인 정보
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 로그인 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               description: 응답 코드
+ *               example: 1
+ *             token:
+ *               type: string
+ *               description: JWT 토큰
+ *       401:
+ *         description: 로그인 실패
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               description: 응답 코드
+ *               example: 0
+ *             message:
+ *               type: string
+ *               description: 에러 메시지
+ */
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ code: 0, message: '이메일이 존재하지 않습니다.' });
+        }
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ code: 0, message: '비밀번호가 일치하지 않습니다.' });
+        }
+
+        // Generate token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+        return res.status(200).json({ code: 1, token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
