@@ -97,43 +97,26 @@ app.get("/", function (req, res) {
  *               type: string
  *               example: Internal Server Error
  */
-router.post('/register', (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-    let userType = req.body.userType;
+router.post('/register', async (req, res) => {
+    try {
+        const { email, password, userType } = req.body;
 
-    // Add random numbers to hashing.
-    const saltRounds = 10;
-
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-        try {
-            User.findOne({
-                email: email
-            }, (error, result) => {
-                if (result) {
-                    res.status(409).json({
-                        code: 0
-                    });
-                } else {
-                    User.insertOne({
-                        email: email,
-                        password: hash,
-                        userType: userType
-                    }, (error, result) => {
-                        res.status(200).json({
-                            code: 1
-                        });
-                    })
-                }
-            })
-        } catch (err) {
-            console.log('err: ' + err);
-            res.status(500).json({
-                message: 'Internal Server Error'
-            });
+        // Check for duplicate emails
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ code: 0 });
         }
-    })
-})
+
+        // Encrypt
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await User.create({ email, password: hashedPassword, userType });
+
+        return res.status(200).json({ code: 1 });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 
 //////////////////////////////////////////////////////////////////////////////////////
