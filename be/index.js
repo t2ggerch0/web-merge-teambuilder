@@ -15,6 +15,7 @@ app.listen(port, () => {
 const router = express.Router();
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
+app.use(router);
 
 // encrypt
 const bcrypt = require("bcryptjs");
