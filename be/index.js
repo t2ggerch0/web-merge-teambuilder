@@ -25,6 +25,9 @@ const cors = require("cors");
 app.use(cors());
 router.use(cors());
 
+// token
+const jwt = require('jsonwebtoken');
+
 // DB
 const mongoose = require("mongoose");
 const MONGODB_URL = "mongodb+srv://root:1398@cluster0.4edtyez.mongodb.net/?retryWrites=true&w=majority";
@@ -164,7 +167,6 @@ router.post('/register', async (req, res) => {
  */
 router.post('/login', async (req, res) => {
     try {
-        const jwt = require('jsonwebtoken');
         const { email, password } = req.body;
 
         // Check if user exists
