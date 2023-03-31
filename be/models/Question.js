@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 // Define Question schema
 const questionSchema = new mongoose.Schema({
+  classId: {
+    type: Number,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -17,5 +21,7 @@ const questionSchema = new mongoose.Schema({
   },
 });
 
+const Question = mongoose.model("Question", questionSchema);
+
 // export Question model
-module.exports = mongoos.model("Question", questionSchema);
+module.exports = Question;

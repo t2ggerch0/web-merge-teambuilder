@@ -192,6 +192,21 @@ router.post('/login', async (req, res) => {
 });
 
 
+// test post Question
+router.post("/add_question", async (req, res) => {
+    try {
+        const { classId, title, type, options } = req.body;
+
+        // verify classId
+
+        // create Question
+        await Question.create({ classId, title, type, options });
+
+        // return result
+        return res.status(200).json({ code: 1 });
+    }
+})
+
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// HELPER ///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
