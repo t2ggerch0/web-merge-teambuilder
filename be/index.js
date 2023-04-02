@@ -62,7 +62,7 @@ app.get("/", function (req, res) {
  *     parameters:
  *       - name: body
  *         in: body
- *         description: application/json 타입으로 패킷 보내주시면 됩니다. userType은 반드시 professor 혹은 student 입니다.
+ *         description: userType은 반드시 professor 혹은 student 입니다.
  *         required: true
  *         schema:
  *           type: object
@@ -90,6 +90,9 @@ app.get("/", function (req, res) {
  *             code:
  *               type: integer
  *               example: 0
+ *             message:
+ *               type: string
+ *               example: user already exists
  *       500:
  *         description: 서버 내부 오류
  *         schema:
@@ -147,23 +150,39 @@ router.post('/register', async (req, res) => {
  *           properties:
  *             code:
  *               type: integer
- *               description: 응답 코드
  *               example: 1
  *             token:
  *               type: string
- *               description: JWT 토큰
  *       401:
- *         description: 로그인 실패
+ *         description: 이메일 없음
  *         schema:
  *           type: object
  *           properties:
  *             code:
  *               type: integer
- *               description: 응답 코드
  *               example: 0
  *             message:
  *               type: string
- *               description: 에러 메시지
+ *               example: email not found
+ *       401:
+ *         description: 비밀번호 불일치
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: password not matched
+ *       500:
+ *         description: 서버 내부 오류
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error
  */
 router.post('/login', async (req, res) => {
     try {
@@ -172,13 +191,13 @@ router.post('/login', async (req, res) => {
         // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ code: 0, message: '이메일이 존재하지 않습니다.' });
+            return res.status(401).json({ code: 0, message: 'email not found' });
         }
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ code: 0, message: '비밀번호가 일치하지 않습니다.' });
+            return res.status(401).json({ code: 0, message: 'password not matched' });
         }
 
         // Generate token
