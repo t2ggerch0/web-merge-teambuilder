@@ -92,7 +92,7 @@ app.get("/", function (req, res) {
  *               example: 0
  *             message:
  *               type: string
- *               example: user already exists
+ *               example: duplicated email
  *       500:
  *         description: 서버 내부 오류
  *         schema:
@@ -109,7 +109,7 @@ router.post('/register', async (req, res) => {
         // Check for duplicate emails
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(409).json({ code: 0 });
+            return res.status(409).json({ code: 0, message: 'duplicated email' });
         }
 
         // Encrypt
@@ -133,7 +133,7 @@ router.post('/register', async (req, res) => {
  *     parameters:
  *       - in: body
  *         name: body
- *         description: 로그인 정보
+ *         description:
  *         required: true
  *         schema:
  *           type: object
@@ -154,7 +154,7 @@ router.post('/register', async (req, res) => {
  *             token:
  *               type: string
  *       401:
- *         description: 이메일 없음
+ *         description: 이메일 없음 혹은 비밀번호 불일치
  *         schema:
  *           type: object
  *           properties:
@@ -163,18 +163,7 @@ router.post('/register', async (req, res) => {
  *               example: 0
  *             message:
  *               type: string
- *               example: email not found
- *       401:
- *         description: 비밀번호 불일치
- *         schema:
- *           type: object
- *           properties:
- *             code:
- *               type: integer
- *               example: 0
- *             message:
- *               type: string
- *               example: password not matched
+ *               example: email not found or password not matched
  *       500:
  *         description: 서버 내부 오류
  *         schema:
