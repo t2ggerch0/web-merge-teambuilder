@@ -14,6 +14,7 @@ const newQuestion = new Question({
   name: "Your age",
   type: "custom",
   options: ["12", "13", "14"],
+  isMandatory: false,
 });
 
 newQuestion

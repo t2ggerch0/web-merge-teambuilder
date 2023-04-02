@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 // Define Question schema
 const questionSchema = new mongoose.Schema({
-  classId: {
-    type: Number,
-    required: true,
-  },
   title: {
     type: String,
     required: true,
@@ -18,6 +14,10 @@ const questionSchema = new mongoose.Schema({
   options: {
     type: [String],
     default: [],
+  },
+  isMandatory: {
+    type: Boolean,
+    required: true,
   },
 });
 
