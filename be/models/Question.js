@@ -19,6 +19,11 @@ const questionSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  weight: {
+    type: Number,
+    required: true,
+    default: 5,
+  },
 });
 
 const Question = mongoose.model("Question", questionSchema);
