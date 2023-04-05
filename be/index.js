@@ -83,6 +83,17 @@ app.get("/", function (req, res) {
  *             code:
  *               type: integer
  *               example: 1
+ *       409:
+ *         description: 이미 등록된 사용자가 있음
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: user already exists
  *       500:
  *         description: 서버 내부 오류
  *         schema:
@@ -96,8 +107,22 @@ router.post('/email', async (req, res) => {
     try {
         const { email } = req.body;
 
+        // Check for duplicate emails
+        const existingUser = await User.findOne({ email, verifyCode: 1 });
+        if (existingUser && existingUser.verifyCode == -1) {
+            return res.status(409).json({ code: 0, message: 'duplicated email' });
+        }
+
         // Generate random code.
-        const code = Math.floor(Math.random() * 1000000);
+        const verifycode = Math.floor(Math.random() * 1000000);
+
+        // Update user verifycode if exist.
+        if (!existingUser) {
+            await User.create({ email, password: 'default', userType: 'default', code: verifycode });
+        } else {
+            existingUser.code = verifycode;
+            await existingUser.save();
+        }
 
         // Create smtp client.
         const transporter = nodemailer.createTransport({
@@ -111,7 +136,7 @@ router.post('/email', async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Verification Code',
-            text: `Your verification code is ${code}`
+            text: `Your verification code is ${verifycode}`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -154,6 +179,8 @@ router.post('/email', async (req, res) => {
  *               type: string
  *             userType:
  *               type: string
+ *             verifyCode:
+ *               type: number
  *     responses:
  *       200:
  *         description: 회원가입 성공
@@ -174,17 +201,6 @@ router.post('/email', async (req, res) => {
  *             message:
  *               type: string
  *               example: invalid verify code
- *       409:
- *         description: 이미 등록된 사용자가 있음
- *         schema:
- *           type: object
- *           properties:
- *             code:
- *               type: integer
- *               example: 0
- *             message:
- *               type: string
- *               example: user already exists
  *       500:
  *         description: 서버 내부 오류
  *         schema:
@@ -198,12 +214,6 @@ router.post('/verify', async (req, res) => {
     try {
         const { email, password, userType, verifyCode } = req.body;
 
-        // Check for duplicate emails
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(409).json({ code: 0, message: 'duplicated email' });
-        }
-
         // Check verify code
         const userVerifyCode = await User.findOne({ email }, { verifyCode: 1 });
         if (!userVerifyCode || userVerifyCode.verifyCode !== verifyCode) {
@@ -213,6 +223,12 @@ router.post('/verify', async (req, res) => {
         // Encrypt
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({ email, password: hashedPassword, userType });
+
+        // Update user.
+        existingUser.password = password;
+        existingUser.userType = userType;
+        existingUser.code = -1;
+        await existingUser.save();
 
         return res.status(200).json({ code: 1 });
     } catch (error) {

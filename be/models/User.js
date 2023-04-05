@@ -13,10 +13,13 @@ const userSchema = new Schema({
     },
     userType: {
         type: String,
-        enum: ["professor", "student"],
+        enum: ["professor", "student", "default"],
         required: true,
     },
-    verifycode: String,
+    verifycode: {
+        type: Number,
+        required: true
+    },
     classes: [
         {
             type: Schema.Types.ObjectId,
