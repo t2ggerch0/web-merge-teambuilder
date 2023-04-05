@@ -239,17 +239,17 @@ router.post('/verify', async (req, res) => {
         const { email, password, userType, verifyCode } = req.body;
 
         // Check verify code
-        const userVerifyCode = await User.findOne({ email }, { verifyCode: 1 });
-        if (!userVerifyCode || userVerifyCode.verifyCode !== verifyCode) {
+        const defaultUser = await User.findOne({ email }, { verifyCode: 1 });
+        if (!defaultUser || defaultUser.verifyCode !== verifyCode) {
             return res.status(400).json({ code: 0, message: 'invalid verify code' });
         }
 
         // Update user.
         const hashedPassword = await bcrypt.hash(password, 10);
-        existingUser.password = hashedPassword;
-        existingUser.userType = userType;
-        existingUser.verifyCode = -1;
-        await existingUser.save();
+        defaultUser.password = hashedPassword;
+        defaultUser.userType = userType;
+        defaultUser.verifyCode = -1;
+        await defaultUser.save();
 
         return res.status(200).json({ code: 1 });
     } catch (error) {
