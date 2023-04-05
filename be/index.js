@@ -70,7 +70,7 @@ app.get("/", function (req, res) {
  *     parameters:
  *       - name: body
  *         in: body
- *         description:
+ *         description: default 유저를 생성합니다.
  *         required: true
  *         schema:
  *           type: object
@@ -121,14 +121,14 @@ router.post('/email', async (req, res) => {
         const sheetName = 'domain';
         const worksheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(worksheet);
-        const domainList = rows.map(row => row['domain']);
-        console.log(domainList)
+        const domainList = rows
+            .map(row => row['domain'])
+            .filter(domain => domain && domain.trim() !== '');
 
         let isValid = false;
         const userDomain = email.split('@')[1];
-        console.log(userDomain)
         for (let index = 0; index < domainList.length; index++) {
-            if (domainList[index].indexOf(userDomain)) {
+            if (domainList[index].indexOf(userDomain) != -1) {
                 isValid = true;
                 break;
             }
@@ -192,7 +192,7 @@ router.post('/email', async (req, res) => {
  *     parameters:
  *       - name: body
  *         in: body
- *         description:
+ *         description: default유저를 실제 유저로 덮어씁니다.
  *         required: true
  *         schema:
  *           type: object
