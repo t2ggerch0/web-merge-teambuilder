@@ -24,6 +24,18 @@ const questionSchema = new mongoose.Schema({
     required: true,
     default: 5,
   },
+  scoringType: {
+    type: String,
+    required: true,
+    enum: ["single", "multi", "points"],
+    default: "single",
+  },
+  countScore: {
+    type: String,
+    required: true,
+    enum: ["same", "different"],
+    default: "same",
+  },
 });
 
 const Question = mongoose.model("Question", questionSchema);
