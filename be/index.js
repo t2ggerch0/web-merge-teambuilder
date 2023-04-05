@@ -45,6 +45,9 @@ const User = require("./models/User");
 const { swaggerUi, specs } = require('./swagger');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+// cached
+let domainList = [];
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// API ///////////////////////////////////////
@@ -93,7 +96,7 @@ app.get("/", function (req, res) {
  *               example: 0
  *             message:
  *               type: string
- *               example: user already exists
+ *               example: user already exists or not school email
  *       500:
  *         description: 서버 내부 오류
  *         schema:
@@ -113,6 +116,28 @@ router.post('/email', async (req, res) => {
             return res.status(409).json({ code: 0, message: 'duplicated email' });
         }
 
+        // Check vaild email.
+        if (domainList.length == 0) {
+            const workbook = XLSX.readFile('domain.xls');
+            const sheetName = 'domain';
+            const worksheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(worksheet);
+            const fields = ['domain'];
+            const domains = rows.map(row => row['domain']);
+            domainList = domains;
+        }
+
+        let isValid = false;
+        for (let index = 0; index < domainList.length; index++) {
+            if (domainList[index] == email) {
+                isValid = true;
+                break;
+            }
+        }
+        if (!isValid) {
+            return res.status(409).json({ code: 0, message: 'not school email' });
+        }
+
         // Generate random code.
         const verifyCode = Math.floor(Math.random() * 1000000);
 
@@ -120,7 +145,7 @@ router.post('/email', async (req, res) => {
         if (!existingUser) {
             await User.create({ email, password: 'default', userType: 'default', verifyCode: verifyCode });
         } else {
-            existingUser.code = verifyCode;
+            existingUser.verifyCode = verifyCode;
             await existingUser.save();
         }
 
