@@ -27,7 +27,7 @@ const userSchema = new Schema({
         }
     ],
     name: String,
-    studentId: String,
+    studentId: Number,
     major: String,
     desirablePosition: String
 },

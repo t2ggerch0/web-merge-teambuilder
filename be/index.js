@@ -210,6 +210,12 @@ router.post('/email', async (req, res) => {
  *               type: string
  *             verifyCode:
  *               type: number
+ *             name:
+ *               type: string
+ *             studentId:
+ *               type: number
+ *             major:
+ *               type: string
  *     responses:
  *       200:
  *         description: 회원가입 성공
@@ -241,7 +247,7 @@ router.post('/email', async (req, res) => {
  */
 router.post('/verify', async (req, res) => {
     try {
-        const { email, password, userType, verifyCode } = req.body;
+        const { email, password, userType, verifyCode, name, studentId, major } = req.body;
 
         // Check verify code
         const defaultUser = await User.findOne({ email }, { verifyCode: 1 });
@@ -254,6 +260,9 @@ router.post('/verify', async (req, res) => {
         defaultUser.password = hashedPassword;
         defaultUser.userType = userType;
         defaultUser.verifyCode = -1;
+        defaultUser.name = name;
+        defaultUser.studentId = studentId;
+        defaultUser.major = major;
         await defaultUser.save();
 
         return res.status(200).json({ code: 1 });
@@ -292,6 +301,8 @@ router.post('/verify', async (req, res) => {
  *               type: integer
  *               example: 1
  *             token:
+ *               type: string
+ *             user:
  *               type: string
  *       401:
  *         description: 이메일 없음 혹은 비밀번호 불일치
@@ -332,7 +343,7 @@ router.post('/login', async (req, res) => {
         // Generate token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'default_secret_key');
 
-        return res.status(200).json({ code: 1, token });
+        return res.status(200).json({ code: 1, token, user });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal Server Error' });
