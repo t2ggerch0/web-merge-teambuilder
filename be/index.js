@@ -121,13 +121,12 @@ router.post('/email', async (req, res) => {
         const sheetName = 'domain';
         const worksheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(worksheet);
-        const fields = ['domain'];
         const domainList = rows.map(row => row['domain']);
 
         let isValid = false;
         const userDomain = email.split('@')[1];
         for (let index = 0; index < domainList.length; index++) {
-            if (domainList[index].includes(userDomain)) {
+            if (domainList[index].indexOf(userDomain)) {
                 isValid = true;
                 break;
             }
