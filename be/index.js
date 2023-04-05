@@ -48,9 +48,6 @@ const User = require("./models/User");
 const { swaggerUi, specs } = require('./swagger');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// cached
-let domainList = [];
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// API ///////////////////////////////////////
@@ -120,15 +117,12 @@ router.post('/email', async (req, res) => {
         }
 
         // Check vaild email.
-        if (domainList.length == 0) {
-            const workbook = XLSX.readFile('domain.xlsx');
-            const sheetName = 'domain';
-            const worksheet = workbook.Sheets[sheetName];
-            const rows = XLSX.utils.sheet_to_json(worksheet);
-            const fields = ['domain'];
-            const domains = rows.map(row => row['domain']);
-            domainList = domains;
-        }
+        const workbook = XLSX.readFile('domain.xlsx');
+        const sheetName = 'domain';
+        const worksheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(worksheet);
+        const fields = ['domain'];
+        const domainList = rows.map(row => row['domain']);
 
         let isValid = false;
         const userDomain = email.split('@')[1];
