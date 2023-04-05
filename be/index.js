@@ -114,13 +114,13 @@ router.post('/email', async (req, res) => {
         }
 
         // Generate random code.
-        const verifycode = Math.floor(Math.random() * 1000000);
+        const verifyCode = Math.floor(Math.random() * 1000000);
 
         // Update user verifycode if exist.
         if (!existingUser) {
-            await User.create({ email, password: 'default', userType: 'default', code: verifycode });
+            await User.create({ email, password: 'default', userType: 'default', verifyCode: verifyCode });
         } else {
-            existingUser.code = verifycode;
+            existingUser.code = verifyCode;
             await existingUser.save();
         }
 
@@ -136,7 +136,7 @@ router.post('/email', async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Verification Code',
-            text: `Your verification code is ${verifycode}`
+            text: `Your verification code is ${verifyCode}`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
