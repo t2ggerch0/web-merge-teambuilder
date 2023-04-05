@@ -87,7 +87,7 @@ app.get("/", function (req, res) {
  *               type: integer
  *               example: 1
  *       409:
- *         description: 이미 등록된 사용자가 있음
+ *         description: 이미 등록된 사용자가 있음 혹은 학교 이메일이 아님
  *         schema:
  *           type: object
  *           properties:
@@ -98,7 +98,7 @@ app.get("/", function (req, res) {
  *               type: string
  *               example: user already exists or not school email
  *       500:
- *         description: 서버 내부 오류
+ *         description: 서버 내부 오류 혹은 이메일 전송 실패
  *         schema:
  *           type: object
  *           properties:
@@ -122,9 +122,11 @@ router.post('/email', async (req, res) => {
         const worksheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(worksheet);
         const domainList = rows.map(row => row['domain']);
+        console.log(domainList)
 
         let isValid = false;
         const userDomain = email.split('@')[1];
+        console.log(userDomain)
         for (let index = 0; index < domainList.length; index++) {
             if (domainList[index].indexOf(userDomain)) {
                 isValid = true;
