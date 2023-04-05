@@ -16,6 +16,7 @@ const userSchema = new Schema({
         enum: ["professor", "student"],
         required: true,
     },
+    verifycode: String,
     classes: [
         {
             type: Schema.Types.ObjectId,

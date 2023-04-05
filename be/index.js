@@ -17,6 +17,12 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 app.use(router);
 
+// nodemailer
+const nodemailer = require('nodemailer');
+
+// dotenv
+require('dotenv').config();
+
 // encrypt
 const bcrypt = require("bcryptjs");
 
@@ -30,8 +36,7 @@ const jwt = require('jsonwebtoken');
 
 // DB
 const mongoose = require("mongoose");
-const MONGODB_URL = "mongodb+srv://root:1398@cluster0.4edtyez.mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(MONGODB_URL);
+mongoose.connect(process.env.MONGODB_URL);
 const Class = require("./models/Class");
 const Team = require("./models/Team");
 const User = require("./models/User");
@@ -52,7 +57,83 @@ app.get("/", function (req, res) {
 
 /**
  * @swagger
- * /register:
+ * /email:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: 인증코드 생성 및 이메일 전송
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description:
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 인증코드 전송 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 1
+ *       500:
+ *         description: 서버 내부 오류
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error or Error sending verification code
+ */
+router.post('/email', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Generate random code.
+        const code = Math.floor(Math.random() * 1000000);
+
+        // Create smtp client.
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        });
+        const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: email,
+            subject: 'Verification Code',
+            text: `Your verification code is ${code}`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: 'Error sending verification code' });
+            } else {
+                console.log('Verification code sent: ' + info.response);
+                return res.status(200).json({ code: 1 });
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
+/**
+ * @swagger
+ * /verify:
  *   post:
  *     tags:
  *       - auth
@@ -62,7 +143,7 @@ app.get("/", function (req, res) {
  *     parameters:
  *       - name: body
  *         in: body
- *         description: userType은 반드시 professor 혹은 student 입니다.
+ *         description:
  *         required: true
  *         schema:
  *           type: object
@@ -82,6 +163,17 @@ app.get("/", function (req, res) {
  *             code:
  *               type: integer
  *               example: 1
+ *       400:
+ *         description: 인증코드 불일치
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: invalid verify code
  *       409:
  *         description: 이미 등록된 사용자가 있음
  *         schema:
@@ -102,14 +194,20 @@ app.get("/", function (req, res) {
  *               type: string
  *               example: Internal Server Error
  */
-router.post('/register', async (req, res) => {
+router.post('/verify', async (req, res) => {
     try {
-        const { email, password, userType } = req.body;
+        const { email, password, userType, verifyCode } = req.body;
 
         // Check for duplicate emails
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({ code: 0, message: 'duplicated email' });
+        }
+
+        // Check verify code
+        const userVerifyCode = await User.findOne({ email }, { verifyCode: 1 });
+        if (!userVerifyCode || userVerifyCode.verifyCode !== verifyCode) {
+            return res.status(400).json({ code: 0, message: 'invalid verify code' });
         }
 
         // Encrypt
