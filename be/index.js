@@ -118,7 +118,7 @@ router.post('/email', async (req, res) => {
 
         // Check vaild email.
         if (domainList.length == 0) {
-            const workbook = XLSX.readFile('domain.xls');
+            const workbook = XLSX.readFile('domain.xlsx');
             const sheetName = 'domain';
             const worksheet = workbook.Sheets[sheetName];
             const rows = XLSX.utils.sheet_to_json(worksheet);
