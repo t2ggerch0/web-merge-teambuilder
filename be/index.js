@@ -32,10 +32,10 @@ const bcrypt = require("bcryptjs");
 // cors
 const cors = require("cors");
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: 'GET,PUT,POST,DELETE',
     allowedHeaders: '*',
-    credentials: true
+    credentials: false
 }));
 router.use(cors());
 
