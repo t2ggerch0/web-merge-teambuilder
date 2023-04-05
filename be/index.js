@@ -251,7 +251,7 @@ router.post('/verify', async (req, res) => {
         // Update user.
         existingUser.password = password;
         existingUser.userType = userType;
-        existingUser.code = -1;
+        existingUser.verifyCode = -1;
         await existingUser.save();
 
         return res.status(200).json({ code: 1 });
