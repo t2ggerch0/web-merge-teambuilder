@@ -131,8 +131,9 @@ router.post('/email', async (req, res) => {
         }
 
         let isValid = false;
+        const userDomain = email.split('@')[1];
         for (let index = 0; index < domainList.length; index++) {
-            if (domainList[index] == email) {
+            if (domainList[index].includes(userDomain)) {
                 isValid = true;
                 break;
             }
