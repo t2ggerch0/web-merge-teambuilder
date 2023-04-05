@@ -244,12 +244,9 @@ router.post('/verify', async (req, res) => {
             return res.status(400).json({ code: 0, message: 'invalid verify code' });
         }
 
-        // Encrypt
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({ email, password: hashedPassword, userType });
-
         // Update user.
-        existingUser.password = password;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        existingUser.password = hashedPassword;
         existingUser.userType = userType;
         existingUser.verifyCode = -1;
         await existingUser.save();
