@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Home.module.scss";
+import Register from "../Register/Register";
 
 const Home = () => {
   return (
@@ -12,7 +13,7 @@ const Home = () => {
           </div>
         </div>
         <div className={styles.join}>
-          <button className={styles.joinButton}>지금 등록하러 가기</button>
+          <Register />
         </div>
       </div>
       <div className={styles.footer}></div>

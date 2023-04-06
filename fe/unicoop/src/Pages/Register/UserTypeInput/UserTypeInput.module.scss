@@ -1,0 +1,12 @@
+.userTypeInput {
+  .option {
+    opacity: 0.5;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+    &.selected {
+      opacity: 1;
+    }
+  }
+}

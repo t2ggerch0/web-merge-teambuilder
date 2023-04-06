@@ -8,7 +8,7 @@
     justify-content: space-between;
     align-items: center;
     flex: 1;
-    padding: 300px 100px;
+    padding: 100px;
     .title {
       display: flex;
       flex-direction: column;
@@ -23,19 +23,9 @@
     }
 
     .join {
-      .joinButton {
-        padding: 16px 24px;
-        border: none;
-        border-radius: 16px;
-        background-color: #3c3c3c;
-        font-size: 20px;
-        color: #fff;
-        opacity: 0.5;
-        cursor: pointer;
-        &:hover {
-          opacity: 1;
-        }
-      }
+      width: 400px;
+      padding: 30px;
+      border: 1px solid #292929;
     }
   }
 
