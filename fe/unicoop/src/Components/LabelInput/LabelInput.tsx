@@ -38,6 +38,7 @@ const LabelInput: FC<LabelInputProps> = ({
         placeholder={placeholder}
         readOnly={isReadOnly}
         onChange={(e) => {
+          console.log('name', e.target.name, 'value', e.target.value)
           onChange(e.target.name, e.target.value);
         }}
       />

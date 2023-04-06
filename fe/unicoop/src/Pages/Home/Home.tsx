@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Home.module.scss";
 import Register from "../Register/Register";
+import LogIn from "../LogIn/LogIn";
 
 const Home = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const changeBoxContent = () => {
+    setIsLogin(!isLogin);
+  };
   return (
     <div className={styles.home}>
       <div className={styles.body}>
@@ -13,7 +18,11 @@ const Home = () => {
           </div>
         </div>
         <div className={styles.join}>
-          <Register />
+          {isLogin ? (
+            <LogIn changeBoxContent={changeBoxContent} />
+          ) : (
+            <Register changeBoxContent={changeBoxContent} />
+          )}
         </div>
       </div>
       <div className={styles.footer}></div>

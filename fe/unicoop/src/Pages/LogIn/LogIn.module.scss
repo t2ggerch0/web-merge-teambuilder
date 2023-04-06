@@ -1,70 +1,19 @@
 .login {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-
-  .body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    padding: 300px 100px;
-    .title {
-      .logo {
-        font-size: 48px;
-        font-weight: bold;
-      }
-      .text {
-        display: flex;
-        .highlight {
-          color: red;
-          margin-left: 5px;
-          font-weight: 600;
-        }
-      }
-      .input_area {
-        .input {
-          width: 100%;
-        }
-      }
-      .button_area {
-        display: flex;
-        justify-content: end;
-        .button {
-          padding: 16px 24px;
-          border: none;
-          border-radius: 16px;
-          background-color: #3c3c3c;
-          font-size: 20px;
-          color: #fff;
-          opacity: 1;
-          cursor: pointer;
-          &:disabled {
-            opacity: 0.5;
-          }
-        }
-      }
-    }
-
-    .join {
-      .joinButton {
-        padding: 16px 24px;
-        border: none;
-        border-radius: 16px;
-        background-color: #3c3c3c;
-        font-size: 20px;
-        color: #fff;
-        opacity: 0.5;
-        cursor: pointer;
-        &:hover {
-          opacity: 1;
-        }
-      }
-    }
+  gap: 16px;
+  .title {
+    font-size: 24px;
+    font-weight: bold;
   }
-
-  .footer {
-    height: 100px;
-    background-color: #3c3c3c;
+  .account_check {
+    opacity: 0.5;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+    &.selected {
+      opacity: 1;
+    }
   }
 }

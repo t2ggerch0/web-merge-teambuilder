@@ -6,6 +6,16 @@
     font-size: 24px;
     font-weight: bold;
   }
+  .account_check {
+    opacity: 0.5;
+    cursor: pointer;
+    &:hover {
+      opacity: 1;
+    }
+    &.selected {
+      opacity: 1;
+    }
+  }
   .privacyNotice {
     font-size: 12px;
   }

@@ -8,8 +8,10 @@ import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
 import { viewToastError } from "../../helper";
 import { RegisterInfo, UserTypeType } from "../../interface";
-
-const Register = () => {
+type RegisterProps = {
+  changeBoxContent: () => void;
+};
+const Register = ({ changeBoxContent }: RegisterProps) => {
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
     name: "",
     studentId: 0,
@@ -68,6 +70,9 @@ const Register = () => {
   return (
     <div className={styles.register}>
       <div className={styles.title}>회원가입</div>
+      <div className={styles.account_check} onClick={changeBoxContent}>
+        이미 계정이 있으신가요?
+      </div>
       <UserTypeInput userType={userType} setUserType={setUserType} />
       <LabelInput
         name={"name"}
