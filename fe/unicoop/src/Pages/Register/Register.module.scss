@@ -1,0 +1,12 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .privacyNotice {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,13 @@
+.unicoopButton {
+  padding: 16px 24px;
+  border: none;
+  border-radius: 16px;
+  background-color: #3c3c3c;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0.5;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+}
