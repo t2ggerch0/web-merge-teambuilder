@@ -18,6 +18,7 @@ const LabelInput: FC<LabelInputProps> = ({
   placeholder,
   isPassword,
   isReadOnly,
+
   onChange,
 }) => {
   return (

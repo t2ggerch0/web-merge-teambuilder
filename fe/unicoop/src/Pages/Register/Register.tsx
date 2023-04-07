@@ -27,8 +27,12 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
 
-  const onChange = (name: string, value: string | number) => {
-    setRegisterInfo({ ...registerInfo, [name]: value });
+  const onChange = (name: string, value: string) => {
+    if (name === "studentId" || name === "verifyCode") {
+      setRegisterInfo({ ...registerInfo, [name]: parseInt(value) });
+    } else {
+      setRegisterInfo({ ...registerInfo, [name]: value });
+    }
   };
 
   const sendCode = async () => {
@@ -64,19 +68,34 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
       return;
     }
     try {
-      const response = await axios.post("/verify", {
+      await axios
+        .post("/verify", {
+          email,
+          password,
+          userType,
+          verifyCode,
+          name,
+          studentId,
+          major,
+        })
+        .then(() => {
+          viewToastInfo("회원가입에 성공했습니다.");
+          setTimeout(() => {
+            changeBoxContent();
+          }, 3000);
+        });
+    } catch (e) {
+      viewToastError("인증코드가 올바르지 않습니다.");
+      console.log(
         email,
         password,
         userType,
         verifyCode,
         name,
         studentId,
-        major,
-      });
-      console.log(verifyCode, studentId);
-      console.log(response);
-    } catch (e) {
-      viewToastError("인증코드가 올바르지 않습니다.");
+        major
+      );
+
       console.log(e);
     }
   };
