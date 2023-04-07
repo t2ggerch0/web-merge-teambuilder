@@ -6,8 +6,9 @@ import EmailInput from "./EmailInput/EmailInput";
 import PasswordInput from "./PasswordInput/PasswordInput";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { viewToastError } from "../../helper";
+import { viewToastError, viewToastInfo } from "../../helper";
 import { RegisterInfo, UserTypeType } from "../../interface";
+import { ToastContainer } from "react-toastify";
 type RegisterProps = {
   changeBoxContent: () => void;
 };
@@ -35,8 +36,11 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
       const response = await axios.post("/email", {
         email,
       });
+
+      viewToastInfo("인증코드를 전송했습니다. 메일을 확인해 주세요.");
       console.log(response);
     } catch (e) {
+      viewToastError("이메일 주소가 올바르지 않습니다.");
       console.log(e);
     }
   };
@@ -60,9 +64,19 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
       return;
     }
     try {
-      const response = await axios.post("/verify", registerInfo);
+      const response = await axios.post("/verify", {
+        email,
+        password,
+        userType,
+        verifyCode,
+        name,
+        studentId,
+        major,
+      });
+      console.log(verifyCode, studentId);
       console.log(response);
     } catch (e) {
+      viewToastError("인증코드가 올바르지 않습니다.");
       console.log(e);
     }
   };
@@ -124,6 +138,13 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
         됩니다.
       </div>
       <UnicoopButton onClick={submit}>회원가입</UnicoopButton>
+      <ToastContainer
+        className={styles.toast}
+        position="top-center"
+        hideProgressBar
+        closeButton={false}
+        rtl={false}
+      />
     </div>
   );
 };

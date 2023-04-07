@@ -3,10 +3,16 @@ import styles from "./LogIn.module.scss";
 import axios from "axios";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import { toast, ToastContainer } from "react-toastify";
+
+import { MyInfoType } from "../../interface";
+import { viewToastError } from "../../helper";
+
 type LoginProps = {
   changeBoxContent: () => void;
+  loginSuccess: (userInfo: MyInfoType) => void;
 };
-const LogIn = ({ changeBoxContent }: LoginProps) => {
+const LogIn = ({ changeBoxContent, loginSuccess }: LoginProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -17,21 +23,32 @@ const LogIn = ({ changeBoxContent }: LoginProps) => {
     setPassword(value);
   };
 
-  const onClickLogin = () => {
-    axios
-      .post("https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/login", {
-        email,
-        password,
-        userType: "student",
-      })
-      .then((res) => {
-        console.log("res", res.data);
-        if (res.data.code === 1) {
-          //로그인 성공
-        } else {
-          // 로그인 실패
-        }
-      });
+  const onClickLogin = async () => {
+    try {
+      await axios
+        .post("/login", {
+          email,
+          password,
+          userType: "student",
+        })
+        .then((res) => {
+          console.log("res", res.data);
+          if (res.data.code === 1) {
+            localStorage.setItem("token", res.data.token);
+            loginSuccess({
+              name: res.data.user.name,
+              classes: res.data.user.classes,
+              email: res.data.user.email,
+              major: res.data.user.major,
+              password: res.data.user.password,
+              studentId: res.data.user.studentId,
+              userType: res.data.user.userType,
+            });
+          }
+        });
+    } catch (e) {
+      viewToastError("일치하는 회원정보가 없습니다!");
+    }
   };
   return (
     <div className={styles.login}>
@@ -60,6 +77,14 @@ const LogIn = ({ changeBoxContent }: LoginProps) => {
       />
 
       <UnicoopButton onClick={onClickLogin}>로그인</UnicoopButton>
+      <ToastContainer
+        className={styles.toast}
+        position="top-center"
+        hideProgressBar
+        closeButton={false}
+        rtl={false}
+        theme="colored"
+      />
     </div>
   );
 };

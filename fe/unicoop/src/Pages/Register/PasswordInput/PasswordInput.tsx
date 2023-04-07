@@ -31,12 +31,13 @@ const PasswordInput: FC<PasswordInputProps> = ({
       strength++;
     }
 
-    if (strength < 3) {
+    if (strength < 2) {
       setIsPasswordValid(false);
     } else {
       setIsPasswordValid(true);
     }
     onChange(name, value);
+    console.log(value, strength);
   };
 
   const passwordConfirmOnChange = (name: string, value: string) => {

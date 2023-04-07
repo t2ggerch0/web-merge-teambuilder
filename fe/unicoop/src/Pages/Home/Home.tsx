@@ -1,13 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Home.module.scss";
 import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
+import { MyInfoType } from "../../interface";
+import { useAuthContext } from "../../Context/UnicoopContext";
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLoginSuccess, setIsLoginSucess] = useState<boolean>(false);
+  const userInfoHandle = useAuthContext();
   const changeBoxContent = () => {
     setIsLogin(!isLogin);
   };
+  const loginSuccess = (userInfo: MyInfoType) => {
+    setIsLoginSucess(true);
+    userInfoHandle.setMyInfo(userInfo);
+  };
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token !== null) {
+      // TODO: token으로 회원 정보 가져오는 api호출
+    }
+  }, []);
   return (
     <div className={styles.home}>
       <div className={styles.body}>
@@ -19,7 +34,14 @@ const Home = () => {
         </div>
         <div className={styles.join}>
           {isLogin ? (
-            <LogIn changeBoxContent={changeBoxContent} />
+            isLoginSuccess ? (
+              <div>{userInfoHandle.myInfo?.name}님, 환영합니다!</div>
+            ) : (
+              <LogIn
+                changeBoxContent={changeBoxContent}
+                loginSuccess={loginSuccess}
+              />
+            )
           ) : (
             <Register changeBoxContent={changeBoxContent} />
           )}
