@@ -116,7 +116,7 @@ router.post('/email', async (req, res) => {
         const { email } = req.body;
 
         // Check for duplicate emails
-        const existingUser = await User.findOne({ email, verifyCode: 1 });
+        const existingUser = await User.findOne({ email });
         if (existingUser && existingUser.verifyCode == -1) {
             return res.status(409).json({ code: 0, message: 'duplicated email' });
         }
