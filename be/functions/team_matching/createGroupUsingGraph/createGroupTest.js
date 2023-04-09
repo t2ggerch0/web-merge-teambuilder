@@ -1,4 +1,5 @@
 const CreateGroupsGreedy = require("./greedyAlgorithm");
+const CreateGroupsHeuristic = require("./heuristicAlgorithm");
 
 // ------ Variables ------ //
 let minWeight = 1;
@@ -12,6 +13,8 @@ let students = [
 let edges = [
   // Add your edges here, with the format { src: student1.id, dest: student2.id, weight: value }
 ];
+
+const edgeMap = new Map();
 
 // ------ Functions ------ //
 function getRandomNumber(min, max) {
@@ -45,33 +48,37 @@ function calculateGroupWeight(group) {
 }
 
 // ------ Main ------ //
-createStudentAndEdges();
+function createGroup() {
+  createStudentAndEdges();
 
-let edgeWeightTotal = 0;
-for (let i = 0; i < edges.length; i++) {
-  edgeWeightTotal += parseInt(edges[i].weight);
+  let edgeWeightTotal = 0;
+  for (let i = 0; i < edges.length; i++) {
+    edgeWeightTotal += parseInt(edges[i].weight);
+  }
+  const topEdges = edges.sort((a, b) => b.weight - a.weight).slice(0, 30);
+  const sumOfTopEdgeWeights = topEdges.reduce((sum, edge) => sum + edge.weight, 0);
+
+  const resultGreedy = CreateGroupsGreedy(students, edges, numGroups);
+  console.log("Groups: ", resultGreedy);
+
+  // Create a map for easy edge weight lookup
+
+  edges.forEach((edge) => {
+    edgeMap.set(`${edge.src}_${edge.dest}`, edge.weight);
+    edgeMap.set(`${edge.dest}_${edge.src}`, edge.weight);
+  });
+
+  //Calculate total weight of each group in the result
+  const groupWeightsGreedy = resultGreedy.map(calculateGroupWeight);
+  console.log("Group weights: ", groupWeightsGreedy);
+
+  const sumGreedy = groupWeightsGreedy.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+  console.log("Edge weight Total: ", edgeWeightTotal);
+
+  console.log("average of edges in graph: ", edgeWeightTotal / edges.length);
+  console.log("average of edges in top 30: ", sumOfTopEdgeWeights / topEdges.length);
+  console.log("average of edges in greedy algorithm: ", sumGreedy / topEdges.length);
 }
-const topEdges = edges.sort((a, b) => b.weight - a.weight).slice(0, 30);
-const sumOfTopEdgeWeights = topEdges.reduce((sum, edge) => sum + edge.weight, 0);
 
-const resultGreedy = CreateGroupsGreedy(students, edges, numGroups);
-console.log("Groups: ", resultGreedy);
-
-// Create a map for easy edge weight lookup
-const edgeMap = new Map();
-edges.forEach((edge) => {
-  edgeMap.set(`${edge.src}_${edge.dest}`, edge.weight);
-  edgeMap.set(`${edge.dest}_${edge.src}`, edge.weight);
-});
-
-// Calculate total weight of each group in the result
-const groupWeightsGreedy = resultGreedy.map(calculateGroupWeight);
-console.log("Group weights: ", groupWeightsGreedy);
-
-const sumGreedy = groupWeightsGreedy.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-console.log("Edge weight Total: ", edgeWeightTotal);
-
-console.log("average of edges in graph: ", edgeWeightTotal / edges.length);
-console.log("average of edges in top 30: ", sumOfTopEdgeWeights / topEdges.length);
-console.log("average of edges in greedy algorithm: ", sumGreedy / topEdges.length);
+module.exports = createGroup;
