@@ -5,28 +5,14 @@
 // express
 const express = require("express");
 const app = express();
-const port = 1398;
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
 
 // router
 const router = express.Router();
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
-app.use(router);
-
-// xlsx
-const XLSX = require("xlsx");
-
-// nodemailer
-const nodemailer = require("nodemailer");
 
 // dotenv
 require("dotenv").config();
-
-// encrypt
-const bcrypt = require("bcryptjs");
 
 // cors
 const cors = require("cors");
@@ -40,15 +26,9 @@ app.use(
 );
 router.use(cors());
 
-// token
-const jwt = require("jsonwebtoken");
-
 // DB
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGODB_URL);
-const Class = require("./models/Class");
-const Team = require("./models/Team");
-const User = require("./models/User");
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
@@ -60,16 +40,33 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 const checkEmail = require("./routes/Sign/checkEmail");
 const verify = require("./routes/Sign/verify");
-const register = require("./routes/Sign/register");
-
-app.use("/email", checkEmail);
-app.use("/verify", verify);
-app.use("/register", register);
+const login = require("./routes/Sign/login");
+const deleteUser = require("./routes/Sign/deleteUser");
 
 app.get("/", function (req, res) {
   res.send("root");
 });
 
+//======Signing API======//
+app.use("/email", checkEmail);
+app.use("/verify", verify);
+app.use("/login", login);
+app.use("/deleteUser", deleteUser);
+
+app.use(router);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Internal Server Error");
+});
+
+const port = 1398;
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
+
+//======Swagger======//
 /**
  * @swagger
  * /email:
@@ -118,75 +115,6 @@ app.get("/", function (req, res) {
  *               type: string
  *               example: Internal Server Error or Error sending verification code
  */
-// router.post("/email", async (req, res) => {
-//   try {
-//     const { email } = req.body;
-
-//     // Check for duplicate emails
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser && existingUser.verifyCode == -1) {
-//       return res.status(409).json({ code: 0, message: "duplicated email" });
-//     }
-
-//     // Check vaild email.
-//     const workbook = XLSX.readFile("domain.xlsx");
-//     const sheetName = "domain";
-//     const worksheet = workbook.Sheets[sheetName];
-//     const rows = XLSX.utils.sheet_to_json(worksheet);
-//     const domainList = rows.map((row) => row["domain"]).filter((domain) => domain && domain.trim() !== "");
-
-//     let isValid = false;
-//     const userDomain = email.split("@")[1];
-//     for (let index = 0; index < domainList.length; index++) {
-//       if (domainList[index].indexOf(userDomain) != -1) {
-//         isValid = true;
-//         break;
-//       }
-//     }
-//     if (!isValid) {
-//       return res.status(409).json({ code: 0, message: "not school email" });
-//     }
-
-//     // Generate random code.
-//     const verifyCode = Math.floor(Math.random() * 1000000);
-
-//     // Update user verifycode if exist.
-//     if (!existingUser) {
-//       await User.create({ email, password: "default", userType: "default", verifyCode: verifyCode });
-//     } else {
-//       existingUser.verifyCode = verifyCode;
-//       await existingUser.save();
-//     }
-
-//     // Create smtp client.
-//     const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.EMAIL_USERNAME,
-//         pass: process.env.EMAIL_PASSWORD,
-//       },
-//     });
-//     const mailOptions = {
-//       from: process.env.EMAIL_USERNAME,
-//       to: email,
-//       subject: "Verification Code",
-//       text: `Your verification code is ${verifyCode}`,
-//     };
-
-//     transporter.sendMail(mailOptions, function (error, info) {
-//       if (error) {
-//         console.log(error);
-//         return res.status(500).json({ message: "Error sending verification code" });
-//       } else {
-//         console.log("Verification code sent: " + info.response);
-//         return res.status(200).json({ code: 1 });
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
 
 /**
  * @swagger
@@ -249,54 +177,6 @@ app.get("/", function (req, res) {
  *               example: Internal Server Error
  */
 
-// router.post("/verify", async (req, res) => {
-//   try {
-//     const { email, password, userType, verifyCode, name, studentId, major } = req.body;
-
-//     // Check verify code
-//     const defaultUser = await User.findOne({ email }, { verifyCode: 1 });
-//     if (!defaultUser || defaultUser.verifyCode !== verifyCode) {
-//       return res.status(400).json({ code: 0, message: "invalid verify code" });
-//     }
-
-//     // Update user.
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     defaultUser.password = hashedPassword;
-//     defaultUser.userType = userType;
-//     defaultUser.verifyCode = -1;
-//     defaultUser.name = name;
-//     defaultUser.studentId = studentId;
-//     defaultUser.major = major;
-//     await defaultUser.save();
-
-//     return res.status(200).json({ code: 1 });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
-
-// router.post("/register", async (req, res) => {
-//   try {
-//     const { email, password, userType } = req.body;
-
-//     // Check for duplicate emails
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(409).json({ code: 0 });
-//     }
-
-//     // Encrypt
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     await User.create({ email, password: hashedPassword, userType });
-
-//     return res.status(200).json({ code: 1 });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
-
 /**
  * @swagger
  * /login:
@@ -349,31 +229,6 @@ app.get("/", function (req, res) {
  *               type: string
  *               example: Internal Server Error
  */
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ code: 0, message: "email not found" });
-    }
-
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ code: 0, message: "password not matched" });
-    }
-
-    // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "default_secret_key");
-
-    return res.status(200).json({ code: 1, token, user });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
 
 /**
  * @swagger
@@ -416,19 +271,6 @@ router.post("/login", async (req, res) => {
  *               type: string
  *               example: Internal Server Error
  */
-router.delete("/users/:email", async (req, res) => {
-  try {
-    const { email } = req.params;
-    const deletedUser = await User.findOneAndDelete({ email });
-    if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    return res.status(200).json({ message: "User deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
 
 // test post Question
 router.post("/add_question", async (req, res) => {
