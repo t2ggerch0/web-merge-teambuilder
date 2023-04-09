@@ -43,3 +43,5 @@ router.post("/create-class", async (req, res) => {
     res.status(500).json({ message: "An error occurred while creating the class" });
   }
 });
+
+module.exports = router;
