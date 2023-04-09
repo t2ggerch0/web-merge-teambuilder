@@ -277,22 +277,90 @@ app.listen(port, () => {
  *               example: Internal Server Error
  */
 
-// test post Question
-router.post("/add_question", async (req, res) => {
-  try {
-    const { classId, title, type, options } = req.body;
-
-    // verify classId
-
-    // create Question
-    await Question.create({ classId, title, type, options });
-
-    // return result
-    return res.status(200).json({ code: 1 });
-  } catch {
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+/**
+ * @swagger
+ * /classes:
+ *   post:
+ *     summary: Create a new class
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: The class to create
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             professorId:
+ *               type: string
+ *             matchingType:
+ *               type: string
+ *             customQuestions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   question:
+ *                     type: string
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   priority:
+ *                     type: number
+ *     responses:
+ *       200:
+ *         description: The created class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             professor:
+ *               type: string
+ *             students:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             teams:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             matchingType:
+ *               type: string
+ *             customQuestions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   question:
+ *                     type: string
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   priority:
+ *                     type: number
+ *       401:
+ *         description: Not authorized to create class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// HELPER ///////////////////////////////////////
