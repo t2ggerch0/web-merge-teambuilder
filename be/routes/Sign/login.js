@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    return res.status(300).json({ code: 0, message: "email not found" });
 
     // Check if user exists
     const user = await User.findOne({ email });
