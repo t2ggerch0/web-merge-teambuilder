@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
+const jwt = require("jsonwebtoken");
 
 router.post("/create-class", async (req, res) => {
   try {
@@ -12,8 +13,9 @@ router.post("/create-class", async (req, res) => {
 
     // Verify the token to get the user ID
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decodedToken.userId;
+    const userId = decodedToken.id;
 
+    console.log(userId, decodedToken);
     // Check if the user is a professor
     const user = await User.findById(userId);
     if (user.userType !== "professor") {

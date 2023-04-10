@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 router.post("/login", async (req, res) => {
   try {

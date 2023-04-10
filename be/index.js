@@ -34,33 +34,33 @@ mongoose.connect(process.env.MONGODB_URL);
 const { swaggerUi, specs } = require("./swagger");
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
+app.use(router);
+
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// API ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
-const checkEmail = require("./routes/Sign/checkEmail");
-const verify = require("./routes/Sign/verify");
-const login = require("./routes/Sign/login");
-const deleteUser = require("./routes/Sign/deleteUser");
-const getUsers = require("./routes/Sign/getUsers");
+const checkEmail = require("./routes/auth/checkEmail");
+const verify = require("./routes/auth/verify");
+const login = require("./routes/auth/login");
+const deleteUser = require("./routes/auth/deleteUser");
+const getUsers = require("./routes/auth/getUsers");
 
-const createClass = require("./routes/Class/createClass");
+const createClass = require("./routes/class/createClass");
 
 app.get("/", function (req, res) {
   res.send("root");
 });
 
 //======Signing API======//
-app.use("/email", checkEmail);
-app.use("/verify", verify);
-app.use("/login", login);
-app.use("/deleteUser", deleteUser);
-app.use("/users", getUsers);
+app.use("/auth", checkEmail);
+app.use("/auth", verify);
+app.use("/auth", login);
+app.use("/auth", deleteUser);
+app.use("/auth", getUsers);
 
 //======Class API======//
-app.use("/create-class", createClass);
-
-app.use(router);
+app.use("/class", createClass);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
