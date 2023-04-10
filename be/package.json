@@ -17,7 +17,9 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
     "nodemailer": "^6.9.1",
-    "xlsx": "^0.18.5"
+    "swagger-cli": "^4.0.4",
+    "xlsx": "^0.18.5",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "swagger-jsdoc": "^6.2.8",

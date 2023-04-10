@@ -42,6 +42,7 @@ const checkEmail = require("./routes/Sign/checkEmail");
 const verify = require("./routes/Sign/verify");
 const login = require("./routes/Sign/login");
 const deleteUser = require("./routes/Sign/deleteUser");
+const getUsers = require("./routes/Sign/getUsers");
 
 const createClass = require("./routes/Class/createClass");
 
@@ -54,6 +55,7 @@ app.use("/email", checkEmail);
 app.use("/verify", verify);
 app.use("/login", login);
 app.use("/deleteUser", deleteUser);
+app.use("/users", getUsers);
 
 //======Class API======//
 app.use("/create-class", createClass);

@@ -23,10 +23,6 @@ router.post("/create-class", async (req, res) => {
     // Create the new class with the request data
     const newClass = new Class({
       professor: userId,
-      students: req.body.students,
-      teams: req.body.teams,
-      matchingType: req.body.matchingType,
-      customQuestions: req.body.customQuestions,
     });
 
     // Save the new class to the database
