@@ -6,6 +6,10 @@ const classSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  name: {
+    type: String,
+    required: true,
+  },
   students: [
     {
       type: Schema.Types.ObjectId,
@@ -18,15 +22,10 @@ const classSchema = new Schema({
       ref: "Team",
     },
   ],
-  customQuestions: [
+  questions: [
     {
-      question: String,
-      options: [
-        {
-          type: String,
-        },
-      ],
-      priority: Number,
+      type: Schema.Types.ObjectId,
+      ref: "Question",
     },
   ],
 });
