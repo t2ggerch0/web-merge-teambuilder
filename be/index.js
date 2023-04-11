@@ -47,6 +47,9 @@ const deleteUser = require("./routes/auth/deleteUser");
 const getUsers = require("./routes/auth/getUsers");
 
 const createClass = require("./routes/class/createClass");
+const addQuestion = require("./routes/class/addDefaultQuestions");
+
+const createQuestion = require("./routes/question/createQuestion");
 
 app.get("/", function (req, res) {
   res.send("root");
@@ -61,6 +64,10 @@ app.use("/auth", getUsers);
 
 //======Class API======//
 app.use("/class", createClass);
+app.use("/class", addQuestion);
+
+//======Question API======//
+app.use("/question", createQuestion);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
