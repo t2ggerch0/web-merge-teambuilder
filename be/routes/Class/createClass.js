@@ -4,18 +4,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
-const jwt = require("jsonwebtoken");
+const verifyJwt = require("../../utils/verifyJWT");
 
 router.post("/create-class", async (req, res) => {
   try {
-    // Extract the JWT token from the request headers
-    const token = req.headers.authorization.split(" ")[1];
+    // Verify JWT
+    const userId = verifyJwt(req, res);
 
-    // Verify the token to get the user ID
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decodedToken.id;
-
-    console.log(userId, decodedToken);
     // Check if the user is a professor
     const user = await User.findById(userId);
     if (user.userType !== "professor") {
@@ -25,6 +20,7 @@ router.post("/create-class", async (req, res) => {
     // Create the new class with the request data
     const newClass = new Class({
       professor: userId,
+      name: req.body.name,
     });
 
     // Save the new class to the database
