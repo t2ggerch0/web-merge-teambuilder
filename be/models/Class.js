@@ -2,38 +2,32 @@ const mongoos = require("mongoose");
 const { Schema } = mongoos;
 
 const classSchema = new Schema({
-    professor: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
+  professor: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  students: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
-    students: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "User"
-        }
-    ],
-    teams: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Team"
-        }
-    ],
-    matchingType: {
-        type: String,
-        enum: ["similar", "diverse"],
-        required: true,
+  ],
+  teams: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Team",
     },
-    customQuestions: [
-        {
-            question: String,
-            options: [
-                {
-                    type: String
-                }
-            ],
-            priority: Number
-        }
-    ]
+  ],
+  questions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Question",
+    },
+  ],
 });
 
 module.exports = mongoos.model("Class", classSchema);
