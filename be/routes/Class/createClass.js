@@ -39,3 +39,11 @@ router.post("/create-class", async (req, res) => {
 });
 
 module.exports = router;
+
+// example
+/*
+{
+  "name": "CSC 309"
+}
+
+*/

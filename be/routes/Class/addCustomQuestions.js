@@ -6,9 +6,8 @@ const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
 const verifyJwt = require("../../utils/verifyJWT");
-const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
-router.post("/add-default-questions", async (req, res) => {
+router.post("/add-custom-questions", async (req, res) => {
   try {
     // verify JWT
     const userId = verifyJwt(req, res);
@@ -28,23 +27,12 @@ router.post("/add-default-questions", async (req, res) => {
     // get selected Class
     const selectedClass = await Class.findById(classId);
 
-    // get question indexes
-    const questionIndexes = req.body.questionIndexes;
-
-    // get weight for each questions
-    const weights = req.body.weights;
-
-    // get scoring types for each question
-    const countScores = req.body.countScores;
-
-    // check length of req.body are all same
-    if (questionIndexes.length !== weights.length || weights.length !== countScores.length) {
-      return res.status(403).json({ message: "Length of questionIndex, weight, and countScores are not same" });
-    }
+    // get question data for each question
+    const questions = req.body.questions;
 
     // add each question to class or override if it already exists
-    for (let i = 0; i < questionIndexes.length; i++) {
-      const questionData = defaultQuestionList[questionIndexes[i]];
+    for (let i = 0; i < questions.length; i++) {
+      const questionData = questions[i];
 
       // If the question does not exist, add it to the selectedClass.questions array
       const newQuestion = new Question({
@@ -53,9 +41,9 @@ router.post("/add-default-questions", async (req, res) => {
         type: questionData.type,
         options: questionData.options,
         isMandatory: questionData.isMandatory,
-        weight: weights[i],
+        weight: questionData.weight,
         scoringType: questionData.scoringType,
-        countScore: countScores[i],
+        countScore: questionData.countScore,
       });
       selectedClass.questions.push(newQuestion);
     }
@@ -72,9 +60,26 @@ router.post("/add-default-questions", async (req, res) => {
 
 module.exports = router;
 
-// {
-//     "classId": "643571a8ac64948d180116d0",
-//     "questionIndexes" : [0,1,2,3,4],
-//     "weights" : [3,3,3,4,5],
-//     "countScores" : ["same","same","same","same","same"]
-// }
+// example
+/*
+{
+  "classId": "643571a8ac64948d180116d0",
+  "questions": [
+    {
+      "title": "Which project do you want?",
+      "type": "custom",
+      "options": ["AI", "non-AI"],
+      "isMandatory": true,
+    },
+    {
+      "title": "What is your interest?",
+      "type": "custom",
+      "options": ["Network", "Security", "System"],
+      "isMandatory": false,
+      "weight": 5,
+      "scoringType": "single",
+      "countScore": "different"
+    }
+  ]
+}
+*/
