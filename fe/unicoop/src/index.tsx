@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UnicoopProvider } from "./Context/UnicoopContext";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,7 +14,7 @@ root.render(
   <React.StrictMode>
     <UnicoopProvider>
       <App />
-      <ToastContainer position={toast.POSITION.TOP_RIGHT} />
+      {/* <ToastContainer position={toast.POSITION.TOP_RIGHT} /> */}
     </UnicoopProvider>
   </React.StrictMode>
 );

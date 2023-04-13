@@ -29,4 +29,11 @@ export interface CommonHeaderProperties extends HeadersDefaults {
 
 export type MyInfoType = {
   name: string;
+
+  email?: string;
+  password?: string;
+  userType?: string;
+  classes?: string[];
+  major?: string;
+  studentId?: number;
 };

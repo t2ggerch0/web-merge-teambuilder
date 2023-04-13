@@ -6,10 +6,13 @@ import EmailInput from "./EmailInput/EmailInput";
 import PasswordInput from "./PasswordInput/PasswordInput";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { viewToastError } from "../../helper";
+import { viewToastError, viewToastInfo } from "../../helper";
 import { RegisterInfo, UserTypeType } from "../../interface";
-
-const Register = () => {
+import { ToastContainer } from "react-toastify";
+type RegisterProps = {
+  changeBoxContent: () => void;
+};
+const Register = ({ changeBoxContent }: RegisterProps) => {
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
     name: "",
     studentId: 0,
@@ -24,8 +27,12 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
 
-  const onChange = (name: string, value: string | number) => {
-    setRegisterInfo({ ...registerInfo, [name]: value });
+  const onChange = (name: string, value: string) => {
+    if (name === "studentId" || name === "verifyCode") {
+      setRegisterInfo({ ...registerInfo, [name]: parseInt(value) });
+    } else {
+      setRegisterInfo({ ...registerInfo, [name]: value });
+    }
   };
 
   const sendCode = async () => {
@@ -33,8 +40,11 @@ const Register = () => {
       const response = await axios.post("/email", {
         email,
       });
+
+      viewToastInfo("인증코드를 전송했습니다. 메일을 확인해 주세요.");
       console.log(response);
     } catch (e) {
+      viewToastError("이메일 주소가 올바르지 않습니다.");
       console.log(e);
     }
   };
@@ -58,9 +68,34 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post("/verify", registerInfo);
-      console.log(response);
+      await axios
+        .post("/verify", {
+          email,
+          password,
+          userType,
+          verifyCode,
+          name,
+          studentId,
+          major,
+        })
+        .then(() => {
+          viewToastInfo("회원가입에 성공했습니다.");
+          setTimeout(() => {
+            changeBoxContent();
+          }, 3000);
+        });
     } catch (e) {
+      viewToastError("인증코드가 올바르지 않습니다.");
+      console.log(
+        email,
+        password,
+        userType,
+        verifyCode,
+        name,
+        studentId,
+        major
+      );
+
       console.log(e);
     }
   };
@@ -68,6 +103,9 @@ const Register = () => {
   return (
     <div className={styles.register}>
       <div className={styles.title}>회원가입</div>
+      <div className={styles.account_check} onClick={changeBoxContent}>
+        이미 계정이 있으신가요?
+      </div>
       <UserTypeInput userType={userType} setUserType={setUserType} />
       <LabelInput
         name={"name"}
@@ -119,6 +157,13 @@ const Register = () => {
         됩니다.
       </div>
       <UnicoopButton onClick={submit}>회원가입</UnicoopButton>
+      <ToastContainer
+        className={styles.toast}
+        position="top-center"
+        hideProgressBar
+        closeButton={false}
+        rtl={false}
+      />
     </div>
   );
 };
