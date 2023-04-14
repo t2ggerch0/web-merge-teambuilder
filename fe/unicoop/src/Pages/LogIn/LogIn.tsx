@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
 import axios from "axios";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
 import { ToastContainer } from "react-toastify";
-
 import { MyInfoType } from "../../interface";
 import { viewToastError } from "../../helper";
 
 type LoginProps = {
-  changeBoxContent: () => void;
-  loginSuccess: (userInfo: MyInfoType) => void;
+  changeBoxContent(): void;
+  loginSuccess(userInfo: MyInfoType): void;
 };
-const LogIn = ({ changeBoxContent, loginSuccess }: LoginProps) => {
+
+const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
