@@ -2,10 +2,12 @@ const mongoos = require("mongoose");
 const { Schema } = mongoos;
 
 const classSchema = new Schema({
-  professor: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
+  professor: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   name: {
     type: String,
     required: true,

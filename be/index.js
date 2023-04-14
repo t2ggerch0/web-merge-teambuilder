@@ -47,7 +47,9 @@ const deleteUser = require("./routes/auth/deleteUser");
 const getUsers = require("./routes/auth/getUsers");
 
 const createClass = require("./routes/class/createClass");
-const addQuestion = require("./routes/class/addDefaultQuestions");
+const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
+const addCustomQuestions = require("./routes/class/addCustomQuestions");
+const joinClass = require("./routes/class/joinClass");
 
 const createQuestion = require("./routes/question/createQuestion");
 
@@ -64,7 +66,9 @@ app.use("/auth", getUsers);
 
 //======Class API======//
 app.use("/class", createClass);
-app.use("/class", addQuestion);
+app.use("/class", addDefaultQuestions);
+app.use("/class", addCustomQuestions);
+app.use("/class", joinClass);
 
 //======Question API======//
 app.use("/question", createQuestion);
