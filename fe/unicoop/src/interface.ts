@@ -12,6 +12,8 @@ export const unicoopContextDefault = {
 
 export type RegisterInfo = {
   name: string;
+  email: string;
+  userType: UserTypeType;
   studentId: number;
   major: string;
   password: string;

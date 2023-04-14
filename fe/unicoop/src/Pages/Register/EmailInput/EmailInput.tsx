@@ -5,13 +5,13 @@ import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
 
 type EmailInputProps = {
   email: string;
-  setEmail(e: string): void;
+  setEmail(name: string, value: string): void;
   sendCode(e: string): void;
 };
 
 const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
   const onChange = (name: string, value: string) => {
-    setEmail(value);
+    setEmail(name, value);
   };
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

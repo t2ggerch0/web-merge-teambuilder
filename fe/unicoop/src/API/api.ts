@@ -1,5 +1,7 @@
 import axios from "axios";
 import { viewToastSuccess, viewToastError } from "../helper";
+import { RegisterInfo } from "../interface";
+import { UserTypeType } from "../interface";
 // import { CommonHeaderProperties } from "../interface";
 
 export const baseURL =
@@ -42,6 +44,57 @@ export const api = {
           "알 수 없는 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
         );
       }
+    }
+  },
+  verifyCode: async ({
+    isPasswordValid,
+    passwordConfirm,
+    registerInfo,
+    changeBoxContent,
+  }: {
+    isPasswordValid: boolean;
+    passwordConfirm: string;
+    registerInfo: RegisterInfo;
+    changeBoxContent: () => void;
+  }) => {
+    const { name, studentId, major, password, verifyCode, email, userType } =
+      registerInfo;
+
+    if (userType !== "student" && userType !== "professor") {
+      viewToastError("회원 가입 유형을 선택해주세요.");
+      return;
+    } else if (name === "") {
+      viewToastError("이름을 입력해주세요.");
+      return;
+    } else if (studentId === 0) {
+      viewToastError("학번을 입력해주세요.");
+      return;
+    } else if (major === "") {
+      viewToastError("전공을 입력해주세요.");
+      return;
+    } else if (!password || !isPasswordValid || password !== passwordConfirm) {
+      viewToastError("비밀번호를 올바르게 입력하셨는지 확인해주세요.");
+      return;
+    }
+    try {
+      await axios
+        .post("/verify", {
+          email,
+          password,
+          userType,
+          verifyCode,
+          name,
+          studentId,
+          major,
+        })
+        .then(() => {
+          viewToastSuccess("회원가입에 성공했습니다.");
+          setTimeout(() => {
+            changeBoxContent();
+          }, 3000);
+        });
+    } catch (e) {
+      viewToastError("인증코드가 올바르지 않습니다.");
     }
   },
 };
