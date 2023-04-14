@@ -1,0 +1,47 @@
+.viewProjects {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 24px 48px;
+  border-radius: 24px;
+  background-color: #f1f1f1;
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .table {
+    display: flex;
+    flex-direction: column;
+    .header {
+      display: flex;
+    }
+    .body {
+      display: flex;
+    }
+  }
+  .buttons {
+    align-self: flex-end;
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.from {
+  width: 10%;
+}
+.to {
+  width: 10%;
+}
+.className {
+  width: 20%;
+}
+.role {
+  width: 10%;
+}
+.grade {
+  width: 10%;
+}
+.file {
+  width: 20%;
+}
