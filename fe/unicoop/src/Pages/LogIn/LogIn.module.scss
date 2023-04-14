@@ -9,11 +9,20 @@
   .account_check {
     opacity: 0.5;
     cursor: pointer;
+    text-align: center;
     &:hover {
       opacity: 1;
     }
     &.selected {
       opacity: 1;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .login {
+    .title {
+      text-align: center;
     }
   }
 }

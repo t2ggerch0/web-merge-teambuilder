@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import styles from "./Register.module.scss";
 import axios from "axios";
 import UserTypeInput from "./UserTypeInput/UserTypeInput";
@@ -6,13 +6,16 @@ import EmailInput from "./EmailInput/EmailInput";
 import PasswordInput from "./PasswordInput/PasswordInput";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { viewToastError, viewToastInfo } from "../../helper";
+import { viewToastError, viewToastSuccess } from "../../helper";
 import { RegisterInfo, UserTypeType } from "../../interface";
 import { ToastContainer } from "react-toastify";
+import { api } from "../../API/api";
+
 type RegisterProps = {
-  changeBoxContent: () => void;
+  changeBoxContent(): void;
 };
-const Register = ({ changeBoxContent }: RegisterProps) => {
+
+const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
     name: "",
     studentId: 0,
@@ -35,23 +38,19 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
     }
   };
 
-  const sendCode = async () => {
+  /*const sendCode = async () => {
     try {
       const response = await axios.post("/email", {
         email,
       });
-
-      viewToastInfo("인증코드를 전송했습니다. 메일을 확인해 주세요.");
-      console.log(response);
+      viewToastSuccess("인증코드를 전송했습니다. 메일을 확인해 주세요.");
     } catch (e) {
       viewToastError("이메일 주소가 올바르지 않습니다.");
-      console.log(e);
     }
-  };
+  };*/
 
   const submit = async () => {
     if (userType !== "student" && userType !== "professor") {
-      console.log("abc");
       viewToastError("회원 가입 유형을 선택해주세요.");
       return;
     } else if (name === "") {
@@ -79,24 +78,13 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
           major,
         })
         .then(() => {
-          viewToastInfo("회원가입에 성공했습니다.");
+          viewToastSuccess("회원가입에 성공했습니다.");
           setTimeout(() => {
             changeBoxContent();
           }, 3000);
         });
     } catch (e) {
       viewToastError("인증코드가 올바르지 않습니다.");
-      console.log(
-        email,
-        password,
-        userType,
-        verifyCode,
-        name,
-        studentId,
-        major
-      );
-
-      console.log(e);
     }
   };
 
@@ -134,7 +122,13 @@ const Register = ({ changeBoxContent }: RegisterProps) => {
         isReadOnly={false}
         onChange={onChange}
       />
-      <EmailInput email={email} setEmail={setEmail} sendCode={sendCode} />
+      <EmailInput
+        email={email}
+        setEmail={setEmail}
+        sendCode={(email) => {
+          api.sendCode(email).then();
+        }}
+      />
       <LabelInput
         name={"verifyCode"}
         value={verifyCode}

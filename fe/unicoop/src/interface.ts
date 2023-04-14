@@ -20,16 +20,8 @@ export type RegisterInfo = {
 
 export type UserTypeType = "student" | "professor" | "";
 
-export type AxiosRequestHeaders = Record<string, string>;
-
-export interface CommonHeaderProperties extends HeadersDefaults {
-  //"Access-Control-Allow-Origin": string;
-  Authorization: string;
-}
-
 export type MyInfoType = {
   name: string;
-
   email?: string;
   password?: string;
   userType?: string;
@@ -37,3 +29,10 @@ export type MyInfoType = {
   major?: string;
   studentId?: number;
 };
+
+export type AxiosRequestHeaders = Record<string, string>;
+
+export interface CommonHeaderProperties extends HeadersDefaults {
+  "Access-Control-Allow-Origin": string;
+  Authorization: string;
+}

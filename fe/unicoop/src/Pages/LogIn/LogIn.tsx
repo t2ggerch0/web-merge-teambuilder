@@ -3,7 +3,7 @@ import styles from "./LogIn.module.scss";
 import axios from "axios";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import { MyInfoType } from "../../interface";
 import { viewToastError } from "../../helper";
@@ -53,9 +53,6 @@ const LogIn = ({ changeBoxContent, loginSuccess }: LoginProps) => {
   return (
     <div className={styles.login}>
       <div className={styles.title}>로그인</div>
-      <div className={styles.account_check} onClick={changeBoxContent}>
-        계정이 없으신가요?
-      </div>
 
       <LabelInput
         name={"email"}
@@ -77,6 +74,11 @@ const LogIn = ({ changeBoxContent, loginSuccess }: LoginProps) => {
       />
 
       <UnicoopButton onClick={onClickLogin}>로그인</UnicoopButton>
+
+      <div className={styles.account_check} onClick={changeBoxContent}>
+        아직 계정이 없으신가요?
+      </div>
+
       <ToastContainer
         className={styles.toast}
         position="top-center"
