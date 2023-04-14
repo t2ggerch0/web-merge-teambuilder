@@ -1,6 +1,6 @@
 const getRandomUsers = (numUsers, questions) => {
   const users = [];
-  for (let i = 1; i <= numUsers; i++) {
+  for (let i = 0; i < numUsers; i++) {
     const answers = [];
 
     for (const question of questions) {
