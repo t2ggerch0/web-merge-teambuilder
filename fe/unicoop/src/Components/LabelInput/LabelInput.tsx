@@ -6,8 +6,8 @@ type LabelInputProps = {
   value: string | number;
   title: string;
   placeholder: string;
-  isPassword: boolean;
-  isReadOnly: boolean;
+  isPassword?: boolean;
+  isReadOnly?: boolean;
   onChange(name: string, value: string): void;
 };
 
@@ -16,10 +16,9 @@ const LabelInput: FC<LabelInputProps> = ({
   value,
   title,
   placeholder,
-  isPassword,
-  isReadOnly,
-
   onChange,
+  isPassword = false,
+  isReadOnly = false,
 }) => {
   return (
     <div className={styles.labelInput}>

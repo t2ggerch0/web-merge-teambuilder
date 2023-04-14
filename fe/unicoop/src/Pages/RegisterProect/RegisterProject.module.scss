@@ -1,0 +1,17 @@
+.container {
+  .duration {
+    display: flex;
+    .datepicker {
+    }
+  }
+  .questions {
+    .question {
+      .question_title {
+        display: flex;
+      }
+      .question_answers {
+        display: flex;
+      }
+    }
+  }
+}

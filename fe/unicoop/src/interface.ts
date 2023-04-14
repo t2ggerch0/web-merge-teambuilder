@@ -20,6 +20,20 @@ export type RegisterInfo = {
   verifyCode: number;
 };
 
+export type ProjectRegisterInfo = {
+  className: string;
+  capacity: number;
+  startDate: string;
+  endDate: string;
+  questions: QuestionType[];
+};
+
+export type QuestionType = {
+  title: string;
+  answer: string;
+  options: string[];
+};
+
 export type UserTypeType = "student" | "professor" | "";
 
 export type MyInfoType = {
