@@ -6,7 +6,7 @@ import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
 type EmailInputProps = {
   email: string;
   setEmail(e: string): void;
-  sendCode(): void;
+  sendCode(e: string): void;
 };
 
 const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
@@ -28,7 +28,7 @@ const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
         isReadOnly={false}
         onChange={onChange}
       />
-      <UnicoopButton onClick={sendCode}>인증받기</UnicoopButton>
+      <UnicoopButton onClick={() => sendCode(email)}>인증받기</UnicoopButton>
     </form>
   );
 };
