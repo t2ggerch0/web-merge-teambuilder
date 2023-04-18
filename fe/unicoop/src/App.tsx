@@ -5,6 +5,7 @@ import Layout from "./Components/Layout/Layout";
 import RegisterProject from "./Pages/RegisterProect/RegisterProject";
 import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ManageProject from "./Pages/ManageProject/ManageProject";
 
 const App = () => {
   const appRef = useRef<HTMLDivElement | null>(null);
@@ -16,9 +17,17 @@ const App = () => {
           <Route
             path="/registerproject"
             element={
-              <Layout pageTitle="프로젝트 등록">
-                <RegisterProject something="asfd" />
-              </Layout>
+              <Layout
+                pageTitle="프로젝트 등록"
+                children={<RegisterProject />}></Layout>
+            }
+          />
+          <Route
+            path="/manageproject"
+            element={
+              <Layout
+                pageTitle="프로젝트 관리"
+                children={<ManageProject />}></Layout>
             }
           />
           <Route path="/mypage" element={<MyPage />} />

@@ -8,9 +8,7 @@ import { ko } from "date-fns/esm/locale";
 import { QuestionType } from "../../interface";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-type RegisterProjectProps = {
-  something: string;
-};
+type RegisterProjectProps = {};
 
 const dummyQuestions: QuestionType[] = [
   {
@@ -20,7 +18,7 @@ const dummyQuestions: QuestionType[] = [
   },
 ];
 
-const RegisterProject: FC<RegisterProjectProps> = ({ something }) => {
+const RegisterProject: FC<RegisterProjectProps> = ({}) => {
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>({
       capacity: 0,
@@ -118,6 +116,9 @@ const RegisterProject: FC<RegisterProjectProps> = ({ something }) => {
             );
           })}
         </div>
+      </div>
+      <div>
+        <button>등록</button>
       </div>
     </div>
   );
