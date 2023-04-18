@@ -51,40 +51,45 @@ const RegisterProject: FC<RegisterProjectProps> = ({ something }) => {
   return (
     <div className={styles.container}>
       <LabelInput
+        className={styles.label}
         title="수업명"
         name="className"
         placeholder="수업명"
+        width={500}
         value={className}
         onChange={onChange}
       />
       <LabelInput
+        className={styles.label}
         title="정원"
         name="capacity"
         placeholder="00명"
+        width={500}
         value={capacity}
         onChange={onChange}
       />
       <div className={styles.duration}>
-        기간
-        <div>
+        <span className={styles.duration_label}>기간</span>
+        <div className={styles.datepicker_container}>
           <DatePicker
             className={styles.datepicker}
             locale={ko}
             dateFormat={"yyyy.MM.dd"}
             onChange={onChangeStartDate}
-            selected={new Date(startDate)}
-          />
+            selected={new Date(startDate)}></DatePicker>
         </div>
-        <CalendarMonthIcon />~
-        <div>
+        <CalendarMonthIcon className={styles.calender} />
+        <span className={styles.text}>~</span>
+        <div className={styles.datepicker_container}>
           <DatePicker
-            className={styles.datepicker}
+            className={`${styles.datepicker} ${styles.datepicker_2}`}
             locale={ko}
             dateFormat={"yyyy.MM.dd"}
             selected={new Date(endDate)}
             onChange={onChangeEndDate}
           />
         </div>
+        <CalendarMonthIcon className={styles.calender_2} />
       </div>
       <div className={styles.questions}>
         <div className={styles.question}>
@@ -92,12 +97,21 @@ const RegisterProject: FC<RegisterProjectProps> = ({ something }) => {
             return (
               <div>
                 <div className={styles.question_title}>
-                  <div>질문 {index + 1}</div>
-                  <div>{item.title}</div>
+                  <div className={styles.question_index}>질문 {index + 1}</div>
+                  <div className={styles.question_content}>{item.title}</div>
+                  <input
+                    className={styles.question_weight}
+                    type="range"
+                    value={50}
+                  />
                 </div>
                 <div className={styles.question_answers}>
                   {item.options.map((option) => {
-                    return <div>{option}</div>;
+                    return (
+                      <div className={styles.answer}>
+                        {option} <span className={styles.cancel}>X</span>
+                      </div>
+                    );
                   })}
                 </div>
               </div>

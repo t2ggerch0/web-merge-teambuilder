@@ -1,16 +1,93 @@
 .container {
+  .label {
+    margin-bottom: 10px;
+  }
   .duration {
     display: flex;
-    .datepicker {
+    margin-bottom: 10px;
+    .duration_label {
+      width: 100px;
+    }
+    .datepicker_container {
+      .datepicker {
+        outline: none;
+        width: 230px;
+        height: 20px;
+
+        border: none;
+        background-color: #f1f1f1;
+
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 14px;
+      }
+      .datepicker_2 {
+        position: relative;
+        right: 84px;
+      }
+    }
+    .calender {
+      position: relative;
+      right: 75px;
+      top: 2px;
+      width: 100px;
+      height: 30px;
+    }
+    .calender_2 {
+      position: relative;
+      right: 160px;
+      top: 2px;
+      width: 100px;
+      height: 30px;
+    }
+    .text {
+      position: relative;
+      right: 90px;
     }
   }
   .questions {
     .question {
       .question_title {
         display: flex;
+        .question_content {
+          display: flex;
+          width: 400px;
+          border-radius: 8px;
+          border: none;
+          background-color: #f1f1f1;
+          padding: 8px;
+          font-size: 14px;
+        }
+        .question_index {
+          color: blue;
+          font-weight: 800;
+          width: 100px;
+        }
+        .question_weight {
+          width: 100px;
+        }
       }
+
       .question_answers {
         display: flex;
+        justify-content: space-between;
+        width: 415px;
+        margin-top: 10px;
+        margin-left: 100px;
+        .answer {
+          display: flex;
+          justify-content: space-between;
+          width: 105px;
+          border-radius: 8px;
+          border: none;
+          background-color: #f1f1f1;
+          padding: 8px;
+          font-size: 14px;
+          .cancel {
+            text-align: right;
+            font-weight: 800;
+          }
+        }
       }
     }
   }
