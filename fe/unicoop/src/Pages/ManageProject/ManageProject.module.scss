@@ -1,0 +1,31 @@
+.container {
+  .class_button {
+    width: 500px;
+    border: none;
+    background-color: #f1f1f1;
+
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 14px;
+  }
+  .line {
+    display: flex;
+  }
+  .btn {
+    margin-left: 10px;
+    border: none;
+    background-color: #f1f1f1;
+    padding: 8px;
+    font-size: 14px;
+  }
+  .modal {
+    .modal_container {
+      width: 500px;
+      height: 500px;
+      border-radius: 10px;
+      background-color: aqua;
+      .code_input {
+      }
+    }
+  }
+}

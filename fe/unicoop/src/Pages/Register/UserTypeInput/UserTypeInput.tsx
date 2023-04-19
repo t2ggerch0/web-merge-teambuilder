@@ -4,7 +4,7 @@ import { UserTypeType } from "../../../interface";
 
 type UserTypeInputProps = {
   userType: UserTypeType;
-  setUserType(e: UserTypeType): void;
+  setUserType(name: string, value: UserTypeType): void;
 };
 
 const UserTypeInput: FC<UserTypeInputProps> = ({ userType, setUserType }) => {
@@ -15,16 +15,14 @@ const UserTypeInput: FC<UserTypeInputProps> = ({ userType, setUserType }) => {
         className={`${styles.option} ${
           userType === "student" ? styles.selected : ""
         }`}
-        onClick={() => setUserType("student")}
-      >
+        onClick={() => setUserType("userType", "student")}>
         학생
       </div>
       <div
         className={`${styles.option} ${
           userType === "professor" ? styles.selected : ""
         }`}
-        onClick={() => setUserType("professor")}
-      >
+        onClick={() => setUserType("userType", "professor")}>
         교수자
       </div>
     </div>
