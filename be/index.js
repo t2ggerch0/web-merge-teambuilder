@@ -56,7 +56,7 @@ const createClass = require("./routes/class/createClass");
 const joinClass = require("./routes/class/joinClass");
 const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
 const addCustomQuestions = require("./routes/class/addCustomQuestions");
-const getClass = require("./routes/auth/getClass");
+const getClass = require("./routes/class/getClass");
 
 const createQuestion = require("./routes/question/createQuestion");
 
