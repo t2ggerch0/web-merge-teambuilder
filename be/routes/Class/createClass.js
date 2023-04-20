@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
+
 const dotenv = require("dotenv");
 dotenv.config();
+
 const User = require("../../models/User");
 const Class = require("../../models/Class");
+
 const verifyJwt = require("../../utils/verifyJwt");
 
 /**
  * @swagger
- * /classes:
+ * /create-class:
  *   post:
  *     summary: Create a new class
  *     tags:
@@ -23,64 +26,19 @@ const verifyJwt = require("../../utils/verifyJwt");
  *         schema:
  *           type: object
  *           properties:
- *             professorId:
+ *             name:
  *               type: string
- *             matchingType:
- *               type: string
- *             customQuestions:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   question:
- *                     type: string
- *                   options:
- *                     type: array
- *                     items:
- *                       type: string
- *                   priority:
- *                     type: number
  *     responses:
- *       200:
- *         description: The created class
- *         schema:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *             professor:
- *               type: string
- *             students:
- *               type: array
- *               items:
- *                 type: string
- *             teams:
- *               type: array
- *               items:
- *                 type: string
- *             matchingType:
- *               type: string
- *             customQuestions:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   question:
- *                     type: string
- *                   options:
- *                     type: array
- *                     items:
- *                       type: string
- *                   priority:
- *                     type: number
- *       401:
- *         description: Not authorized to create class
+ *       201:
+ *         description: Class created successfully
+ *       403:
+ *         description: Only professors can create a class
  *         schema:
  *           type: object
  *           properties:
  *             message:
  *               type: string
- *               example: Unauthorized
+ *               example: Only professors can create a class
  *       500:
  *         description: Internal server error
  *         schema:
@@ -90,7 +48,6 @@ const verifyJwt = require("../../utils/verifyJwt");
  *               type: string
  *               example: Internal server error
  */
-
 router.post("/create-class", async (req, res) => {
   try {
     // Verify JWT
@@ -124,11 +81,3 @@ router.post("/create-class", async (req, res) => {
 });
 
 module.exports = router;
-
-// example
-/*
-{
-  "name": "CSC 309"
-}
-
-*/

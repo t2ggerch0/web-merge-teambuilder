@@ -1,41 +1,42 @@
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////// LIFE CYCLE /////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
 // express
 const express = require("express");
 const app = express();
-
-// router
-const router = express.Router();
-const bodyParser = require("body-parser");
-router.use(bodyParser.json());
-
-// dotenv
-const dotenv = require("dotenv");
-dotenv.config();
 
 // cors
 const cors = require("cors");
 app.use(
   cors({
-    origin: "*",
+    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'http://localhost:3000'],
+    credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*",
-    credentials: false,
+    allowedHeaders: "*"
   })
 );
-router.use(cors());
 
-// DB
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URL);
+// router
+const router = express.Router();
+const bodyParser = require("body-parser");
+router.use(bodyParser.json());
+app.use(router);
+
+// dotenv
+const dotenv = require("dotenv");
+dotenv.config();
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use(router);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Internal Server Error");
+});
+
+const port = 1398;
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
 
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// API ///////////////////////////////////////
@@ -73,18 +74,3 @@ app.use("/class", joinClass);
 
 //======Question API======//
 app.use("/question", createQuestion);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Internal Server Error");
-});
-
-const port = 1398;
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
-
-//////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// HELPER ///////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
