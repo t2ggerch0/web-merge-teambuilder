@@ -10,7 +10,7 @@ const options = {
         host: 'port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app',
         basePath: '/'
     },
-    apis: ['*.js', 'routes/*.js', 'routes/*.js', 'routes/auth/*.js', 'routes/Class/*.js', 'routes/question/*.js']
+    apis: ['*.js']
 };
 
 const specs = swaggereJsdoc(options);
