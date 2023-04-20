@@ -304,7 +304,7 @@ app.use("/auth", deleteUser);
  *           properties:
  *             message:
  *               type: string
- *               example: token is invalid
+ *               example: Authorization header missing or Invalid token
  *       404:
  *         description: User not found
  *         schema:
