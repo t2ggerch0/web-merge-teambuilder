@@ -21,7 +21,7 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     const targetClass = await Class.findById(classId);
 
     // add user to class
-    if (user.userType !== "professor") {
+    if (user.userType === "professor") {
       // when there are multi professors
       targetClass.professor.push(userId);
     } else {

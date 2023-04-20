@@ -330,7 +330,7 @@ app.use("/auth", getUsers);
  * @swagger
  * /class/create-class:
  *   post:
- *     summary: Create a new class
+ *     summary: 클래스를 생성하고 클래스ID를 반환합니다.
  *     tags:
  *       - class
  *     produces:
@@ -343,11 +343,23 @@ app.use("/auth", getUsers);
  *         schema:
  *           type: object
  *           properties:
- *             name:
- *               type: string
+ *             capacity:
+ *               type: integer
+ *             startDate:
+ *               type: date
+ *             endDate:
+ *               type: date
  *     responses:
  *       201:
  *         description: Class created successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: number
+ *             message:
+ *               type: string
+ *               example: Class created successfully
  *       403:
  *         description: Only professors can create a class
  *         schema:
@@ -366,9 +378,49 @@ app.use("/auth", getUsers);
  *               example: Internal server error
  */
 app.use("/class", createClass);
+
+/**
+ * @swagger
+ * /class/create-class:
+ *   post:
+ *     summary: 클래스ID로 클래스에 입장합니다.
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: 클래스ID
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: integer
+ *     responses:
+ *       201:
+ *         description: joined class successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: number
+ *             message:
+ *               type: string
+ *               example: joined class successfully
+ *       500:
+ *         description: An error occurred while joining the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while joining the class
+ */
+app.use("/class", joinClass);
 app.use("/class", addDefaultQuestions);
 app.use("/class", addCustomQuestions);
-app.use("/class", joinClass);
 
 //======Question API======//
 app.use("/question", createQuestion);

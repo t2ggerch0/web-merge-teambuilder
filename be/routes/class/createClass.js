@@ -24,6 +24,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     const newClass = new Class({
       professor: userId,
       name: req.body.name,
+      capacity: req.body.capacity,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
     });
 
     // Save the new class to the database
