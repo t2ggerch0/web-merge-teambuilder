@@ -530,12 +530,11 @@ app.use("/class", addDefaultQuestions);
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
- *                     type: string
  *                   title:
  *                     type: string
  *                   type:
  *                     type: string
+ *                     example: custom
  *                   options:
  *                     type: array
  *                     items:

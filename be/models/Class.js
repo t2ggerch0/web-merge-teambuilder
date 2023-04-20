@@ -32,12 +32,15 @@ const classSchema = new Schema({
   ],
   capacity: {
     type: Number,
+    required: false,
   },
   startDate: {
     type: Date,
+    required: false,
   },
   endDate: {
     type: Date,
+    required: false,
   },
 });
 
