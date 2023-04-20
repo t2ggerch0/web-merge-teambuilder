@@ -8,7 +8,7 @@ const User = require("../../models/User");
 
 /**
  * @swagger
- * /verify:
+ * /auth/verify:
  *   post:
  *     tags:
  *       - auth
