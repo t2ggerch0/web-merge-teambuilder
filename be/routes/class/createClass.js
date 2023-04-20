@@ -37,7 +37,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     await user.save();
 
     // Send a success response
-    res.status(201).json({ message: "Class created successfully" });
+    res.status(201).json({ classId: newClass._id.toString(), message: "Class created successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while creating the class" });

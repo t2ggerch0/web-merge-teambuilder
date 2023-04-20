@@ -346,6 +346,8 @@ app.use("/auth", getUsers);
  *         schema:
  *           type: object
  *           properties:
+ *             name:
+ *               type: string
  *             capacity:
  *               type: integer
  *             startDate:
@@ -434,7 +436,7 @@ app.use("/class", joinClass);
  * @swagger
  * /class/add-default-questions:
  *   post:
- *     summary: Add default questions to a class
+ *     summary: classId로 클래스를 찾고, default question을 추가합니다.
  *     tags:
  *       - class
  *     produces:
@@ -496,7 +498,7 @@ app.use("/class", addDefaultQuestions);
  * @swagger
  * /class/add-custom-questions:
  *   post:
- *     summary: Add custom questions to a class
+ *     summary: 클래스ID로 클래스를 찾고, custom question을 추가합니다.
  *     tags:
  *       - class
  *     produces:
