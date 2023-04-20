@@ -59,8 +59,8 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: countScores[i],
       });
-      selectedClass.questions.push(newQuestion);
       await newQuestion.save();
+      selectedClass.questions.push(newQuestion);
     }
 
     await selectedClass.save().catch((err) => console.log(err));
