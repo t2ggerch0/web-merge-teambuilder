@@ -4,7 +4,92 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
-const verifyJwt = require("../../utils/verifyJWT");
+const verifyJwt = require("../../utils/verifyJwt");
+
+/**
+ * @swagger
+ * /classes:
+ *   post:
+ *     summary: Create a new class
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: The class to create
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             professorId:
+ *               type: string
+ *             matchingType:
+ *               type: string
+ *             customQuestions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   question:
+ *                     type: string
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   priority:
+ *                     type: number
+ *     responses:
+ *       200:
+ *         description: The created class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             professor:
+ *               type: string
+ *             students:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             teams:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             matchingType:
+ *               type: string
+ *             customQuestions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   question:
+ *                     type: string
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   priority:
+ *                     type: number
+ *       401:
+ *         description: Not authorized to create class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Unauthorized
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
 
 router.post("/create-class", async (req, res) => {
   try {

@@ -5,7 +5,7 @@ dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
-const verifyJwt = require("../../utils/verifyJWT");
+const verifyJwt = require("../../utils/verifyJwt");
 
 router.post("/add-custom-questions", async (req, res) => {
   try {

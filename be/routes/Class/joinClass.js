@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
-const verifyJwt = require("../../utils/verifyJWT");
+const verifyJwt = require("../../utils/verifyJwt");
 
 router.post("/join-class", async (req, res) => {
   try {
