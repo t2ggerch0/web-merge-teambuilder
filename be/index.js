@@ -288,6 +288,12 @@ app.use("/auth", deleteUser);
  *     description: 토큰을 받고 유저 정보를 반환합니다.
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
  *         description: User information retrieved successfully
