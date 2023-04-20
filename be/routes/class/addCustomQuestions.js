@@ -46,6 +46,7 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
         countScore: questionData.countScore,
       });
       selectedClass.questions.push(newQuestion);
+      await newQuestion.save();
     }
 
     await selectedClass.save().catch((err) => console.log(err));
