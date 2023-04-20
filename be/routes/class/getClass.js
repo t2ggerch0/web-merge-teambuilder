@@ -6,7 +6,7 @@ const User = require("../../models/User");
 const Class = require("../../models/Class");
 const verifyJwt = require("../../utils/verifyJwt");
 
-router.get("/", verifyJwt, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { classId } = req.query;
 
