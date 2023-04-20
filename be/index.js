@@ -53,9 +53,10 @@ const deleteUser = require("./routes/auth/deleteUser");
 const getUsers = require("./routes/auth/getUsers");
 
 const createClass = require("./routes/class/createClass");
+const joinClass = require("./routes/class/joinClass");
 const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
 const addCustomQuestions = require("./routes/class/addCustomQuestions");
-const joinClass = require("./routes/class/joinClass");
+const getClass = require("./routes/auth/getClass");
 
 const createQuestion = require("./routes/question/createQuestion");
 
@@ -575,6 +576,45 @@ app.use("/class", addDefaultQuestions);
  *               example: An error occurred while creating the class
  */
 app.use("/class", addCustomQuestions);
+
+/**
+ * @swagger
+ * /class:
+ *   get:
+ *     tags:
+ *       - class
+ *     summary: 클래스 정보
+ *     description: 클래스ID로 클래스 정보를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: Class ID
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Class information retrieved successfully
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/class", getClass);
 
 //======Question API======//
 app.use("/question", createQuestion);
