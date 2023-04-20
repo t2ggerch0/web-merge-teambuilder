@@ -23,6 +23,10 @@ app.use(router);
 const dotenv = require("dotenv");
 dotenv.config();
 
+// DB
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGODB_URL, { bufferCommands: false });
+
 // swagger
 const { swaggerUi, specs } = require("./swagger");
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
