@@ -10,7 +10,7 @@ const User = require("../../models/User");
 router.get("/user", verifyJwt, async (req, res) => {
   try {
     // verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     const user = await User.findById(userId);
     if (!user) {

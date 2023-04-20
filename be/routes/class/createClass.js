@@ -9,49 +9,10 @@ const Class = require("../../models/Class");
 
 const verifyJwt = require("../../utils/verifyJwt");
 
-/**
- * @swagger
- * /create-class:
- *   post:
- *     summary: Create a new class
- *     tags:
- *       - class
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: body
- *         in: body
- *         description: The class to create
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *     responses:
- *       201:
- *         description: Class created successfully
- *       403:
- *         description: Only professors can create a class
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: Only professors can create a class
- *       500:
- *         description: Internal server error
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: Internal server error
- */
-router.post("/create-class", async (req, res) => {
+router.post("/create-class", verifyJwt, async (req, res) => {
   try {
     // Verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     // Check if the user is a professor
     const user = await User.findById(userId);

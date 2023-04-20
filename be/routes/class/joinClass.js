@@ -6,10 +6,10 @@ const User = require("../../models/User");
 const Class = require("../../models/Class");
 const verifyJwt = require("../../utils/verifyJwt");
 
-router.post("/join-class", async (req, res) => {
+router.post("/join-class", verifyJwt, async (req, res) => {
   try {
     // Verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     // get User
     const user = await User.findById(userId);

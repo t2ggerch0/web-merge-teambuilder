@@ -8,10 +8,10 @@ const Question = require("../../models/Question");
 const verifyJwt = require("../../utils/verifyJwt");
 const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
-router.post("/add-default-questions", async (req, res) => {
+router.post("/add-default-questions", verifyJwt, async (req, res) => {
   try {
     // verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     // Check if the user is a professor
     const user = await User.findById(userId);
