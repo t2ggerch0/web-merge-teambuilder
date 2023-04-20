@@ -432,7 +432,7 @@ app.use("/class", joinClass);
 
 /**
  * @swagger
- * /add-default-questions:
+ * /class/add-default-questions:
  *   post:
  *     summary: Add default questions to a class
  *     tags:
@@ -494,7 +494,7 @@ app.use("/class", addDefaultQuestions);
 
 /**
  * @swagger
- * /add-custom-questions:
+ * /class/add-custom-questions:
  *   post:
  *     summary: Add custom questions to a class
  *     tags:
