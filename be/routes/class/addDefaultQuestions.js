@@ -23,12 +23,12 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
-    if ((await Class.findById(classId)) === null) {
+    if (await Class.findOne({ _id: classId }) === null) {
       return res.status(403).json({ message: "Class ID not found" });
     }
 
     // get selected Class
-    const selectedClass = await Class.findById(classId);
+    const selectedClass = await Class.findOne({ _id: classId });
 
     // get question indexes
     const questionIndexes = req.body.questionIndexes;
