@@ -60,13 +60,301 @@ app.get("/", function (req, res) {
 });
 
 //======Signing API======//
+
+/**
+ * @swagger
+ * /auth/email:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: 인증코드 생성 및 이메일 전송
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: default 유저를 생성합니다.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 인증코드 전송 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 1
+ *       409:
+ *         description: 이미 등록된 사용자가 있음
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: user already exists
+ *       500:
+ *         description: 서버 내부 오류 혹은 이메일 전송 실패
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error or Error sending verification code
+ */
 app.use("/auth", checkEmail);
+
+
+/**
+ * @swagger
+ * /auth/verify:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: 회원가입
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: default유저를 실제 유저로 덮어씁니다.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             userType:
+ *               type: string
+ *             verifyCode:
+ *               type: number
+ *             name:
+ *               type: string
+ *             studentId:
+ *               type: number
+ *             major:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 회원가입 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 1
+ *       400:
+ *         description: 인증코드 불일치
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: invalid verify code
+ *       500:
+ *         description: 서버 내부 오류
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error
+ */
 app.use("/auth", verify);
+
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: 로그인
+ *     tags:
+ *       - auth
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description:
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 로그인 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 1
+ *             token:
+ *               type: string
+ *             user:
+ *               type: string
+ *       401:
+ *         description: 이메일 없음 혹은 비밀번호 불일치
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: email not found or password not matched
+ *       500:
+ *         description: 서버 내부 오류
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error
+ */
 app.use("/auth", login);
+
+
+/**
+ * @swagger
+ * /auth/{email}:
+ *   delete:
+ *     tags:
+ *       - auth
+ *     summary: 회원 탈퇴
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: email
+ *         in: path
+ *         description: 삭제할 유저의 이메일
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: 유저 삭제 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User deleted successfully
+ *       404:
+ *         description: 유저가 존재하지 않음
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User not found
+ *       500:
+ *         description: 서버 내부 오류
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error
+ */
 app.use("/auth", deleteUser);
+
+
+/**
+ * @swagger
+ * /auth/user:
+ *   get:
+ *     tags:
+ *       - auth
+ *     summary: 유저 정보
+ *     description: 토큰을 받고 유저 정보를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully
+ *       401:
+ *         description: Unauthorized access
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: token is invalid
+ *       404:
+ *         description: User not found
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User not found
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
 app.use("/auth", getUsers);
 
 //======Class API======//
+
+/**
+ * @swagger
+ * /class/create-class:
+ *   post:
+ *     summary: Create a new class
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: The class to create
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Class created successfully
+ *       403:
+ *         description: Only professors can create a class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can create a class
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
 app.use("/class", createClass);
 app.use("/class", addDefaultQuestions);
 app.use("/class", addCustomQuestions);
