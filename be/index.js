@@ -442,6 +442,11 @@ app.use("/class", joinClass);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: body
  *         in: body
  *         description: Class ID and question information
@@ -504,6 +509,11 @@ app.use("/class", addDefaultQuestions);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: body
  *         in: body
  *         description: Class ID and question information
