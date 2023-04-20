@@ -59,6 +59,7 @@ const addCustomQuestions = require("./routes/class/addCustomQuestions");
 const getClass = require("./routes/class/getClass");
 
 const createQuestion = require("./routes/question/createQuestion");
+const getQuestion = require("./routes/question/getQuestion");
 
 app.get("/", function (req, res) {
   res.send("root");
@@ -608,3 +609,32 @@ app.use("/class", getClass);
 
 //======Question API======//
 app.use("/question", createQuestion);
+
+/**
+ * @swagger
+ * /question:
+ *   get:
+ *     tags:
+ *       - question
+ *     summary: 질문 정보
+ *     description: 질문ID로 질문 정보를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: questionId
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Question information retrieved successfully
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/question", getQuestion);

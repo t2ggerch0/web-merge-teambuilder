@@ -4,15 +4,15 @@ const router = express.Router();
 const dotenv = require("dotenv");
 dotenv.config();
 
-const Class = require("../../models/Class");
+const Question = require("../../models/Question");
 
 router.get("/", async (req, res) => {
   try {
-    const { classId } = req.query;
+    const { questionId } = req.query;
 
     // find class with classID
-    const targetClass = await Class.findOne({ _id: classId });
-    res.status(201).json({ targetClass });
+    const targetQuestion = await Question.findOne({ _id: questionId });
+    res.status(201).json({ targetQuestion });
   } catch (error) {
     console.error(error);
   }
