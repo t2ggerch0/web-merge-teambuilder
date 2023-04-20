@@ -236,16 +236,14 @@ app.use("/auth", login);
 
 /**
  * @swagger
- * /auth/{email}:
+ * /auth/user:
  *   delete:
  *     tags:
  *       - auth
  *     summary: 회원 탈퇴
- *     produces:
- *       - application/json
  *     parameters:
  *       - name: email
- *         in: path
+ *         in: query
  *         description: 삭제할 유저의 이메일
  *         required: true
  *         type: string
@@ -381,7 +379,7 @@ app.use("/class", createClass);
 
 /**
  * @swagger
- * /class/create-class:
+ * /class/join-class:
  *   post:
  *     summary: 클래스ID로 클래스에 입장합니다.
  *     tags:
