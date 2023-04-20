@@ -6,7 +6,7 @@ const app = express();
 const cors = require("cors");
 app.use(
   cors({
-    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'http://localhost:3000'],
+    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'https://localhost:3000', 'http://localhost:3000'],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
     allowedHeaders: "*"
@@ -334,6 +334,11 @@ app.use("/auth", getUsers);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: body
  *         in: body
  *         description: The class to create
@@ -344,9 +349,11 @@ app.use("/auth", getUsers);
  *             capacity:
  *               type: integer
  *             startDate:
- *               type: date
+ *               type: string
+ *               format: date
  *             endDate:
- *               type: date
+ *               type: string
+ *               format: date
  *     responses:
  *       201:
  *         description: Class created successfully
@@ -354,7 +361,7 @@ app.use("/auth", getUsers);
  *           type: object
  *           properties:
  *             classId:
- *               type: number
+ *               type: string
  *             message:
  *               type: string
  *               example: Class created successfully
@@ -387,6 +394,11 @@ app.use("/class", createClass);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: body
  *         in: body
  *         description: 클래스ID
@@ -395,7 +407,7 @@ app.use("/class", createClass);
  *           type: object
  *           properties:
  *             classId:
- *               type: integer
+ *               type: string
  *     responses:
  *       201:
  *         description: joined class successfully
@@ -417,7 +429,139 @@ app.use("/class", createClass);
  *               example: An error occurred while joining the class
  */
 app.use("/class", joinClass);
+
+/**
+ * @swagger
+ * /add-default-questions:
+ *   post:
+ *     summary: Add default questions to a class
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: Class ID and question information
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *             questionIndexes:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *               example: [0,1,2,3,4]
+ *             weights:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *               example: [3,3,3,4,5]
+ *             countScores:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ["same","same","same","same","same"]
+ *     responses:
+ *       201:
+ *         description: Successfully added questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: Error adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can add questions or Class ID not found or Length of questionIndex, weight, and countScores are not same
+ *       500:
+ *         description: An error occurred while adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while creating the class
+ */
 app.use("/class", addDefaultQuestions);
+
+/**
+ * @swagger
+ * /add-custom-questions:
+ *   post:
+ *     summary: Add custom questions to a class
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: Class ID and question information
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *             questions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   isMandatory:
+ *                     type: boolean
+ *                   weight:
+ *                     type: integer
+ *                   scoringType:
+ *                     type: string
+ *                     enum: [single, multi, points]
+ *                   countScore:
+ *                     type: string
+ *                     enum: [same, different]
+ *     responses:
+ *       201:
+ *         description: Successfully added questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: Error adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can add questions or Class ID not found
+ *       500:
+ *         description: An error occurred while adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while creating the class
+ */
 app.use("/class", addCustomQuestions);
 
 //======Question API======//

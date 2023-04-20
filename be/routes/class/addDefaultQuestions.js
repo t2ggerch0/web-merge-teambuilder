@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
+
+const verifyJwt = require("../../utils/verifyJwt");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
-const verifyJwt = require("../../utils/verifyJwt");
 const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/add-default-questions", verifyJwt, async (req, res) => {
