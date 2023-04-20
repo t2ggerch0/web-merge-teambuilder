@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const { classId } = req.query;
 
     // find class with classID
-    const targetClass = await Class.findById(classId);
+    const targetClass = await Class.findById(mongoose.Types.ObjectId(classId));
     res.status(201).json({ class: targetClass, code: 1 });
   } catch (error) {
     console.error(error);
