@@ -30,6 +30,18 @@ const classSchema = new Schema({
       ref: "Question",
     },
   ],
+  capacity: {
+    type: Number,
+    required: false,
+  },
+  startDate: {
+    type: Date,
+    required: false,
+  },
+  endDate: {
+    type: Date,
+    required: false,
+  },
 });
 
 module.exports = mongoos.model("Class", classSchema);

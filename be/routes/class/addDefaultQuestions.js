@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
+
+const verifyJwt = require("../../utils/verifyJwt");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
-const verifyJwt = require("../../utils/verifyJWT");
 const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
-router.post("/add-default-questions", async (req, res) => {
+router.post("/add-default-questions", verifyJwt, async (req, res) => {
   try {
     // verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     // Check if the user is a professor
     const user = await User.findById(userId);
@@ -58,6 +60,7 @@ router.post("/add-default-questions", async (req, res) => {
         countScore: countScores[i],
       });
       selectedClass.questions.push(newQuestion);
+      await newQuestion.save();
     }
 
     await selectedClass.save().catch((err) => console.log(err));
