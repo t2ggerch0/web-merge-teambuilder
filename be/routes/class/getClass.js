@@ -8,8 +8,7 @@ const verifyJwt = require("../../utils/verifyJwt");
 
 router.get("/", verifyJwt, async (req, res) => {
   try {
-    // get class id
-    const classId = req.body.classId;
+    const { classId } = req.query;
 
     // find class with classID
     const targetClass = await Class.findById(classId);

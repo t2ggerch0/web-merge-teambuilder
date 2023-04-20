@@ -588,20 +588,10 @@ app.use("/class", addCustomQuestions);
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         description: JWT token
- *         in: header
- *         required: false
- *         type: string
- *       - name: body
- *         in: body
- *         description: Class ID
+ *       - name: classId
+ *         in: query
  *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             classId:
- *               type: string
+ *         type: string
  *     responses:
  *       200:
  *         description: Class information retrieved successfully
