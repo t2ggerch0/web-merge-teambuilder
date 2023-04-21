@@ -8,18 +8,18 @@ dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
-const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
+const verifyUserType = require("../../utils/verifyUserType");
+const verifyClassId = require("../../utils/verifyClassId");
+const defaultQuestionList =
+  require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/add-default-questions", verifyJwt, async (req, res) => {
   try {
     // verify JWT
     const userId = req.userId;
 
-    // Check if the user is a professor
-    const user = await User.findById(userId);
-    if (user.userType !== "professor") {
-      return res.status(403).json({ message: "Only professors can add questions" });
-    }
+    // check if user is professor, return user if true
+    verifyUserType(userId, "professor");
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
@@ -28,7 +28,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     }
 
     // get selected Class
-    const selectedClass = await Class.findById(classId);
+    const selectedClass = verifyClassId(classId);
 
     // get question indexes
     const questionIndexes = req.body.questionIndexes;
@@ -40,8 +40,14 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     const countScores = req.body.countScores;
 
     // check length of req.body are all same
-    if (questionIndexes.length !== weights.length || weights.length !== countScores.length) {
-      return res.status(403).json({ message: "Length of questionIndex, weight, and countScores are not same" });
+    if (
+      questionIndexes.length !== weights.length ||
+      weights.length !== countScores.length
+    ) {
+      return res.status(403).json({
+        message:
+          "Length of questionIndex, weight, and countScores are not same",
+      });
     }
 
     // add each question to class or override if it already exists
@@ -69,7 +75,9 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     res.status(201).json({ message: "Added Question Successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while creating the class" });
   }
 });
 
