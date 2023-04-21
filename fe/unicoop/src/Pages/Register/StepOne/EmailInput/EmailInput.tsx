@@ -1,7 +1,7 @@
 import React, { FormEvent, FC } from "react";
 import styles from "./EmailInput.module.scss";
-import LabelInput from "../../../Components/LabelInput/LabelInput";
-import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import LabelInput from "../../../../Components/LabelInput/LabelInput";
+import UnicoopButton from "../../../../Components/UnicoopButton/UnicoopButton";
 
 type EmailInputProps = {
   email: string;
