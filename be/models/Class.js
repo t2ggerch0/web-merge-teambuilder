@@ -30,6 +30,12 @@ const classSchema = new Schema({
       ref: "Question",
     },
   ],
+  answers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Answer",
+    },
+  ],
 });
 
 module.exports = mongoos.model("Class", classSchema);

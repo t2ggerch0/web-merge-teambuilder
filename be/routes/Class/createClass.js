@@ -14,7 +14,9 @@ router.post("/create-class", async (req, res) => {
     // Check if the user is a professor
     const user = await User.findById(userId);
     if (user.userType !== "professor") {
-      return res.status(403).json({ message: "Only professors can create a class" });
+      return res
+        .status(403)
+        .json({ message: "Only professors can create a class" });
     }
 
     // Create the new class with the request data
@@ -34,7 +36,9 @@ router.post("/create-class", async (req, res) => {
     res.status(201).json({ message: "Class created successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while creating the class" });
   }
 });
 
@@ -43,7 +47,7 @@ module.exports = router;
 // example
 /*
 {
-  "name": "CSC 309"
+  "name": "Software Engineering"
 }
 
 */
