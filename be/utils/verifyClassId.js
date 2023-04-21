@@ -1,6 +1,6 @@
 const Class = require("../models/Class");
 
-const VerifyClassId = async (classId) => {
+const verifyClassId = async (classId) => {
   // verify class Id
   const selectedClass = await Class.findById(classId);
   if (selectedClass === null) {
@@ -9,4 +9,4 @@ const VerifyClassId = async (classId) => {
   return selectedClass;
 };
 
-module.exports = VerifyClassId;
+module.exports = verifyClassId;

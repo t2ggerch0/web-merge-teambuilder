@@ -1,11 +1,12 @@
 const User = require("../models/User");
 
-const VerifyUserType = async (userId, type) => {
+const verifyUserType = async (userId, type) => {
   // verify user type
   const user = await User.findById(userId);
   if (user.userType !== type) {
     return res.status(403).json({ message: "Wrong user type" });
   }
+  return user;
 };
 
-module.exports = VerifyUserType;
+module.exports = verifyUserType;

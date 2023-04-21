@@ -3,9 +3,9 @@ const router = express.Router();
 const dotenv = require("dotenv");
 dotenv.config();
 const Answer = require("../../models/Answer");
-const verifyJwt = require("../../utils/verifyJWT");
-const VerifyUserType = require("../../utils/verifyUserType");
-const VerifyClassId = require("../../utils/verifyClassId");
+const verifyUserType = require("../../utils/verifyUserType");
+const verifyClassId = require("../../utils/verifyClassId");
+const verifyJwt = require("../../utils/verifyJwt");
 
 router.post("/submit-answers", async (req, res) => {
   try {
@@ -13,11 +13,11 @@ router.post("/submit-answers", async (req, res) => {
     const userId = verifyJwt(req, res);
 
     // Check if the user is a student
-    VerifyUserType(userId, "student");
+    verifyUserType(userId, "student");
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
-    const selectedClass = await VerifyClassId(classId);
+    const selectedClass = await verifyClassId(classId);
 
     // Get the question ids from the request body
     const questionIds = req.body.questionIds;
