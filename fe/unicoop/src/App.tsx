@@ -3,9 +3,10 @@ import styles from "./App.module.scss";
 import Home from "./Pages/Home/Home";
 import Layout from "./Components/Layout/Layout";
 import RegisterProject from "./Pages/RegisterProect/RegisterProject";
+import ManageProject from "./Pages/ManageProject/ManageProject";
+import Activity from "./Pages/Activity/Activity";
 import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ManageProject from "./Pages/ManageProject/ManageProject";
 
 const App = () => {
   const appRef = useRef<HTMLDivElement | null>(null);
@@ -19,7 +20,8 @@ const App = () => {
             element={
               <Layout
                 pageTitle="프로젝트 등록"
-                children={<RegisterProject />}></Layout>
+                children={<RegisterProject />}
+              ></Layout>
             }
           />
           <Route
@@ -27,9 +29,11 @@ const App = () => {
             element={
               <Layout
                 pageTitle="프로젝트 관리"
-                children={<ManageProject />}></Layout>
+                children={<ManageProject />}
+              ></Layout>
             }
           />
+          <Route path={"/activity"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter>

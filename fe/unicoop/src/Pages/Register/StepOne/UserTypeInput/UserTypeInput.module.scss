@@ -1,5 +1,12 @@
 .userTypeInput {
+  display: flex;
+
+  .title {
+    width: 100px;
+  }
+
   .option {
+    width: 100px;
     opacity: 0.5;
     cursor: pointer;
     &:hover {

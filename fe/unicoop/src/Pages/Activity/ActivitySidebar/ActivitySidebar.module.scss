@@ -1,0 +1,45 @@
+.activitySidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #595959;
+  color: #fff;
+  width: 200px;
+  padding: 60px 30px;
+
+  .teamInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: bold;
+    .project {
+      font-size: 28px;
+    }
+    .team {
+      font-size: 24px;
+    }
+  }
+
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 20px;
+    .tab {
+      cursor: pointer;
+      &.selected {
+        font-weight: bold;
+      }
+    }
+    .addTab {
+      font-style: italic;
+      cursor: pointer;
+    }
+  }
+
+  .unicoop {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+}
