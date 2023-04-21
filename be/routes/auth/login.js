@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const dotenv = require("dotenv");
-dotenv.config();
-const User = require("../../models/User");
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const User = require("../../models/User");
 
 router.post("/login", async (req, res) => {
   try {
@@ -23,9 +25,9 @@ router.post("/login", async (req, res) => {
     }
 
     // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "default_secret_key");
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    return res.status(200).json({ code: 1, token, user });
+    return res.status(200).json({ code: 1, token});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });

@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
+
 const dotenv = require("dotenv");
 dotenv.config();
+
 const User = require("../../models/User");
 const Class = require("../../models/Class");
-const verifyJwt = require("../../utils/verifyJWT");
 
-router.post("/create-class", async (req, res) => {
+const verifyJwt = require("../../utils/verifyJwt");
+
+router.post("/create-class", verifyJwt, async (req, res) => {
   try {
     // Verify JWT
-    const userId = verifyJwt(req, res);
+    const userId = req.userId;
 
     // Check if the user is a professor
     const user = await User.findById(userId);
@@ -23,6 +26,9 @@ router.post("/create-class", async (req, res) => {
     const newClass = new Class({
       professor: userId,
       name: req.body.name,
+      capacity: req.body.capacity,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
     });
 
     // Save the new class to the database
@@ -33,7 +39,12 @@ router.post("/create-class", async (req, res) => {
     await user.save();
 
     // Send a success response
-    res.status(201).json({ message: "Class created successfully" });
+    res
+      .status(201)
+      .json({
+        classId: newClass._id.toString(),
+        message: "Class created successfully",
+      });
   } catch (error) {
     console.error(error);
     res
@@ -42,8 +53,6 @@ router.post("/create-class", async (req, res) => {
   }
 });
 
-module.exports = router;
-
 // example
 /*
 {
@@ -51,3 +60,4 @@ module.exports = router;
 }
 
 */
+module.exports = router;

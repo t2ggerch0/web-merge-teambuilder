@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const User = require("../../models/User");
 
-router.delete("/users/:email", async (req, res) => {
+router.delete("/user", async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.query;
     const deletedUser = await User.findOneAndDelete({ email });
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });

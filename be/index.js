@@ -1,77 +1,35 @@
-//////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////// LIFE CYCLE /////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
 // express
 const express = require("express");
 const app = express();
-
-// router
-const router = express.Router();
-const bodyParser = require("body-parser");
-router.use(bodyParser.json());
-
-// dotenv
-require("dotenv").config();
 
 // cors
 const cors = require("cors");
 app.use(
   cors({
-    origin: "*",
+    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'https://localhost:3000', 'http://localhost:3000'],
+    credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*",
-    credentials: false,
+    allowedHeaders: "*"
   })
 );
-router.use(cors());
+
+// router
+const router = express.Router();
+const bodyParser = require("body-parser");
+router.use(bodyParser.json());
+app.use(router);
+
+// dotenv
+const dotenv = require("dotenv");
+dotenv.config();
 
 // DB
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URL);
+mongoose.connect(process.env.MONGODB_URL, { bufferCommands: false });
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
-
-app.use(router);
-
-///////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// API ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-
-const checkEmail = require("./routes/auth/checkEmail");
-const verify = require("./routes/auth/verify");
-const login = require("./routes/auth/login");
-const deleteUser = require("./routes/auth/deleteUser");
-const getUsers = require("./routes/auth/getUsers");
-
-const createClass = require("./routes/class/createClass");
-const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
-const addCustomQuestions = require("./routes/class/addCustomQuestions");
-const joinClass = require("./routes/class/joinClass");
-
-const createQuestion = require("./routes/question/createQuestion");
-
-app.get("/", function (req, res) {
-  res.send("root");
-});
-
-//======Signing API======//
-app.use("/auth", checkEmail);
-app.use("/auth", verify);
-app.use("/auth", login);
-app.use("/auth", deleteUser);
-app.use("/auth", getUsers);
-
-//======Class API======//
-app.use("/class", createClass);
-app.use("/class", addDefaultQuestions);
-app.use("/class", addCustomQuestions);
-app.use("/class", joinClass);
-
-//======Question API======//
-app.use("/question", createQuestion);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -84,10 +42,34 @@ app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
-//======Swagger======//
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// API ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+const checkEmail = require("./routes/auth/checkEmail");
+const verify = require("./routes/auth/verify");
+const login = require("./routes/auth/login");
+const deleteUser = require("./routes/auth/deleteUser");
+const getUsers = require("./routes/auth/getUsers");
+
+const createClass = require("./routes/class/createClass");
+const joinClass = require("./routes/class/joinClass");
+const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
+const addCustomQuestions = require("./routes/class/addCustomQuestions");
+const getClass = require("./routes/class/getClass");
+
+const createQuestion = require("./routes/question/createQuestion");
+const getQuestion = require("./routes/question/getQuestion");
+
+app.get("/", function (req, res) {
+  res.send("root");
+});
+
+//======Signing API======//
+
 /**
  * @swagger
- * /email:
+ * /auth/email:
  *   post:
  *     tags:
  *       - auth
@@ -114,7 +96,7 @@ app.listen(port, () => {
  *               type: integer
  *               example: 1
  *       409:
- *         description: 이미 등록된 사용자가 있음 혹은 학교 이메일이 아님
+ *         description: 이미 등록된 사용자가 있음
  *         schema:
  *           type: object
  *           properties:
@@ -123,7 +105,7 @@ app.listen(port, () => {
  *               example: 0
  *             message:
  *               type: string
- *               example: user already exists or not school email
+ *               example: user already exists
  *       500:
  *         description: 서버 내부 오류 혹은 이메일 전송 실패
  *         schema:
@@ -133,10 +115,12 @@ app.listen(port, () => {
  *               type: string
  *               example: Internal Server Error or Error sending verification code
  */
+app.use("/auth", checkEmail);
+
 
 /**
  * @swagger
- * /verify:
+ * /auth/verify:
  *   post:
  *     tags:
  *       - auth
@@ -194,10 +178,12 @@ app.listen(port, () => {
  *               type: string
  *               example: Internal Server Error
  */
+app.use("/auth", verify);
+
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *     summary: 로그인
  *     tags:
@@ -247,19 +233,19 @@ app.listen(port, () => {
  *               type: string
  *               example: Internal Server Error
  */
+app.use("/auth", login);
+
 
 /**
  * @swagger
- * /users/{email}:
+ * /auth/user:
  *   delete:
  *     tags:
  *       - auth
  *     summary: 회원 탈퇴
- *     produces:
- *       - application/json
  *     parameters:
  *       - name: email
- *         in: path
+ *         in: query
  *         description: 삭제할 유저의 이메일
  *         required: true
  *         type: string
@@ -289,82 +275,44 @@ app.listen(port, () => {
  *               type: string
  *               example: Internal Server Error
  */
+app.use("/auth", deleteUser);
+
 
 /**
  * @swagger
- * /classes:
- *   post:
- *     summary: Create a new class
+ * /auth/user:
+ *   get:
  *     tags:
- *       - class
+ *       - auth
+ *     summary: 유저 정보
+ *     description: 토큰을 받고 유저 정보를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
- *         description: The class to create
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             professorId:
- *               type: string
- *             matchingType:
- *               type: string
- *             customQuestions:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   question:
- *                     type: string
- *                   options:
- *                     type: array
- *                     items:
- *                       type: string
- *                   priority:
- *                     type: number
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *     responses:
  *       200:
- *         description: The created class
- *         schema:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *             professor:
- *               type: string
- *             students:
- *               type: array
- *               items:
- *                 type: string
- *             teams:
- *               type: array
- *               items:
- *                 type: string
- *             matchingType:
- *               type: string
- *             customQuestions:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   question:
- *                     type: string
- *                   options:
- *                     type: array
- *                     items:
- *                       type: string
- *                   priority:
- *                     type: number
+ *         description: User information retrieved successfully
  *       401:
- *         description: Not authorized to create class
+ *         description: Unauthorized access
  *         schema:
  *           type: object
  *           properties:
  *             message:
  *               type: string
- *               example: Unauthorized
+ *               example: Authorization header missing or Invalid token
+ *       404:
+ *         description: User not found
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User not found
  *       500:
  *         description: Internal server error
  *         schema:
@@ -374,7 +322,318 @@ app.listen(port, () => {
  *               type: string
  *               example: Internal server error
  */
+app.use("/auth", getUsers);
 
-//////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// HELPER ///////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
+//======Class API======//
+
+/**
+ * @swagger
+ * /class/create-class:
+ *   post:
+ *     summary: 클래스를 생성하고 클래스ID를 반환합니다.
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: The class to create
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             capacity:
+ *               type: integer
+ *             startDate:
+ *               type: string
+ *               format: date
+ *             endDate:
+ *               type: string
+ *               format: date
+ *     responses:
+ *       201:
+ *         description: Class created successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *             message:
+ *               type: string
+ *               example: Class created successfully
+ *       403:
+ *         description: Only professors can create a class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can create a class
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/class", createClass);
+
+/**
+ * @swagger
+ * /class/join-class:
+ *   post:
+ *     summary: 클래스ID로 클래스에 입장합니다.
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: 클래스ID
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: joined class successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: number
+ *             message:
+ *               type: string
+ *               example: joined class successfully
+ *       500:
+ *         description: An error occurred while joining the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while joining the class
+ */
+app.use("/class", joinClass);
+
+/**
+ * @swagger
+ * /class/add-default-questions:
+ *   post:
+ *     summary: classId로 클래스를 찾고, default question을 추가합니다.
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: Class ID and question information
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *             questionIndexes:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *               example: [0,1,2,3,4]
+ *             weights:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *               example: [3,3,3,4,5]
+ *             countScores:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ["same","same","same","same","same"]
+ *     responses:
+ *       201:
+ *         description: Successfully added questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: Error adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can add questions or Class ID not found or Length of questionIndex, weight, and countScores are not same
+ *       500:
+ *         description: An error occurred while adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while creating the class
+ */
+app.use("/class", addDefaultQuestions);
+
+/**
+ * @swagger
+ * /class/add-custom-questions:
+ *   post:
+ *     summary: 클래스ID로 클래스를 찾고, custom question을 추가합니다.
+ *     tags:
+ *       - class
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: Class ID and question information
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *             questions:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                     example: custom
+ *                   options:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   isMandatory:
+ *                     type: boolean
+ *                   weight:
+ *                     type: integer
+ *                   scoringType:
+ *                     type: string
+ *                     enum: [single, multi, points]
+ *                   countScore:
+ *                     type: string
+ *                     enum: [same, different]
+ *     responses:
+ *       201:
+ *         description: Successfully added questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: Error adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Only professors can add questions or Class ID not found
+ *       500:
+ *         description: An error occurred while adding questions to the class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occurred while creating the class
+ */
+app.use("/class", addCustomQuestions);
+
+/**
+ * @swagger
+ * /class:
+ *   get:
+ *     tags:
+ *       - class
+ *     summary: 클래스 정보
+ *     description: 클래스ID로 클래스 정보를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: classId
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Class information retrieved successfully
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/class", getClass);
+
+//======Question API======//
+app.use("/question", createQuestion);
+
+/**
+ * @swagger
+ * /question:
+ *   get:
+ *     tags:
+ *       - question
+ *     summary: 질문 정보
+ *     description: 질문ID로 질문 정보를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: questionId
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Question information retrieved successfully
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/question", getQuestion);

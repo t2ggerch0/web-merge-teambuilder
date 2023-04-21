@@ -1,11 +1,60 @@
 const express = require("express");
 const router = express.Router();
-const XLSX = require("xlsx");
+
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
+
 const User = require("../../models/User");
 
+/**
+ * @swagger
+ * /email:
+ *   post:
+ *     tags:
+ *       - auth
+ *     summary: 인증코드 생성 및 이메일 전송
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         description: default 유저를 생성합니다.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: 인증코드 전송 성공
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 1
+ *       409:
+ *         description: 이미 등록된 사용자가 있음
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: user already exists
+ *       500:
+ *         description: 서버 내부 오류 혹은 이메일 전송 실패
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal Server Error or Error sending verification code
+ */
 router.post("/email", async (req, res) => {
   try {
     const { email } = req.body;
@@ -17,23 +66,23 @@ router.post("/email", async (req, res) => {
     }
 
     // Check vaild email.
-    const workbook = XLSX.readFile("domain.xlsx");
-    const sheetName = "domain";
-    const worksheet = workbook.Sheets[sheetName];
-    const rows = XLSX.utils.sheet_to_json(worksheet);
-    const domainList = rows.map((row) => row["domain"]).filter((domain) => domain && domain.trim() !== "");
+    // const workbook = XLSX.readFile("domain.xlsx");
+    // const sheetName = "domain";
+    // const worksheet = workbook.Sheets[sheetName];
+    // const rows = XLSX.utils.sheet_to_json(worksheet);
+    // const domainList = rows.map((row) => row["domain"]).filter((domain) => domain && domain.trim() !== "");
 
-    let isValid = false;
-    const userDomain = email.split("@")[1];
-    for (let index = 0; index < domainList.length; index++) {
-      if (domainList[index].indexOf(userDomain) != -1) {
-        isValid = true;
-        break;
-      }
-    }
-    if (!isValid) {
-      return res.status(409).json({ code: 0, message: "not school email" });
-    }
+    // let isValid = false;
+    // const userDomain = email.split("@")[1];
+    // for (let index = 0; index < domainList.length; index++) {
+    //   if (domainList[index].indexOf(userDomain) != -1) {
+    //     isValid = true;
+    //     break;
+    //   }
+    // }
+    // if (!isValid) {
+    //   return res.status(409).json({ code: 0, message: "not school email" });
+    // }
 
     // Generate random code.
     const verifyCode = Math.floor(Math.random() * 1000000);
