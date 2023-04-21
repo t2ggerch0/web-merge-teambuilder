@@ -1,11 +1,13 @@
 .login {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+
   .title {
     font-size: 24px;
     font-weight: bold;
   }
+
   .account_check {
     opacity: 0.5;
     cursor: pointer;
