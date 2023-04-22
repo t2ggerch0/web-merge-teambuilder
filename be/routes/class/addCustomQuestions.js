@@ -20,12 +20,16 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
-    if ((await Class.findOne({ _id: classId })) === null) {
+    let temp = await Class.findOne({ _id: classId });
+    if (temp === null) {
       return res.status(403).json({ message: "Class ID not found" });
     }
+    console.log(temp);
+
 
     // get selected Class
     const selectedClass = await Class.findOne({ _id: classId });
+    console.log(selectedClass);
 
     // get question data for each question
     const questions = req.body.questions;
@@ -44,7 +48,6 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: questionData.countScore,
       });
-      console.log(newQuestion);
       selectedClass.questions.push(newQuestion);
     }
 

@@ -29,6 +29,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
 
     // get selected Class
     const selectedClass = await Class.findOne({ _id: classId });
+    console.log(selectedClass);
 
     // get question indexes
     const questionIndexes = req.body.questionIndexes;
@@ -58,7 +59,6 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: countScores[i],
       });
-      console.log(newQuestion);
       selectedClass.questions.push(newQuestion);
     }
 
