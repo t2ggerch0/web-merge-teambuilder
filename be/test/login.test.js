@@ -1,15 +1,20 @@
-// index.js
-require("dotenv").config();
-const mongoose = require("mongoose");
+const axios = require('axios');
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URL, { useNewUrlParser: true })
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.log("MongoDB connection error:", error));
+const login = async (email, password) => {
+  try {
+    const response = await axios.post('localhost:3000/auth/login', {
+      email: email,
+      password: password
+    });
 
-// create a new user
-const newRequest = new Object({
-  email: "juns98@g.skku.edu",
-  password: "1234",
-});
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+// email과 password를 입력받아 로그인을 시도합니다.
+login('chojbsoft@gmail.com', '123qwe!@#')
+  .then(data => console.log(data))
+  .catch(error => console.error(error));

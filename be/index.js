@@ -4,14 +4,18 @@ const app = express();
 
 // cors
 const cors = require("cors");
-app.use(
-  cors({
-    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'https://localhost:3000', 'http://localhost:3000'],
-    credentials: true,
-    methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*"
-  })
-);
+// app.use(
+//   cors({
+//     origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
+//     ,'http://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
+//     ,'https://localhost:3000'
+//     ,'http://localhost:3000'],
+//     credentials: true,
+//     methods: "GET,PUT,POST,DELETE",
+//     allowedHeaders: "*"
+//   })
+// );
+app.use(cors());
 
 // router
 const router = express.Router();
@@ -37,7 +41,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-const port = 1398;
+const port = 3000;
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
