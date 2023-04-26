@@ -3,7 +3,7 @@ const assert = require("assert");
 const { app, server } = require("../index");
 const { exit } = require("process");
 
-describe("API Tests", () => {
+describe("Login API Tests", () => {
   // Test login endpoint
   describe("POST /auth/login", () => {
     it("should return status 200 if email and password are valid", (done) => {
@@ -19,8 +19,9 @@ describe("API Tests", () => {
         .end((err, res) => {
           if (err) return done(err);
 
+          console.log(res.body.token);
           // assert.strictEqual(res.body.success, true);
-          // assert.strictEqual(typeof res.body.token, "string");
+          assert.strictEqual(typeof res.body.token, "string");
 
           done();
         });
