@@ -13,14 +13,24 @@ router.post("/submit-answers", async (req, res) => {
     const userId = verifyJwt(req, res);
 
     // Check if the user is a student
-    verifyUserType(userId, "student");
+    await verifyUserType(userId, "student");
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
     const selectedClass = await verifyClassId(classId);
 
+    // check if end question is true
+    if (!selectedClass.endQuestion) {
+      return res.status(403).json({ message: "Question is not ended" });
+    }
+
     // Get the question ids from the request body
     const questionIds = req.body.questionIds;
+
+    // check if questionIds length equals to questionIds length in database
+    if (questionIds.length !== selectedClass.questions.length) {
+      return res.status(403).json({ message: "Question length is not equal" });
+    }
 
     // Get the answers for the questions
     const answers = questionIds.map((questionId) => {
@@ -40,9 +50,7 @@ router.post("/submit-answers", async (req, res) => {
     await selectedClass.save();
   } catch {
     console.error(error);
-    res
-      .status(500)
-      .send({ message: "An error occured while submitting answers" });
+    res.status(500).send({ message: "An error occured while submitting answers" });
   }
 });
 

@@ -5,6 +5,7 @@ dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const verifyJwt = require("../../utils/verifyJwt");
+const verifyClassId = require("../../utils/verifyClassId");
 
 router.post("/join-class", verifyJwt, async (req, res) => {
   try {
@@ -18,7 +19,22 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     const classId = req.body.classId;
 
     // find class with classID
-    const targetClass = await Class.findById(classId);
+    const targetClass = await verifyClassId(classId);
+
+    // check if user is already in class
+    if (user.classes.includes(classId)) {
+      return res.status(403).json({ message: "User is already in class" });
+    }
+
+    // check class capacity
+    if (targetClass.capacity <= targetClass.students.length) {
+      return res.status(403).json({ message: "Class is full" });
+    }
+
+    // check if class adding question is ended
+    if (!targetClass.endQuestion) {
+      return res.status(403).json({ message: "Class is still on creation" });
+    }
 
     // add user to class
     if (user.userType === "professor") {
