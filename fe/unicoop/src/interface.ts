@@ -38,12 +38,13 @@ export type UserTypeType = "student" | "professor" | "";
 
 export type MyInfoType = {
   name: string;
-  email?: string;
-  password?: string;
-  userType?: string;
-  classes?: string[];
-  major?: string;
-  studentId?: number;
+  email: string;
+  password: string;
+  userType: string;
+  classes: string[];
+  major: string;
+  studentId: number;
+  id: string;
 };
 
 export type AxiosRequestHeaders = Record<string, string>;

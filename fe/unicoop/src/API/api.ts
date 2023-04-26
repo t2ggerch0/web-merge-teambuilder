@@ -1,7 +1,7 @@
 import axios from "axios";
 import { viewToastSuccess, viewToastError } from "../helper";
 import { RegisterInfo } from "../interface";
-import { UserTypeType } from "../interface";
+
 // import { CommonHeaderProperties } from "../interface";
 
 export const baseURL =
@@ -17,7 +17,7 @@ export const baseURL =
 export const api = {
   sendCode: async (email: string) => {
     try {
-      const response = await axios.post("/email", {
+      const response = await axios.post("/auth/email", {
         email,
       });
       if (response.status === 200) {
@@ -78,7 +78,7 @@ export const api = {
     }
     try {
       await axios
-        .post("/verify", {
+        .post("/auth/verify", {
           email,
           password,
           userType,
@@ -95,6 +95,42 @@ export const api = {
         });
     } catch (e) {
       viewToastError("인증코드가 올바르지 않습니다.");
+    }
+  },
+  getUserInfoByToken: async (token: string) => {
+    try {
+      return await axios
+        .get("/auth/user", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => {
+          return res.data;
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  login: async ({ email, password }: { email: string; password: string }) => {
+    try {
+      return await axios
+        .post("/auth/login", {
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res.data.code === 1) {
+            localStorage.setItem("token", res.data.token);
+            return res.data.token;
+          }
+        });
+    } catch (e) {
+      viewToastError("일치하는 회원정보가 없습니다!");
+      console.log(e);
+    }
+  },
+  deleteUser: async ({ email }: { email: string }) => {
+    try {
+      return axios.delete(`/auth/user?email=${email}`);
+    } catch (e) {
+      console.log(e);
     }
   },
 };

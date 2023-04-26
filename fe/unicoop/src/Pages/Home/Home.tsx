@@ -4,6 +4,7 @@ import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
 import { MyInfoType } from "../../interface";
 import { useAuthContext } from "../../Context/UnicoopContext";
+import { api } from "../../API/api";
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -12,15 +13,36 @@ const Home = () => {
   const changeBoxContent = () => {
     setIsLogin(!isLogin);
   };
-  const loginSuccess = (userInfo: MyInfoType) => {
-    setIsLoginSucess(true);
-    userInfoHandle.setMyInfo(userInfo);
+  const login = ({ email, password }: { email: string; password: string }) => {
+    api.login({ email, password }).then((token) => {
+      console.log("token", token);
+
+      getUserInfo({ token });
+    });
+  };
+
+  const getUserInfo = ({ token }: { token: string }) => {
+    api.getUserInfoByToken(token).then((res) => {
+      console.log("userInfo", res.user);
+      userInfoHandle.setMyInfo({
+        userType: res?.user.userType ?? "student",
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user.id ?? "",
+        major: res?.user.major ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        studentId: res?.user.studentId ?? -1,
+      });
+      setIsLoginSucess(true);
+    });
   };
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-    if (token !== null) {
+    if (token) {
       // TODO: token으로 회원 정보 가져오는 api호출
+      getUserInfo({ token });
     }
   }, []);
   return (
@@ -37,10 +59,7 @@ const Home = () => {
             isLoginSuccess ? (
               <div>{userInfoHandle.myInfo?.name}님, 환영합니다!</div>
             ) : (
-              <LogIn
-                changeBoxContent={changeBoxContent}
-                loginSuccess={loginSuccess}
-              />
+              <LogIn changeBoxContent={changeBoxContent} loginSuccess={login} />
             )
           ) : (
             <Register changeBoxContent={changeBoxContent} />
