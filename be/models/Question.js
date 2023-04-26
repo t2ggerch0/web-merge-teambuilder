@@ -36,18 +36,9 @@ const questionSchema = new mongoose.Schema({
     enum: ["same", "different"],
     default: "same",
   },
-  capacity: {
-    type: Number,
-    required: true,
-  },
-  startDate: {
-    type: Date,
-    required: true,
-  },
-  endDate: {
-    type: Date,
-    required: true,
-  },
+  startDate: { type: Date, default: Date.now },
+  endDate: { type: Date, default: Date.now },
+  capacity: { type: Number, default: 0 },
 });
 
 const Question = mongoose.model("Question", questionSchema);
