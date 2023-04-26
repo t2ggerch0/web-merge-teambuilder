@@ -45,7 +45,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
       return res.status(403).json({ message: "Length of questionIndex, weight, and countScores are not same" });
     }
 
-    let newQuestions = [Question];
+    let newQuestions = [];
     // add each question to class or override if it already exists
     for (let i = 0; i < questionIndexes.length; i++) {
       const questionData = defaultQuestionList[questionIndexes[i]];
