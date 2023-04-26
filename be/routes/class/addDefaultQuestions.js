@@ -48,6 +48,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     // add each question to class or override if it already exists
     for (let i = 0; i < questionIndexes.length; i++) {
       const questionData = defaultQuestionList[questionIndexes[i]];
+      console.log(questionData);
 
       // If the question does not exist, add it to the selectedClass.questions array
       const newQuestion = new Question({
@@ -59,6 +60,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: countScores[i],
       });
+      console.log(newQuestion);
       selectedClass.questions.push(newQuestion);
     }
 

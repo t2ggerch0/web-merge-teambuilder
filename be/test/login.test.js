@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const login = async (email, password) => {
   try {
-    const response = await axios.post('localhost:3000/auth/login', {
+    const response = await axios.post('localhost:3000/class/add-default-questions', {
       email: email,
       password: password
     });

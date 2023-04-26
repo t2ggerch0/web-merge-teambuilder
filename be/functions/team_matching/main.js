@@ -5,7 +5,7 @@ const questions = require("../../data/DefaultQuestionLists.json").questions;
 
 const users = getRandomUsers(20, questions);
 for (let i = 0; i < users.length; i++) {
-  //console.log("user ", i + 1, users[i].answers);
+  console.log("user ", i + 1, users[i].answers);
 }
 
 const graph = createGraph(users);
