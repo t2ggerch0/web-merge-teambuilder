@@ -45,6 +45,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
       return res.status(403).json({ message: "Length of questionIndex, weight, and countScores are not same" });
     }
 
+    let newQuestions = [Question];
     // add each question to class or override if it already exists
     for (let i = 0; i < questionIndexes.length; i++) {
       const questionData = defaultQuestionList[questionIndexes[i]];
@@ -59,8 +60,13 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: countScores[i],
       });
+      console.log(newQuestion);
+      newQuestions.push(newQuestion);
       selectedClass.questions.push(newQuestion);
-      newQuestion.save();
+    }
+
+    for (let i = 0; i < newQuestions.length; i++) {
+      newQuestions[i].save();
     }
 
     await selectedClass.save().catch();
