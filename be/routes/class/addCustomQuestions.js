@@ -29,7 +29,6 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
 
     // get selected Class
     const selectedClass = await Class.findOne({ _id: classId });
-    console.log(selectedClass);
 
     // get question data for each question
     const questions = req.body.questions;
@@ -48,6 +47,7 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: questionData.countScore,
       });
+      newQuestion.save();
       selectedClass.questions.push(newQuestion);
     }
 
