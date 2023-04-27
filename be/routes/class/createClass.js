@@ -48,6 +48,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Send a success response
     res.status(201).json({
       accessKey: savedClass.accessKey,
+      classId: savedClass._id.toString(),
       message: "Class created successfully",
     });
   } catch (error) {
