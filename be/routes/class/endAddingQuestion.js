@@ -36,7 +36,7 @@ router.post("/end-question", verifyJwt, async (req, res) => {
     res.status(201).json({ message: "Added Question Successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

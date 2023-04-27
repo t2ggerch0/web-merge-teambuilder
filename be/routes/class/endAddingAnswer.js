@@ -34,14 +34,14 @@ router.post("/end-answer", verifyJwt, async (req, res) => {
     }
 
     // set endQuestion to true
-    targetClass.endQuestion = true;
+    targetClass.endAnswer = true;
     await targetClass.save();
 
     // Send a success response
-    res.status(201).json({ message: "Added Question Successfully" });
+    res.status(201).json({ message: "Added Answer Successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

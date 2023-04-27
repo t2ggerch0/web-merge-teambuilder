@@ -60,6 +60,8 @@ const joinClass = require("./routes/class/joinClass");
 const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
 const addCustomQuestions = require("./routes/class/addCustomQuestions");
 const getClass = require("./routes/class/getClass");
+const endAddingQuestion = require("./routes/class/endAddingQuestion");
+const endAddingAnswer = require("./routes/class/endAddingAnswer");
 
 const createQuestion = require("./routes/question/createQuestion");
 const getQuestion = require("./routes/question/getQuestion");
@@ -608,6 +610,56 @@ app.use("/class", addCustomQuestions);
  *               example: Internal server error
  */
 app.use("/class", getClass);
+
+/**
+ * @swagger
+ * /end-question:
+ *   post:
+ *     tags:
+ *       - class
+ *     summary: 질문 추가 시퀀스를 끝냅니다
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: classId
+ *         in: body
+ *         description: The ID of the class to update.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: EndQuestion flag set successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: User is not professor of class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User is not professor of class
+ *       500:
+ *         description: Server Error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Server Error
+ */
+app.use("/class", endAddingQuestion);
+
+
+app.use("/class", endAddingAnswer);
 
 //======Question API======//
 app.use("/question", createQuestion);
