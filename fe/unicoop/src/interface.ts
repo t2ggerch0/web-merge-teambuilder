@@ -46,7 +46,7 @@ export type QuestionType = {
   options: string[];
   isMandatory: boolean;
   weight: number;
-  scoringType: string;
+  scoringType?: string;
   countScore: string;
   id: string;
 };

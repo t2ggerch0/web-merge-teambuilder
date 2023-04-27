@@ -7,6 +7,7 @@ import Layout from "../../Components/Layout/Layout";
 import { api } from "../../API/api";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
+import EditProject from "./EditProject/EditProject";
 
 type ManageProjectProps = {
   something?: string;
@@ -33,10 +34,30 @@ const ManageProject: FC<ManageProjectProps> = ({
   const userInfoHandle = useAuthContext();
   const [isPopOn, setIsPopOn] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
-
+  const [currentClass, setCurrentClass] = useState<ClassType | undefined>(
+    undefined
+  );
   const [classes, setClasses] = useState<ClassType[]>([]);
   const onChangeCode = (newCode: string) => {
     setCode(newCode);
+  };
+  const onClickModal = () => {
+    setIsPopOn(!isPopOn);
+  };
+
+  const getClassesInfoAll = async () => {
+    const result = await Promise.all(
+      dummyClassId.map((id) => {
+        return api.getClassInfo(id).then((res) => {
+          return res as ClassType;
+        });
+      })
+    );
+
+    setClasses(result);
+  };
+  const onClickClass = (classId?: string) => {
+    setCurrentClass(classes.find((item) => item.id === classId));
   };
 
   useEffect(() => {
@@ -56,42 +77,38 @@ const ManageProject: FC<ManageProjectProps> = ({
         });
       });
     }
-    dummyClassId.map((id) => {
-      return api.getClassInfo(id).then((res) => {
-        console.log("classinfo", res);
-        if (res) {
-          setClasses([...classes, res]);
-        }
-      });
-    });
+    getClassesInfoAll();
   }, []);
 
   return (
     <Layout
       pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
         <div className={styles.btn_wrapper}>
-          <button
-            className={styles.btn}
-            onClick={() => {
-              setIsPopOn(true);
-            }}
-          >
-            {`프로젝트 ${
-              userInfoHandle.myInfo?.userType === "professor"
-                ? "생성하기"
-                : "입장하기"
-            }`}
-          </button>
+          {userInfoHandle.myInfo?.userType === "student" && (
+            <button className={styles.btn} onClick={onClickModal}>
+              "프로젝트 입장하기"
+            </button>
+          )}
         </div>
 
         <div className={styles.class_container}>
-          {classes.map((item, index) => (
-            <Class key={`class_${item.id}`} classInfo={item} order={index} />
-          ))}
+          {currentClass === undefined ? (
+            classes.map((item, index) => {
+              return (
+                <Class
+                  key={`class_${item.id}`}
+                  classInfo={item}
+                  order={index}
+                  onClickClass={onClickClass}
+                />
+              );
+            })
+          ) : (
+            <EditProject classInfo={currentClass} onClickClass={onClickClass} />
+          )}
         </div>
 
         {isPopOn && <CodePopUp isPopOn={isPopOn} setIsPopOn={setIsPopOn} />}

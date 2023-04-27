@@ -21,3 +21,7 @@ export const parseSemesterFromStartDate = (date: string) => {
     return `${year}-2`;
   }
 };
+
+export const getMyToken = () => {
+  return window.localStorage.getItem("accessToken");
+};

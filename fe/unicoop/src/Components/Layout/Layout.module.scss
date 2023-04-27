@@ -41,7 +41,7 @@
     }
   }
   .right_container {
-    width: 100%;
+    width: 87%;
     min-width: 1050px;
 
     height: 100%;
@@ -60,13 +60,15 @@
       .user_menu {
         display: flex;
         justify-content: space-between;
-        width: 250px;
+        width: 270px;
         .logout {
           border: none;
           border-radius: 8px;
           background-color: #dbd2e0;
           text-align: center;
-          width: 150px;
+          width: 100px;
+          font-size: 20px;
+          font-weight: 300;
         }
       }
     }

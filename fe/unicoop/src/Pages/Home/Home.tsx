@@ -22,26 +22,31 @@ const Home = () => {
       console.log("token", token);
       window.localStorage.setItem("token", token);
       getUserInfo({ token });
-      navigation("/manageproject");
     });
   };
 
   const getUserInfo = ({ token }: { token: string }) => {
-    api.getUserInfoByToken(token).then((res) => {
-      console.log("userInfo", res?.user);
-      userInfoHandle.setMyInfo({
-        userType: res?.user.userType ?? "student",
-        classes: res?.user.classes ?? [],
-        email: res?.user.email ?? "",
-        id: res?.user._id ?? "",
-        major: res?.user.major ?? "",
-        name: res?.user.name ?? "",
-        password: res?.user.password ?? "",
-        studentId: res?.user.studentId ?? -1,
-        token,
+    api
+      .getUserInfoByToken(token)
+      .then((res) => {
+        console.log("userInfo", res?.user);
+        userInfoHandle.setMyInfo({
+          userType: res?.user.userType ?? "student",
+          classes: res?.user.classes ?? [],
+          email: res?.user.email ?? "",
+          id: res?.user._id ?? "",
+          major: res?.user.major ?? "",
+          name: res?.user.name ?? "",
+          password: res?.user.password ?? "",
+          studentId: res?.user.studentId ?? -1,
+          token,
+        });
+        setIsLoginSucess(true);
+        navigation("/manageproject");
+      })
+      .catch((e) => {
+        viewToastError("Invalid Token");
       });
-      setIsLoginSucess(true);
-    });
   };
 
   useEffect(() => {

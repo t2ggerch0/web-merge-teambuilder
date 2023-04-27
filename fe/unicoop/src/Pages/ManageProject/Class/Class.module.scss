@@ -5,6 +5,8 @@
   .color_box {
     width: 100%;
     height: 70%;
+    display: flex;
+    justify-content: flex-end;
   }
   .class_info {
     padding: 0px 10px;

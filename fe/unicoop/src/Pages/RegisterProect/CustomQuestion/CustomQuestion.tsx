@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from "react";
 import styles from "./CustomQuestion.module.scss";
 import { QuestionType, ScoringType } from "../../../interface";
+import Tooltip from "@mui/material/Tooltip";
 
 type CustomQuestionProps = {
   defaultQuestionLength: number;
@@ -44,25 +45,30 @@ const CustomQuestion: FC<CustomQuestionProps> = ({
                       <div className={styles.question_index_text}>
                         {`질문 ${defaultQuestionLength + index + 1}`}
                       </div>
-                      <div className={styles.is_mandatory}>
-                        <span>필수</span>
-                        <input
-                          className={styles.is_mandatory_input}
-                          type="checkbox"
-                          checked={item.isMandatory}
-                          onChange={(e) => {
-                            onChangeData({
-                              ...item,
-                              isMandatory: e.target.checked,
-                            });
-                          }}
-                        />
-                      </div>
+                      <Tooltip
+                        placement="top"
+                        title="학생들이 해당 질문에 필수적으로 답을 해야 하는지를 의미합니다."
+                        arrow>
+                        <div className={styles.is_mandatory}>
+                          <span>필수</span>
+                          <input
+                            className={styles.is_mandatory_input}
+                            type="checkbox"
+                            checked={item.isMandatory}
+                            onChange={(e) => {
+                              onChangeData({
+                                ...item,
+                                isMandatory: e.target.checked,
+                              });
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
                     </div>
                     <input
                       className={styles.question_content}
                       value={item.title}
-                      placeholder="질문을 입력해주세요"
+                      placeholder="질문을 입력하세요"
                       onChange={(e) => {
                         onChangeData({
                           ...item,
@@ -72,104 +78,74 @@ const CustomQuestion: FC<CustomQuestionProps> = ({
                     />
 
                     <div className={styles.count_score_container}>
-                      <div>
-                        <input
-                          type="radio"
-                          name={`q_${index}_score`}
-                          value={"same"}
-                          checked={item.countScore === "same"}
-                          onChange={() => {
-                            onChangeData({
-                              ...item,
-                              countScore: "same",
-                            });
-                          }}
-                        />
-                        <span>same</span>
-                      </div>
-                      <div>
-                        <input
-                          type="radio"
-                          name={`q_${index}_score`}
-                          value={"different"}
-                          checked={item.countScore === "different"}
-                          onChange={() => {
-                            onChangeData({
-                              ...item,
-                              countScore: "different",
-                            });
-                          }}
-                        />
-                        <span>different</span>
-                      </div>
+                      <Tooltip
+                        placement="top"
+                        title="서로 같은 응답을 한 경우에 점수를 부여합니다."
+                        arrow>
+                        <div>
+                          <input
+                            type="radio"
+                            name={`q_${index}_score`}
+                            value={"same"}
+                            checked={item.countScore === "same"}
+                            onChange={() => {
+                              onChangeData({
+                                ...item,
+                                countScore: "same",
+                              });
+                            }}
+                          />
+                          <span>same</span>
+                        </div>
+                      </Tooltip>
+                      <Tooltip
+                        title="서로 다른 응답을 한 경우에 점수를 부여합니다."
+                        arrow>
+                        <div>
+                          <input
+                            type="radio"
+                            name={`q_${index}_score`}
+                            value={"different"}
+                            checked={item.countScore === "different"}
+                            onChange={() => {
+                              onChangeData({
+                                ...item,
+                                countScore: "different",
+                              });
+                            }}
+                          />
+                          <span>different</span>
+                        </div>
+                      </Tooltip>
                     </div>
                     <div className={styles.weight}>
-                      <div>
-                        <div>weight: {item.weight}</div>
-                        <input
-                          className={styles.question_weight}
-                          type="range"
-                          min={0}
-                          max={5}
-                          value={item.weight.toString()}
-                          onChange={(e) => {
-                            onChangeData({
-                              ...item,
-                              weight: Number(e.target.value),
-                            });
-                          }}
-                        />
-                      </div>
+                      <Tooltip
+                        placement="top"
+                        title="해당 질문의 가중치를 결정합니다."
+                        arrow>
+                        <div>
+                          <div>weight: {item.weight}</div>
+                          <input
+                            className={styles.question_weight}
+                            type="range"
+                            min={1}
+                            max={5}
+                            value={item.weight.toString()}
+                            onChange={(e) => {
+                              onChangeData({
+                                ...item,
+                                weight: Number(e.target.value),
+                              });
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
                     </div>
                     <div
                       className={styles.delete_question}
                       onClick={() => onDeleteData(item.id)}>
                       질문 삭제하기
                     </div>
-                  </div>
-                  <div className={styles.scoring_type}>
-                    <span>scoringType: </span>
-                    <input
-                      type="radio"
-                      name={`q_${item.id}_scoring_type`}
-                      value={ScoringType.single}
-                      checked={item.scoringType === ScoringType.single}
-                      onChange={() => {
-                        onChangeData({
-                          ...item,
-                          scoringType: ScoringType.single,
-                        });
-                      }}
-                    />
-                    <span>{ScoringType.single}</span>
-
-                    <input
-                      type="radio"
-                      name={`q_${item.id}_scoring_type`}
-                      value={ScoringType.multi}
-                      checked={item.scoringType === ScoringType.multi}
-                      onChange={() => {
-                        onChangeData({
-                          ...item,
-                          scoringType: ScoringType.multi,
-                        });
-                      }}
-                    />
-                    <span>{ScoringType.multi}</span>
-
-                    <input
-                      type="radio"
-                      name={`q_${item.id}_scoring_type`}
-                      value={ScoringType.points}
-                      checked={item.scoringType === ScoringType.points}
-                      onChange={() => {
-                        onChangeData({
-                          ...item,
-                          scoringType: ScoringType.points,
-                        });
-                      }}
-                    />
-                    <span>{ScoringType.points}</span>
                   </div>
                 </div>
                 <div className={styles.question_answers}>
