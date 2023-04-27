@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import useSWR from "swr";
 import axios, { HeadersDefaults } from "axios";
+=======
+import axios from "axios";
+>>>>>>> 9bcaaff0f617e7684892e2556d3e73efb55cfaa5
 import { viewToastSuccess, viewToastError } from "../helper";
 import { QuestionType, RegisterInfo } from "../interface";
 
@@ -15,6 +19,10 @@ export const setHeaders = (token: string | null) => {
     : {
         "Access-Control-Allow-Origin": window.location.origin,
       };
+};
+
+export const swrFetcher = async (url: string) => {
+  return (await axios.get(url)).data;
 };
 
 export const api = {
@@ -142,6 +150,36 @@ export const api = {
       return axios.delete(`/auth/user?email=${email}`);
     } catch (e) {
       console.log(e);
+    }
+  },
+
+  deleteAccount: async (email: string) => {
+    try {
+      const response = await axios.delete("/auth/user", {
+        data: { email },
+      });
+      if (response.status === 200) {
+        viewToastSuccess("회원 탈퇴가 성공적으로 완료되었습니다.");
+      }
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response) {
+        const statusCode = e.response.status;
+        if (statusCode === 404) {
+          viewToastError("존재하지 않는 사용자입니다.");
+        } else if (statusCode === 500) {
+          viewToastError(
+            "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          );
+        } else {
+          viewToastError(
+            "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          );
+        }
+      } else {
+        viewToastError(
+          "알 수 없는 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+        );
+      }
     }
   },
   createClass: async ({

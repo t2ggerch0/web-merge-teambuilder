@@ -1,13 +1,12 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./ManageProject.module.scss";
 import { ClassType, Menu, UserTypeType } from "../../interface";
-import LabelInput from "../../Components/LabelInput/LabelInput";
-import ReactModal from "react-modal";
+import Class from "./Class/Class";
+import CodePopUp from "../../Components/CodePopUp/CodePopUp";
 import Layout from "../../Components/Layout/Layout";
 import { api } from "../../API/api";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
-import Class from "./Class/Class";
 import EditProject from "./EditProject/EditProject";
 
 type ManageProjectProps = {
@@ -33,7 +32,7 @@ const ManageProject: FC<ManageProjectProps> = ({
     "6449fd28cb95e526b717e183",
   ];
   const userInfoHandle = useAuthContext();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isPopOn, setIsPopOn] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
   const [currentClass, setCurrentClass] = useState<ClassType | undefined>(
     undefined
@@ -43,7 +42,7 @@ const ManageProject: FC<ManageProjectProps> = ({
     setCode(newCode);
   };
   const onClickModal = () => {
-    setIsOpen(!isOpen);
+    setIsPopOn(!isPopOn);
   };
 
   const getClassesInfoAll = async () => {
@@ -80,9 +79,10 @@ const ManageProject: FC<ManageProjectProps> = ({
     }
     getClassesInfoAll();
   }, []);
+
   return (
     <Layout
-      pageTitle="프로젝트 관리"
+      pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
       onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
@@ -111,22 +111,7 @@ const ManageProject: FC<ManageProjectProps> = ({
           )}
         </div>
 
-        <ReactModal
-          className={styles.modal}
-          isOpen={isOpen}
-          onRequestClose={onClickModal}>
-          <div className={styles.modal_container}>
-            <LabelInput
-              className={styles.code_input}
-              name="projectEntering"
-              width={400}
-              placeholder="프로젝트 코드를 입력하세요"
-              onChange={onChangeCode}
-              title="프로젝트 코드"
-              value={code}
-            />
-          </div>
-        </ReactModal>
+        {isPopOn && <CodePopUp isPopOn={isPopOn} setIsPopOn={setIsPopOn} />}
       </div>
     </Layout>
   );

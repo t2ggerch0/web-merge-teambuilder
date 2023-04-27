@@ -20,19 +20,21 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         <div className={styles.project}>Capstone</div>
         <div className={styles.team}>Team F</div>
       </div>
-      <div className={styles.tabs}>
-        {activityArray.map((activity, index) => (
-          <div
-            className={`${styles.tab} ${
-              index === activityIndex ? styles.selected : ""
-            }`}
-            onClick={() => {
-              setActivityIndex(index);
-            }}
-          >
-            {activity}
-          </div>
-        ))}
+      <div className={styles.menu}>
+        <div className={styles.tabs}>
+          {activityArray.map((activity, index) => (
+            <div
+              className={`${styles.tab} ${
+                index === activityIndex ? styles.selected : ""
+              }`}
+              onClick={() => {
+                setActivityIndex(index);
+              }}
+            >
+              {activity}
+            </div>
+          ))}
+        </div>
         <div className={styles.addTab} onClick={() => {}}>
           + add tab
         </div>

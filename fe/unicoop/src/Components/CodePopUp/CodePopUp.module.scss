@@ -1,0 +1,49 @@
+.modal {
+  &:focus {
+    outline: none;
+  }
+  position: absolute;
+  top: 15%;
+  left: calc(50% - 150px);
+  width: fit-content;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 50;
+}
+
+.codePopUp {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 300px;
+  background-color: #fffefc;
+  border-radius: 16px;
+  padding: 30px 50px;
+  position: absolute;
+  color: #292929;
+
+  .text {
+    width: 280px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .keyInput {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: solid 2px #0245ad;
+    height: 40px;
+    width: 90%;
+    &:focus {
+      outline: none;
+    }
+  }
+}

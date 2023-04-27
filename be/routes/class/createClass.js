@@ -16,7 +16,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     const userId = req.userId;
 
     // Check if the user is a professor. returns user if verified
-    const user = verifyUserType(userId, "professor");
+    const user = await verifyUserType(userId, "professor");
 
     // Create the new class with the request data
     const newClass = new Class({
@@ -28,22 +28,20 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     });
 
     // Save the new class to the database
-    await newClass.save();
+    const savedClass = await newClass.save();
 
     // Add the new class to the professor's list of classes
-    user.classes.push(newClass._id);
+    user.classes.push(savedClass._id);
     await user.save();
 
     // Send a success response
     res.status(201).json({
-      classId: newClass._id.toString(),
+      classId: savedClass._id.toString(),
       message: "Class created successfully",
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "An error occurred while creating the class" });
   }
 });
 
