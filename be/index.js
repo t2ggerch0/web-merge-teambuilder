@@ -621,6 +621,11 @@ app.use("/class", getClass);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: classId
  *         in: body
  *         description: The ID of the class to update.
@@ -668,6 +673,11 @@ app.use("/class", endAddingQuestion);
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
  *       - name: classId
  *         in: body
  *         description: The ID of the class to update.
