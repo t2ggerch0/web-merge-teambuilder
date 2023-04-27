@@ -10,8 +10,7 @@ const Class = require("../../models/Class");
 const Question = require("../../models/Question");
 const verifyUserType = require("../../utils/verifyUserType");
 const verifyClassId = require("../../utils/verifyClassId");
-const defaultQuestionList =
-  require("../../data/DefaultQuestionLists.json").questions;
+const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/add-default-questions", verifyJwt, async (req, res) => {
   try {
@@ -19,7 +18,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     const userId = req.userId;
 
     // check if user is professor, return user if true
-    verifyUserType(userId, "professor");
+    await verifyUserType(userId, "professor");
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
@@ -28,7 +27,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     }
 
     // get selected Class
-    const selectedClass = verifyClassId(classId);
+    const selectedClass = await verifyClassId(classId);
 
     // get question indexes
     const questionIndexes = req.body.questionIndexes;
@@ -40,13 +39,9 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     const countScores = req.body.countScores;
 
     // check length of req.body are all same
-    if (
-      questionIndexes.length !== weights.length ||
-      weights.length !== countScores.length
-    ) {
+    if (questionIndexes.length !== weights.length || weights.length !== countScores.length) {
       return res.status(403).json({
-        message:
-          "Length of questionIndex, weight, and countScores are not same",
+        message: "Length of questionIndex, weight, and countScores are not same",
       });
     }
 
@@ -75,9 +70,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     res.status(201).json({ message: "Added Question Successfully" });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "An error occurred while creating the class" });
   }
 });
 

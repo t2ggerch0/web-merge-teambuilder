@@ -48,6 +48,16 @@ const classSchema = new Schema({
     type: Date,
     required: false,
   },
+  endQuestion: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  endAnswer: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
 });
 
 module.exports = mongoos.model("Class", classSchema);

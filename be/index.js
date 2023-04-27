@@ -6,10 +6,10 @@ const app = express();
 const cors = require("cors");
 app.use(
   cors({
-    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app', 'https://localhost:3000', 'http://localhost:3000'],
+    origin: ["https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app", "https://localhost:3000", "http://localhost:3000"],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*"
+    allowedHeaders: "*",
   })
 );
 
@@ -25,7 +25,7 @@ dotenv.config();
 
 // DB
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URL, { bufferCommands: false });
+mongoose.connect(process.env.MONGODB_URL, { bufferCommands: true });
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
 });
 
 const port = 1398;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
@@ -117,7 +117,6 @@ app.get("/", function (req, res) {
  */
 app.use("/auth", checkEmail);
 
-
 /**
  * @swagger
  * /auth/verify:
@@ -180,7 +179,6 @@ app.use("/auth", checkEmail);
  */
 app.use("/auth", verify);
 
-
 /**
  * @swagger
  * /auth/login:
@@ -235,7 +233,6 @@ app.use("/auth", verify);
  */
 app.use("/auth", login);
 
-
 /**
  * @swagger
  * /auth/user:
@@ -276,7 +273,6 @@ app.use("/auth", login);
  *               example: Internal Server Error
  */
 app.use("/auth", deleteUser);
-
 
 /**
  * @swagger
@@ -637,3 +633,5 @@ app.use("/question", createQuestion);
  *               example: Internal server error
  */
 app.use("/question", getQuestion);
+
+module.exports = { app, server };
