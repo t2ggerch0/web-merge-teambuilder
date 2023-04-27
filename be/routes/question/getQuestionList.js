@@ -4,6 +4,8 @@ const router = express.Router();
 const dotenv = require("dotenv");
 dotenv.config();
 
+const Class = require("../../models/Class");
+
 router.get("/list", async (req, res) => {
   try {
     const { classId } = req.query;
