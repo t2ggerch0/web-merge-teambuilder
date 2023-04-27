@@ -6,9 +6,9 @@ export type UnicoopContext = {
 };
 
 export enum Menu {
-  ManagementProejct,
+  ManagementProject,
   RegisterProject,
-  Acitivty,
+  Activity,
 }
 
 export const unicoopContextDefault = {
