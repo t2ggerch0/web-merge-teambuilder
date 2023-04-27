@@ -40,14 +40,6 @@ const ManageProject: FC<ManageProjectProps> = ({
 
   const getClassesInfoAll = async () => {
     if (userInfoHandle.myInfo) {
-      const result = await Promise.all(
-        userInfoHandle.myInfo.classes.map((id) => {
-          return api.getClassInfo(id).then((res) => {
-            return res as ClassType;
-          });
-        })
-      );
-      setClasses(result);
     }
   };
   const onClickClass = (classId?: string) => {
@@ -64,23 +56,36 @@ const ManageProject: FC<ManageProjectProps> = ({
   };
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token !== null) {
-      api.getUserInfoByToken(token).then((res) => {
+    let token = window.localStorage.getItem("token") ?? "";
+    console.log("token", token);
+
+    api
+      .getUserInfoByToken(token)
+      .then((res) => {
+        console.log("res", res.user);
         userInfoHandle.setMyInfo({
           userType: res?.user.userType ?? "student",
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
-          id: res?.user?.id ?? "",
+          id: res?.user?._id ?? "",
           major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
           studentId: res?.user.studentId ?? -1,
-          token: token ?? "",
+          token,
         });
+        return res.user.classes as string[];
+      })
+      .then(async (classes) => {
+        const result = await Promise.all(
+          classes.map((id) => {
+            return api.getClassInfo(id).then((res) => {
+              return res as ClassType;
+            });
+          })
+        );
+        setClasses(result);
       });
-    }
-    getClassesInfoAll();
   }, []);
 
   return (
