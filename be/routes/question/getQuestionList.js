@@ -11,7 +11,10 @@ router.get("/list", async (req, res) => {
     const { classId } = req.query;
 
     // find class with classID
-    const targetClass = await Class.findById(classId).populate("questions");
+    const targetClass = await Class.findById(classId).populate({
+      path: "questions",
+      model: "Question"
+    });
     res.status(200).json({ questions: targetClass.questions });
   } catch (error) {
     console.error(error);

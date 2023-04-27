@@ -18,7 +18,7 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     // get class id
     const accessKey = req.body.accessKey;
 
-    let targetClass = Class.findOne({ accessKey: accessKey });
+    let targetClass = await Class.findOne({ accessKey: accessKey });
     if (!targetClass) {
       return res.status(403).json({ message: "Class not found" });
     }
