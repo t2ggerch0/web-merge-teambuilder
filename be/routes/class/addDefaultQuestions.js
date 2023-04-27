@@ -8,6 +8,8 @@ dotenv.config();
 const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
+const verifyUserType = require("../../utils/verifyUserType");
+const verifyClassId = require("../../utils/verifyClassId");
 const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/add-default-questions", verifyJwt, async (req, res) => {
@@ -15,11 +17,8 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     // verify JWT
     const userId = req.userId;
 
-    // Check if the user is a professor
-    const user = await User.findById(userId);
-    if (user.userType !== "professor") {
-      return res.status(403).json({ message: "Only professors can add questions" });
-    }
+    // check if user is professor, return user if true
+    await verifyUserType(userId, "professor");
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
@@ -28,8 +27,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
     }
 
     // get selected Class
-    const selectedClass = await Class.findOne({ _id: classId });
-    console.log(selectedClass);
+    const selectedClass = await verifyClassId(classId);
 
     // get question indexes
     const questionIndexes = req.body.questionIndexes;
@@ -42,7 +40,9 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
 
     // check length of req.body are all same
     if (questionIndexes.length !== weights.length || weights.length !== countScores.length) {
-      return res.status(403).json({ message: "Length of questionIndex, weight, and countScores are not same" });
+      return res.status(403).json({
+        message: "Length of questionIndex, weight, and countScores are not same",
+      });
     }
 
     let newQuestions = [];

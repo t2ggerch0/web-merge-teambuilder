@@ -32,7 +32,6 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
           userType: "student",
         })
         .then((res) => {
-          console.log("res", res.data);
           if (res.data.code === 1) {
             localStorage.setItem("token", res.data.token);
             loginSuccess({
@@ -50,6 +49,7 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
       viewToastError("일치하는 회원정보가 없습니다!");
     }
   };
+
   return (
     <div className={styles.login}>
       <div className={styles.title}>로그인</div>
@@ -59,15 +59,20 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
         value={email}
         title={"이메일"}
         placeholder={"unicoop@g.skku.edu"}
+        width={"100%"}
+        padding={12}
         isPassword={false}
         isReadOnly={false}
         onChange={onChangeEmail}
       />
+
       <LabelInput
         name={"password"}
         value={password}
         title={"비밀번호"}
         placeholder={"비밀번호를 입력하세요"}
+        width={"100%"}
+        padding={12}
         isPassword={true}
         isReadOnly={false}
         onChange={onChangePassword}

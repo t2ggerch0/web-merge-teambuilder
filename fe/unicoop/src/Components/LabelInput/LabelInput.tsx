@@ -7,7 +7,8 @@ type LabelInputProps = {
   title: string;
   placeholder: string;
   className?: string;
-  width?: number;
+  width?: number | string;
+  padding?: number;
   isPassword?: boolean;
   isReadOnly?: boolean;
   onChange(name: string, value: string): void;
@@ -20,6 +21,7 @@ const LabelInput: FC<LabelInputProps> = ({
   placeholder,
   onChange,
   width,
+  padding,
   className,
   isPassword = false,
   isReadOnly = false,
@@ -35,7 +37,7 @@ const LabelInput: FC<LabelInputProps> = ({
       )}
       <input
         className={`${styles.input} ${isReadOnly ? styles.readOnly : ""}`}
-        style={{ width }}
+        style={{ width, padding }}
         id={name}
         type={isPassword ? "password" : "text"}
         name={name}

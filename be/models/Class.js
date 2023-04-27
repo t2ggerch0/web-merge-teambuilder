@@ -30,6 +30,12 @@ const classSchema = new Schema({
       ref: "Question",
     },
   ],
+  answers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Answer",
+    },
+  ],
   capacity: {
     type: Number,
     required: false,
@@ -40,6 +46,16 @@ const classSchema = new Schema({
   },
   endDate: {
     type: Date,
+    required: false,
+  },
+  endQuestion: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  endAnswer: {
+    type: Boolean,
+    default: false,
     required: false,
   },
 });

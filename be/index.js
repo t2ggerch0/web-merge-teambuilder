@@ -4,18 +4,17 @@ const app = express();
 
 // cors
 const cors = require("cors");
-// app.use(
-//   cors({
-//     origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
-//     ,'http://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
-//     ,'https://localhost:3000'
-//     ,'http://localhost:3000'],
-//     credentials: true,
-//     methods: "GET,PUT,POST,DELETE",
-//     allowedHeaders: "*"
-//   })
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
+    ,'http://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/class/join-class'
+    ,'https://localhost:3000'
+    , 'http://localhost:3000'],
+    credentials: true,
+    methods: "GET,PUT,POST,DELETE",
+    allowedHeaders: "*"
+  })
+);
 
 // router
 const router = express.Router();

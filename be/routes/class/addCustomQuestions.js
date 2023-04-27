@@ -6,29 +6,19 @@ const User = require("../../models/User");
 const Class = require("../../models/Class");
 const Question = require("../../models/Question");
 const verifyJwt = require("../../utils/verifyJwt");
+const verifyUserType = require("../../utils/verifyUserType");
+const verifyClassId = require("../../utils/verifyClassId");
 
 router.post("/add-custom-questions", verifyJwt, async (req, res) => {
   try {
     // verify JWT
     const userId = req.userId;
 
-    // Check if the user is a professor
-    const user = await User.findById(userId);
-    if (user.userType !== "professor") {
-      return res.status(403).json({ message: "Only professors can add questions" });
-    }
+    // check if user is professor
+    await verifyUserType(userId, "professor");
 
-    // verify if classid equals to classid in database
-    const classId = req.body.classId;
-    let temp = await Class.findOne({ _id: classId });
-    if (temp === null) {
-      return res.status(403).json({ message: "Class ID not found" });
-    }
-    console.log(temp);
-
-
-    // get selected Class
-    const selectedClass = await Class.findOne({ _id: classId });
+    // verify if classid equals to classid in database. return class if true
+    const selectedClass = await verifyClassId(req.body.classId);
 
     // get question data for each question
     const questions = req.body.questions;

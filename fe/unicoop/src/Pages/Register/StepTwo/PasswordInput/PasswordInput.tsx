@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./PasswordInput.module.scss";
-import LabelInput from "../../../Components/LabelInput/LabelInput";
+import LabelInput from "../../../../Components/LabelInput/LabelInput";
 
 type PasswordInputProps = {
   password: string;
@@ -46,29 +46,35 @@ const PasswordInput: FC<PasswordInputProps> = ({
 
   return (
     <div className={styles.passwordInput}>
-      <LabelInput
-        name={"password"}
-        value={password}
-        title={"비밀번호"}
-        placeholder={"••••••••••••••"}
-        isPassword={true}
-        isReadOnly={false}
-        onChange={passwordOnChange}
-      />
-      {!isPasswordValid && (
-        <div>
-          영어, 숫자, 특수문자가 모두 포함된 8자 이상의 비밀번호를 입력해주세요.
-        </div>
-      )}
-      <LabelInput
-        name={"passwordConfirm"}
-        value={passwordConfirm}
-        title={"비밀번호 확인"}
-        placeholder={"••••••••••••••"}
-        isPassword={true}
-        isReadOnly={false}
-        onChange={passwordConfirmOnChange}
-      />
+      <div className={styles.password}>
+        <LabelInput
+          name={"password"}
+          value={password}
+          title={"비밀번호"}
+          placeholder={"••••••••••••••"}
+          isPassword={true}
+          isReadOnly={false}
+          onChange={passwordOnChange}
+        />
+        {!isPasswordValid && (
+          <div className={styles.notice}>
+            * 영어, 숫자, 특수문자가 모두 포함된 8자 이상의 비밀번호를
+            입력해주세요.
+          </div>
+        )}
+      </div>
+
+      <div className={styles.passwordConfirm}>
+        <LabelInput
+          name={"passwordConfirm"}
+          value={passwordConfirm}
+          title={"비밀번호 확인"}
+          placeholder={"••••••••••••••"}
+          isPassword={true}
+          isReadOnly={false}
+          onChange={passwordConfirmOnChange}
+        />
+      </div>
     </div>
   );
 };
