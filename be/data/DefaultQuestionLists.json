@@ -1,9 +1,9 @@
 {
   "questions": [
     {
-      "title": "What is your Age?",
+      "title": "What is your Grade?",
       "type": "default",
-      "options": ["20", "21", "22", "23", "24", "25 or more"],
+      "options": ["FreshMan", "Sophomore", "Junior", "Senior"],
       "isMandatory": false,
       "weight": 3,
       "scoringType": "points",

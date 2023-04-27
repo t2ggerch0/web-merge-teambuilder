@@ -11,11 +11,7 @@ type EditProjectProps = {
   onFinishEditQuestion(classId?: string): void;
 };
 
-const EditProject: FC<EditProjectProps> = ({
-  classInfo,
-  onClickClass,
-  onFinishEditQuestion,
-}) => {
+const EditProject: FC<EditProjectProps> = ({ classInfo, onClickClass, onFinishEditQuestion }) => {
   const [question, setQuestion] = useState<QuestionType[]>([]);
 
   const getQuestion = async () => {
@@ -29,7 +25,7 @@ const EditProject: FC<EditProjectProps> = ({
     setQuestion(result);
   };
 
-  console.log("quesiotn", question);
+  console.log("question", question);
   useEffect(() => {
     getQuestion();
   }, []);
@@ -58,33 +54,41 @@ const EditProject: FC<EditProjectProps> = ({
       </div>
       <hr />
       <div className={styles.question_container}>
+        <div className={styles.menu}>
+          <button className={styles.btn}>질문 추가</button>
+          <button className={styles.btn}>질문 수정</button>
+          <button className={styles.btn}>질문 삭제</button>
+          <button className={styles.btn} onClick={() => onFinishEditQuestion(classInfo.id)}>
+            질문 편집 완료
+          </button>
+        </div>
         <div className={styles.question_wrapper}>
-          <div className={styles.label}>questions:</div>
-          <div className={styles.menu}>
-            <button className={styles.btn}>질문 추가</button>
-            <button className={styles.btn}>질문 수정</button>
-            <button className={styles.btn}>질문 삭제</button>
-            <button
-              className={styles.btn}
-              onClick={() => onFinishEditQuestion(classInfo.id)}>
-              질문 편집 완료
-            </button>
-          </div>
+          <div className={styles.label}>Questions</div>
+          <div className={styles.label}>옵션</div>
+          <div className={styles.label}>필수 여부</div>
+          <div className={styles.label}>가중치</div>
+          <div className={styles.label}>점수 판단 기준</div>
         </div>
 
         {question.map((q) => {
           return (
-            <div className={styles.question_value}>
-              <div>{q?.title}</div>
-              <div>답: {q.options.map((o) => o)}</div>
-              <div>필수 여부: {q.isMandatory}</div>
-              <div>가중치{q.weight}</div>
-              <div>점수 판단 기준:{q.countScore}</div>
-            </div>
+            <>
+              <div className={styles.question_value}>
+                <div>{q?.title}</div>
+                <div>
+                  {q.options.map((option) => {
+                    return <div>{option}</div>;
+                  })}
+                </div>
+                <div>{q.isMandatory ? q.isMandatory : "X"}</div>
+                <div>{q.weight}</div>
+                <div>{q.countScore}</div>
+              </div>
+              <hr></hr>
+            </>
           );
         })}
       </div>
-      <hr />
       <div className={styles.answer_container}>
         <div className={styles.label}>answers:</div>
         {classInfo.answers}

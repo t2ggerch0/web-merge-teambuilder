@@ -25,6 +25,10 @@
       justify-content: space-around;
       font-weight: 300;
       color: gray;
+      .menu_item {
+        text-align: center;
+        font-size: 25px;
+      }
       .menu_item:hover {
         color: white;
         font-weight: 600;
