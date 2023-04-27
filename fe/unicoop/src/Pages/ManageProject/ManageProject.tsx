@@ -57,7 +57,16 @@ const ManageProject: FC<ManageProjectProps> = ({
     setClasses(result);
   };
   const onClickClass = (classId?: string) => {
-    setCurrentClass(classes.find((item) => item.id === classId));
+    setCurrentClass(classes.find((item) => item?.id === classId));
+  };
+
+  const onFinishEditQuestion = (classId?: string) => {
+    if (classId && userInfoHandle.myInfo?.token) {
+      api.endQuestion({
+        token: userInfoHandle.myInfo?.token,
+        classId,
+      });
+    }
   };
 
   useEffect(() => {
@@ -68,7 +77,7 @@ const ManageProject: FC<ManageProjectProps> = ({
           userType: res?.user.userType ?? "student",
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
-          id: res?.user.id ?? "",
+          id: res?.user?.id ?? "",
           major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
@@ -94,12 +103,13 @@ const ManageProject: FC<ManageProjectProps> = ({
           )}
         </div>
 
-        <div className={styles.class_container}>
+        <div
+          className={`${currentClass === undefined && styles.class_container}`}>
           {currentClass === undefined ? (
             classes.map((item, index) => {
               return (
                 <Class
-                  key={`class_${item.id}`}
+                  key={`class_${item?.id}`}
                   classInfo={item}
                   order={index}
                   onClickClass={onClickClass}
@@ -107,7 +117,11 @@ const ManageProject: FC<ManageProjectProps> = ({
               );
             })
           ) : (
-            <EditProject classInfo={currentClass} onClickClass={onClickClass} />
+            <EditProject
+              classInfo={currentClass}
+              onClickClass={onClickClass}
+              onFinishEditQuestion={onFinishEditQuestion}
+            />
           )}
         </div>
 

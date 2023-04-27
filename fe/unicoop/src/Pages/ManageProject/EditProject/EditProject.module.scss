@@ -1,0 +1,61 @@
+.container {
+  width: 100%;
+
+  .header_container {
+    display: flex;
+    justify-content: space-between;
+    .title {
+      display: flex;
+      align-items: center;
+    }
+
+    .delete_button {
+      .btn {
+        background-color: red;
+        color: white;
+        font-weight: 800;
+        border: none;
+        border-radius: 8px;
+        width: 80px;
+        height: 30px;
+      }
+    }
+  }
+  .name,
+  .capacity,
+  .startdate,
+  .enddate {
+    font-weight: 800;
+  }
+
+  .question_container {
+    .question_wrapper {
+      display: flex;
+      justify-content: space-between;
+      .label {
+        font-weight: 800;
+      }
+      .menu {
+        .btn {
+        }
+      }
+    }
+    .question_value {
+    }
+  }
+  .answer_container {
+    label {
+      font-weight: 800;
+    }
+  }
+  .student_container {
+    label {
+      font-weight: 800;
+    }
+  }
+  .team_container {
+    label {
+      font-weight: 800;
+    }
+  }
+}

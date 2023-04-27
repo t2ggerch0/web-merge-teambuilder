@@ -22,7 +22,7 @@ const Class: FC<ClassProps> = ({ classInfo, order, onClickClass }) => {
     "#50b4db",
   ];
   const onClickBox = () => {
-    onClickClass(classInfo.id);
+    onClickClass(classInfo?.id);
   };
   return (
     <div className={styles.class_box} onClick={onClickBox}>
@@ -33,10 +33,10 @@ const Class: FC<ClassProps> = ({ classInfo, order, onClickClass }) => {
       </div>
       <div className={styles.class_info}>
         <div className={styles.class_name} style={{ color: `${color[order]}` }}>
-          {classInfo.name}
+          {classInfo?.name}
         </div>
         <div className={styles.class_semester}>
-          {parseSemesterFromStartDate(classInfo.startDate)}
+          {parseSemesterFromStartDate(classInfo?.startDate)}
         </div>
       </div>
     </div>

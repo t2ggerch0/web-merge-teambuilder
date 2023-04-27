@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import useSWR from "swr";
 import axios, { HeadersDefaults } from "axios";
-=======
-import axios from "axios";
->>>>>>> 9bcaaff0f617e7684892e2556d3e73efb55cfaa5
 import { viewToastSuccess, viewToastError } from "../helper";
 import { QuestionType, RegisterInfo } from "../interface";
 
@@ -339,13 +335,23 @@ export const api = {
       }
     }
   },
-  endQuestion: async (token: string) => {
+  endQuestion: async ({
+    classId,
+    token,
+  }: {
+    token: string;
+    classId: string;
+  }) => {
     try {
       setHeaders(token);
-      return await axios.post("/class/end-question").then((res) => {
-        console.log(res.data);
-        return res.data;
-      });
+      return await axios
+        .post("/class/end-question", {
+          classId,
+        })
+        .then((res) => {
+          console.log(res.data);
+          return res.data;
+        });
     } catch (e) {
       console.log(e);
       if (axios.isAxiosError(e) && e.response) {
