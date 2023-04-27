@@ -1,18 +1,21 @@
-import axios from "axios";
-import { viewToastSuccess, viewToastError, viewToastInfo } from "../helper";
+import useSWR from "swr";
+import axios, { HeadersDefaults } from "axios";
+import { viewToastSuccess, viewToastError } from "../helper";
 import { QuestionType, RegisterInfo } from "../interface";
-
-// import { CommonHeaderProperties } from "../interface";
 
 export const baseURL =
   "https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app";
 
-/*export const setHeaders = (token: string | null) => {
-  axios.defaults.headers = {
-    "Access-Control-Allow-Origin": window.location.origin,
-    Authorization: token ? `Bearer ${token}` : "",
-  } as CommonHeaderProperties;
-};*/
+export const setHeaders = (token: string | null) => {
+  axios.defaults.headers.common = token
+    ? {
+        "Access-Control-Allow-Origin": window.location.origin,
+        Authorization: `Bearer ${token}`,
+      }
+    : {
+        "Access-Control-Allow-Origin": window.location.origin,
+      };
+};
 
 export const api = {
   sendCode: async (email: string) => {
@@ -99,15 +102,18 @@ export const api = {
   },
   getUserInfoByToken: async (token: string) => {
     try {
-      return await axios
-        .get("/auth/user", { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => {
-          return res.data;
-        });
+      setHeaders(token);
+      // return await axios
+      //   .get("/auth/user", { headers: { Authorization: `Bearer ${token}` } })
+      //   .then((res) => {
+      //     return res.data;
+      //   });
+      return await axios.get("/auth/user").then((res) => {
+        return res.data;
+      });
     } catch (e) {
       console.log(e);
       throw new Error("Invalid Token");
-      return e;
     }
   },
   login: async ({ email, password }: { email: string; password: string }) => {
@@ -255,7 +261,7 @@ export const api = {
   getClassInfo: async (classId: string) => {
     try {
       return await axios.get(`/class?classId=${classId}`).then((res) => {
-        console.log(res.data.targetClass);
+        // console.log(res.data.targetClass);
         const data = res.data.targetClass;
         return {
           answers: data.answers,
@@ -287,6 +293,21 @@ export const api = {
         .then((res) => {
           console.log(res.data);
         });
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  endQuestion: async (token: string) => {
+    try {
+      setHeaders(token);
+      return await axios.post("/class/end-question").then((res) => {
+        console.log(res.data);
+        return res.data;
+      });
     } catch (e) {
       console.log(e);
       if (axios.isAxiosError(e) && e.response) {

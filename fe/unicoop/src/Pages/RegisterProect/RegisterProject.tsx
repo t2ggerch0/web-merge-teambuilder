@@ -33,20 +33,19 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     useState<ProjectRegisterInfo>({
       capacity: 0,
       className: "",
-      endDate: "2023.01.02",
+      endDate: "2023.06.09",
       questions: [],
-      startDate: "2023.01.01",
+      startDate: "2023.03.02",
     });
 
   const [defaultQuestions, setDefaultQuestions] = useState<QuestionType[]>([
     {
       id: "1",
-      title: "What is your Age?",
+      title: "What is your grade?",
       type: "default",
-      options: ["20", "21", "22", "23", "24", "25 or more"],
+      options: ["freshman", "sophomore", "junior", "senior"],
       isMandatory: false,
-      weight: 5,
-      scoringType: "points",
+      weight: 3,
       countScore: "different",
     },
     {
@@ -56,7 +55,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       options: ["Extrovert", "Introvert"],
       isMandatory: false,
       weight: 3,
-      scoringType: "single",
+
       countScore: "different",
     },
     {
@@ -73,8 +72,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
         "Sunday",
       ],
       isMandatory: false,
-      weight: 2,
-      scoringType: "multi",
+      weight: 3,
+
       countScore: "same",
     },
     {
@@ -83,8 +82,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       type: "default",
       options: ["Good", "Average", "Bad"],
       isMandatory: false,
-      weight: 1,
-      scoringType: "single",
+      weight: 3,
+
       countScore: "different",
     },
     {
@@ -93,8 +92,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       type: "default",
       options: ["Leader", "Follower"],
       isMandatory: false,
-      weight: 1,
-      scoringType: "single",
+      weight: 3,
+
       countScore: "different",
     },
   ]);
@@ -136,7 +135,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           token,
         })
         .then((classId) => {
-          // TODO : Default questoi의 count와 weight 전송
           api
             .addDefaultQuestion({
               classId,
@@ -153,7 +151,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
             })
             .then((res) => {
               if (customQuestions.length > 0) {
-                // TODO : Custom Question 추가 전송
                 api
                   .addCustomQuestion({
                     classId,
@@ -199,10 +196,10 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           id: customQuestions.length.toString(),
           isMandatory: true,
           options: [""],
-          scoringType: ScoringType.multi,
+
           title: "",
           type: "custom",
-          weight: 5,
+          weight: 3,
         },
       ].map((item, index) => {
         return {
