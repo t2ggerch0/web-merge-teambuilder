@@ -69,6 +69,7 @@ const addCustomQuestions = require("./routes/class/addCustomQuestions");
 const getClass = require("./routes/class/getClass");
 const endAddingQuestion = require("./routes/class/endAddingQuestion");
 const endAddingAnswer = require("./routes/class/endAddingAnswer");
+const submitAnswers = require("./routes/class/submitAnswers");
 
 const createQuestion = require("./routes/question/createQuestion");
 const getQuestion = require("./routes/question/getQuestion");
@@ -718,6 +719,102 @@ app.use("/class", endAddingQuestion);
  *               example: Server Error
  */
 app.use("/class", endAddingAnswer);
+
+/**
+ * @swagger
+ * /class/submit-answers:
+ *   post:
+ *     tags:
+ *       - class
+ *     summary: 학생의 회원가입 시, Answers을 제출합니다.
+ *     description: 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: classId
+ *         in: body
+ *         description: The ID of the class to submit answers for.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *       - name: questionIds
+ *         in: body
+ *         description: An array of question IDs to submit answers for.
+ *         required: true
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: body
+ *         name: answers
+ *         description: An object containing the student's answers for each question.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             answer_1:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             answer_2:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             answer_3:
+ *               type: array
+ *               items:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Answers submitted successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Answers submitted successfully
+ *       400:
+ *         description: Invalid request body or missing required parameters
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Invalid request body or missing required parameters
+ *       401:
+ *         description: User is not authorized to submit answers
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User is not authorized to submit answers
+ *       403:
+ *         description: Question is not ended or question length is not equal
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Question is not ended or question length is not equal
+ *       500:
+ *         description: Server Error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occured while submitting answers
+ */
+app.use("/class", submitAnswers);
 
 //======Question API======//
 app.use("/question", createQuestion);

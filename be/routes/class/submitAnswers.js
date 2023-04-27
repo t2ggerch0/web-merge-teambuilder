@@ -7,10 +7,10 @@ const verifyUserType = require("../../utils/verifyUserType");
 const verifyClassId = require("../../utils/verifyClassId");
 const verifyJwt = require("../../utils/verifyJwt");
 
-router.post("/submit-answers", async (req, res) => {
+router.post("/submit-answers", verifyJwt, async (req, res) => {
   try {
-    // verify JWT
-    const userId = verifyJwt(req, res);
+    // Verify JWT
+    const userId = req.userId;
 
     // Check if the user is a student
     await verifyUserType(userId, "student");
