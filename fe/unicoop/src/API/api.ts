@@ -252,13 +252,28 @@ export const api = {
   },
   getClassInfo: async (classId: string) => {
     try {
-      return await axios.get(`/class?=${classId}`).then((res) => {
-        console.log(res.data);
+      return await axios.get(`/class?classId=${classId}`).then((res) => {
+        console.log(res.data.targetClass);
+        const data = res.data.targetClass;
+        return {
+          answers: data.answers,
+          capacity: data.capacity,
+          endAnswer: data.endAnswer,
+          endDate: data.endDate,
+          endQuestion: data.endQuestion,
+          name: data.name,
+          professor: data.professor,
+          questions: data.questions,
+          startDate: data.startDate,
+          students: data.students,
+          teams: data.teams,
+          id: data._id,
+        };
       });
     } catch (e) {
       console.log(e);
       if (axios.isAxiosError(e) && e.response) {
-        console.log(e.response.data.message);
+        // console.log(e.response.data.message);
         viewToastError(e?.response?.data.message);
       }
     }

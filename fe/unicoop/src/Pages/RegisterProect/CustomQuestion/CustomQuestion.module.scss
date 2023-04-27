@@ -1,0 +1,116 @@
+.custom_questions {
+  min-width: 700px;
+  .custom_questions_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0px;
+    .add_question_button {
+      background-color: #dbd2e0;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      width: 100px;
+    }
+  }
+
+  .custom_questions_wrapper {
+    .question_wrapper {
+      .question_row {
+        .question_title {
+          display: flex;
+          .question_title_info {
+            .question_index_text {
+              color: blue;
+              font-weight: 800;
+              width: 100px;
+            }
+            .is_mandatory {
+              .is_mandatory_input {
+              }
+            }
+          }
+          .question_content {
+            align-items: center;
+            display: flex;
+            width: 200px;
+            border-radius: 8px;
+            border: none;
+            background-color: #f1f1f1;
+            padding: 8px;
+            font-size: 14px;
+            outline: none;
+          }
+
+          .weight {
+            display: flex;
+            align-items: center;
+            width: 100px;
+            justify-content: center;
+            text-align: center;
+            .question_weight {
+              margin-left: 3px;
+              outline: none;
+              border: 1px solid black;
+              width: 80px;
+              text-align: center;
+            }
+          }
+          .delete_question {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            height: 100%;
+            padding: 0px 10px;
+          }
+        }
+        .scoring_type {
+          margin-left: 100px;
+        }
+      }
+      .question_answers {
+        display: grid;
+        align-items: center;
+        grid-template-columns: repeat(7, 1fr);
+        width: 450px;
+
+        margin-top: 10px;
+        margin-left: 100px;
+        gap: 5px;
+        .answer_wrapper {
+          display: flex;
+          align-items: center;
+          .answer {
+            display: flex;
+            justify-content: center;
+            border-radius: 8px;
+            border: none;
+            background-color: #f1f1f1;
+            padding: 8px;
+            font-size: 14px;
+            height: 38px;
+            outline: none;
+          }
+          .cancel {
+            position: relative;
+            right: 30px;
+          }
+        }
+        .add_answer_option_button {
+          background-color: #dbd2e0;
+          border: none;
+          border-radius: 8px;
+          text-align: center;
+          width: 140px;
+        }
+      }
+    }
+  }
+}
+
+.question_index {
+}

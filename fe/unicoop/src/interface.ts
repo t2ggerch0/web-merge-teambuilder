@@ -65,6 +65,21 @@ export type MyInfoType = {
   token: string;
 };
 
+export type ClassType = {
+  id: string;
+  professor: string[];
+  name: string;
+  students: number[];
+  teams: number[];
+  questions: string[];
+  answers: string[];
+  capacity: number;
+  startDate: string;
+  endDate: string;
+  endQuestion: boolean;
+  endAnswer: boolean;
+};
+
 export type AxiosRequestHeaders = Record<string, string>;
 
 export interface CommonHeaderProperties extends HeadersDefaults {
