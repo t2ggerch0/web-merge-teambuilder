@@ -1,12 +1,12 @@
 .container {
   width: 100vw;
-  height: 100vh;
+
   display: flex;
 
   .left_bar {
     width: 13%;
     min-width: 120px;
-    // height: 100%;
+    min-height: 100vh;
     background-color: #273b09;
     color: white;
     font-weight: 800;

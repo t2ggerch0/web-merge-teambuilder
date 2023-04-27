@@ -23,15 +23,8 @@ const ManageProject: FC<ManageProjectProps> = ({
   userType = "student",
 }) => {
   const navigation = useNavigate();
-  const dummyClassId = [
-    "6449f86b9705e3f6c25cf18e",
-    "6449f87d9705e3f6c25cf1a5",
-    "6449fc039705e3f6c25cf1c0",
-    "6449fc80cb95e526b717e147",
-    "6449fd0dcb95e526b717e165",
-    "6449fd28cb95e526b717e183",
-  ];
   const userInfoHandle = useAuthContext();
+  const dummyClassId = userInfoHandle.myInfo?.classes ?? [];
   const [isPopOn, setIsPopOn] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
   const [currentClass, setCurrentClass] = useState<ClassType | undefined>(
@@ -46,15 +39,16 @@ const ManageProject: FC<ManageProjectProps> = ({
   };
 
   const getClassesInfoAll = async () => {
-    const result = await Promise.all(
-      dummyClassId.map((id) => {
-        return api.getClassInfo(id).then((res) => {
-          return res as ClassType;
-        });
-      })
-    );
-
-    setClasses(result);
+    if (userInfoHandle.myInfo) {
+      const result = await Promise.all(
+        userInfoHandle.myInfo.classes.map((id) => {
+          return api.getClassInfo(id).then((res) => {
+            return res as ClassType;
+          });
+        })
+      );
+      setClasses(result);
+    }
   };
   const onClickClass = (classId?: string) => {
     setCurrentClass(classes.find((item) => item?.id === classId));
