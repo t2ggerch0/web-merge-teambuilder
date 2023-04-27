@@ -738,37 +738,18 @@ app.use("/class", endAddingAnswer);
  *         type: string
  *       - name: classId
  *         in: body
- *         description: The ID of the class to submit answers for.
+ *         description: questionId키의 밸류는 해당 question의 answer 리스트입니다.
  *         required: true
  *         schema:
  *           type: object
  *           properties:
  *             classId:
  *               type: string
- *       - name: questionIds
- *         in: body
- *         description: An array of question IDs to submit answers for.
- *         required: true
- *         schema:
- *           type: array
- *           items:
- *             type: string
- *       - in: body
- *         name: answers
- *         description: An object containing the student's answers for each question.
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             answer_1:
+ *             questionIds:
  *               type: array
  *               items:
  *                 type: string
- *             answer_2:
- *               type: array
- *               items:
- *                 type: string
- *             answer_3:
+ *             questionId:
  *               type: array
  *               items:
  *                 type: string
