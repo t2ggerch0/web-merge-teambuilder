@@ -16,6 +16,7 @@ import ClassInfo from "./ClassInfo/ClassInfo";
 import DefaultQuestion from "./DefaultQuestion/DefaultQuestion";
 import CustomQuestion from "./CustomQuestion/CustomQuestion";
 import { viewToastError, viewToastSuccess } from "../../helper";
+import { useNavigate } from "react-router-dom";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -26,6 +27,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   selectedMenu,
   onChangeMenu,
 }) => {
+  const navigation = useNavigate();
   const userInfoHandle = useAuthContext();
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>({
@@ -164,6 +166,9 @@ const RegisterProject: FC<RegisterProjectProps> = ({
               } else {
                 viewToastSuccess("수업을 생성했습니다.");
               }
+              setTimeout(() => {
+                navigation("../manageproject");
+              }, 3000);
             });
         });
     }
@@ -271,8 +276,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       });
     }
   }, []);
-
-  console.log(customQuestions);
 
   return (
     <Layout

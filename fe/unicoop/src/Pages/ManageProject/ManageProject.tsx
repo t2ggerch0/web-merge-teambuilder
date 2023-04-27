@@ -1,9 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styles from "./ManageProject.module.scss";
 import { Menu, UserTypeType } from "../../interface";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import ReactModal from "react-modal";
 import Layout from "../../Components/Layout/Layout";
+import { api } from "../../API/api";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../Context/UnicoopContext";
 
 type ManageProjectProps = {
   something?: string;
@@ -18,6 +21,8 @@ const ManageProject: FC<ManageProjectProps> = ({
   onChangeMenu,
   userType = "student",
 }) => {
+  const navigation = useNavigate();
+  const userInfoHandle = useAuthContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
   const onChangeCode = (newCode: string) => {
@@ -26,6 +31,25 @@ const ManageProject: FC<ManageProjectProps> = ({
   const onClickModal = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token !== null) {
+      api.getUserInfoByToken(token).then((res) => {
+        userInfoHandle.setMyInfo({
+          userType: res?.user.userType ?? "student",
+          classes: res?.user.classes ?? [],
+          email: res?.user.email ?? "",
+          id: res?.user.id ?? "",
+          major: res?.user.major ?? "",
+          name: res?.user.name ?? "",
+          password: res?.user.password ?? "",
+          studentId: res?.user.studentId ?? -1,
+          token: token ?? "",
+        });
+      });
+    }
+  }, []);
   return (
     <Layout
       pageTitle="프로젝트 관리"

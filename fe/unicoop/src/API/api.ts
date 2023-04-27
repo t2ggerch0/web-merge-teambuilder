@@ -252,7 +252,7 @@ export const api = {
   },
   getClassInfo: async (classId: string) => {
     try {
-      return await axios.get(`/class?=${classId}`).then((res) => {
+      return await axios.get(`/class?classId=${classId}`).then((res) => {
         console.log(res.data);
       });
     } catch (e) {
