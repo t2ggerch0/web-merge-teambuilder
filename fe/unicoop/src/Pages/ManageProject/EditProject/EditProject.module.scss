@@ -41,6 +41,8 @@
       }
     }
     .question_value {
+      display: flex;
+      justify-content: space-between;
     }
   }
   .answer_container {

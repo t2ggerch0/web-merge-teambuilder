@@ -163,6 +163,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
               } else {
                 viewToastSuccess("수업을 생성했습니다.");
               }
+              updateUserInfo();
               setTimeout(() => {
                 navigation("../manageproject");
               }, 3000);
@@ -253,6 +254,25 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           return { ...data, id: index.toString() };
         })
     );
+  };
+
+  const updateUserInfo = () => {
+    const token = userInfoHandle.myInfo?.token ?? "";
+    if (token) {
+      api.getUserInfoByToken(token).then((res) => {
+        userInfoHandle.setMyInfo({
+          userType: res?.user.userType ?? "student",
+          classes: res?.user.classes ?? [],
+          email: res?.user.email ?? "",
+          id: res?.user.id ?? "",
+          major: res?.user.major ?? "",
+          name: res?.user.name ?? "",
+          password: res?.user.password ?? "",
+          studentId: res?.user.studentId ?? -1,
+          token: token ?? "",
+        });
+      });
+    }
   };
 
   useEffect(() => {

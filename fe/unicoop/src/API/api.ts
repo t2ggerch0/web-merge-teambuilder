@@ -107,11 +107,7 @@ export const api = {
   getUserInfoByToken: async (token: string) => {
     try {
       setHeaders(token);
-      // return await axios
-      //   .get("/auth/user", { headers: { Authorization: `Bearer ${token}` } })
-      //   .then((res) => {
-      //     return res.data;
-      //   });
+
       return await axios.get("/auth/user").then((res) => {
         return res.data;
       });
@@ -295,7 +291,7 @@ export const api = {
   getClassInfo: async (classId: string) => {
     try {
       return await axios.get(`/class?classId=${classId}`).then((res) => {
-        // console.log(res.data.targetClass);
+        // console.log("classid", classId, "res", res.data.targetClass);
         const data = res.data.targetClass;
         return {
           answers: data.answers,
@@ -325,7 +321,8 @@ export const api = {
       return await axios
         .get(`/question?questionId=${questionId}`)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data.targetQuestion);
+          return res.data.targetQuestion;
         });
     } catch (e) {
       console.log(e);
