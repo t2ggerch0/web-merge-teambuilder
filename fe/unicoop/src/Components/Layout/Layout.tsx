@@ -41,7 +41,7 @@ const Layout: FC<LayoutProps> = ({
   };
 
   const onClickManageProject = () => {
-    onChangeMenu(Menu.ManagementProejct);
+    onChangeMenu(Menu.ManagementProject);
     navigation("/manageproject");
   };
 
@@ -56,10 +56,11 @@ const Layout: FC<LayoutProps> = ({
         <div className={styles.menu}>
           <div
             className={`${styles.menu_item} ${
-              selectedMenu === Menu.ManagementProejct &&
+              selectedMenu === Menu.ManagementProject &&
               styles.menu_item_selected
             }`}
-            onClick={onClickManageProject}>
+            onClick={onClickManageProject}
+          >
             프로젝트 관리
           </div>
 
@@ -69,7 +70,8 @@ const Layout: FC<LayoutProps> = ({
                 selectedMenu === Menu.RegisterProject &&
                 styles.menu_item_selected
               }`}
-              onClick={onClickRegisterProject}>
+              onClick={onClickRegisterProject}
+            >
               프로젝트 등록
             </div>
           )}

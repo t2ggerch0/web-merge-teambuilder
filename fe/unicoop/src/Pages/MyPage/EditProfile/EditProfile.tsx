@@ -2,8 +2,11 @@ import React from "react";
 import styles from "./EditProfile.module.scss";
 import LabelInput from "../../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import { api } from "../../../API/api";
 
 const EditProfile = () => {
+  const email = "";
+
   return (
     <div className={styles.editProfile}>
       <div className={styles.row}>
@@ -54,7 +57,16 @@ const EditProfile = () => {
           onChange={() => {}}
         />
       </div>
-      <UnicoopButton onClick={() => {}}>수정 완료</UnicoopButton>
+      <div className={styles.buttons}>
+        <UnicoopButton onClick={() => {}}>수정 완료</UnicoopButton>
+        <UnicoopButton
+          onClick={() => {
+            api.deleteAccount(email).then();
+          }}
+        >
+          회원 탈퇴
+        </UnicoopButton>
+      </div>
     </div>
   );
 };

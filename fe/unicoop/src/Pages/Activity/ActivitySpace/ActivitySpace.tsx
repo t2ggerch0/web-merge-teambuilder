@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useState, FC } from "react";
 import styles from "./ActivitySpace.module.scss";
 import SendIcon from "@mui/icons-material/Send";
 
@@ -7,6 +7,7 @@ type ActivitySpaceProps = {
 };
 
 const ActivitySpace: FC<ActivitySpaceProps> = ({ activity }) => {
+  const [text, setText] = useState<string>("");
   return (
     <div className={styles.activitySpace}>
       <div className={styles.title}>{activity}</div>
@@ -32,10 +33,15 @@ const ActivitySpace: FC<ActivitySpaceProps> = ({ activity }) => {
         </div>
       </div>
 
-      <div className={styles.input}>
-        <span className={styles.placeholder}>Send message</span>
+      <form className={styles.message}>
+        <input
+          className={styles.input}
+          placeholder={"Send message"}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
         <SendIcon className={styles.send} />
-      </div>
+      </form>
     </div>
   );
 };
