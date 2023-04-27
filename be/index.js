@@ -832,7 +832,7 @@ app.use("/question", getQuestion);
 
 /**
  * @swagger
- * /class/list:
+ * /question/list:
  *   get:
  *     tags:
  *       - question
