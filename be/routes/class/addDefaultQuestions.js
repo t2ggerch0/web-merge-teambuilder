@@ -22,7 +22,7 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
 
     // verify if classid equals to classid in database
     const classId = req.body.classId;
-    if ((await Class.findById(classId)) === null) {
+    if (await Class.findOne({ _id: classId }) === null) {
       return res.status(403).json({ message: "Class ID not found" });
     }
 
@@ -45,13 +45,13 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
       });
     }
 
+    let newQuestions = [];
     // add each question to class or override if it already exists
     for (let i = 0; i < questionIndexes.length; i++) {
       const questionData = defaultQuestionList[questionIndexes[i]];
 
       // If the question does not exist, add it to the selectedClass.questions array
       const newQuestion = new Question({
-        id: questionData.id,
         title: questionData.title,
         type: questionData.type,
         options: questionData.options,
@@ -60,11 +60,11 @@ router.post("/add-default-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: countScores[i],
       });
+      newQuestion.save();
       selectedClass.questions.push(newQuestion);
-      await newQuestion.save();
     }
 
-    await selectedClass.save().catch((err) => console.log(err));
+    await selectedClass.save().catch();
 
     // Send a success response
     res.status(201).json({ message: "Added Question Successfully" });

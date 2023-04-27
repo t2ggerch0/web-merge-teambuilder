@@ -6,10 +6,13 @@ const app = express();
 const cors = require("cors");
 app.use(
   cors({
-    origin: ["https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app", "https://localhost:3000", "http://localhost:3000"],
+    origin: ['https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app'
+    ,'http://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/class/join-class'
+    ,'https://localhost:3000'
+    , 'http://localhost:3000'],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*",
+    allowedHeaders: "*"
   })
 );
 
@@ -25,7 +28,7 @@ dotenv.config();
 
 // DB
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URL, { bufferCommands: true });
+mongoose.connect(process.env.MONGODB_URL, { bufferCommands: false });
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
@@ -37,8 +40,15 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-const port = 1398;
-const server = app.listen(port, () => {
+// path
+const path = require("path");
+app.use(express.static(path.join(__dirname, "./build")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./build/index.html"));
+});
+
+const port = 3000;
+app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
@@ -57,13 +67,13 @@ const joinClass = require("./routes/class/joinClass");
 const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
 const addCustomQuestions = require("./routes/class/addCustomQuestions");
 const getClass = require("./routes/class/getClass");
+const endAddingQuestion = require("./routes/class/endAddingQuestion");
+const endAddingAnswer = require("./routes/class/endAddingAnswer");
+const submitAnswers = require("./routes/class/submitAnswers");
 
 const createQuestion = require("./routes/question/createQuestion");
 const getQuestion = require("./routes/question/getQuestion");
 
-app.get("/", function (req, res) {
-  res.send("root");
-});
 
 //======Signing API======//
 
@@ -116,6 +126,7 @@ app.get("/", function (req, res) {
  *               example: Internal Server Error or Error sending verification code
  */
 app.use("/auth", checkEmail);
+
 
 /**
  * @swagger
@@ -179,6 +190,7 @@ app.use("/auth", checkEmail);
  */
 app.use("/auth", verify);
 
+
 /**
  * @swagger
  * /auth/login:
@@ -233,6 +245,7 @@ app.use("/auth", verify);
  */
 app.use("/auth", login);
 
+
 /**
  * @swagger
  * /auth/user:
@@ -273,6 +286,7 @@ app.use("/auth", login);
  *               example: Internal Server Error
  */
 app.use("/auth", deleteUser);
+
 
 /**
  * @swagger
@@ -602,6 +616,206 @@ app.use("/class", addCustomQuestions);
  */
 app.use("/class", getClass);
 
+/**
+ * @swagger
+ * /class/end-question:
+ *   post:
+ *     tags:
+ *       - class
+ *     summary: 질문 추가 시퀀스를 끝냅니다
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: classId
+ *         in: body
+ *         description: The ID of the class to update.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: EndQuestion flag set successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Question Successfully
+ *       403:
+ *         description: User is not professor of class
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User is not professor of class
+ *       500:
+ *         description: Server Error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Server Error
+ */
+app.use("/class", endAddingQuestion);
+
+/**
+ * @swagger
+ * /class/end-answer:
+ *   post:
+ *     tags:
+ *       - class
+ *     summary: 답변 시퀀스를 끝냅니다
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: classId
+ *         in: body
+ *         description: The ID of the class to update.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: EndAnswer flag set successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Added Answer Successfully
+ *       403:
+ *         description: User is not professor of class or student length doesn't match answer length
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User is not professor of class or student length doesn't match answer length
+ *       500:
+ *         description: Server Error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Server Error
+ */
+app.use("/class", endAddingAnswer);
+
+/**
+ * @swagger
+ * /class/submit-answers:
+ *   post:
+ *     tags:
+ *       - class
+ *     summary: 학생의 회원가입 시, Answers을 제출합니다.
+ *     description: 
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: false
+ *         type: string
+ *       - name: classId
+ *         in: body
+ *         description: The ID of the class to submit answers for.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *       - name: questionIds
+ *         in: body
+ *         description: An array of question IDs to submit answers for.
+ *         required: true
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: body
+ *         name: answers
+ *         description: An object containing the student's answers for each question.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             answer_1:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             answer_2:
+ *               type: array
+ *               items:
+ *                 type: string
+ *             answer_3:
+ *               type: array
+ *               items:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Answers submitted successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Answers submitted successfully
+ *       400:
+ *         description: Invalid request body or missing required parameters
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Invalid request body or missing required parameters
+ *       401:
+ *         description: User is not authorized to submit answers
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User is not authorized to submit answers
+ *       403:
+ *         description: Question is not ended or question length is not equal
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Question is not ended or question length is not equal
+ *       500:
+ *         description: Server Error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: An error occured while submitting answers
+ */
+app.use("/class", submitAnswers);
+
 //======Question API======//
 app.use("/question", createQuestion);
 
@@ -633,5 +847,3 @@ app.use("/question", createQuestion);
  *               example: Internal server error
  */
 app.use("/question", getQuestion);
-
-module.exports = { app, server };

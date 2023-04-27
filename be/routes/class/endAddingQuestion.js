@@ -5,12 +5,8 @@ const verifyJwt = require("../../utils/verifyJwt");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const User = require("../../models/User");
-const Class = require("../../models/Class");
-const Question = require("../../models/Question");
 const verifyUserType = require("../../utils/verifyUserType");
 const verifyClassId = require("../../utils/verifyClassId");
-const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/end-question", verifyJwt, async (req, res) => {
   try {
@@ -36,7 +32,7 @@ router.post("/end-question", verifyJwt, async (req, res) => {
     res.status(201).json({ message: "Added Question Successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

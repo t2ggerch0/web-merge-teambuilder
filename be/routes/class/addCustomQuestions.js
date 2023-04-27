@@ -29,7 +29,6 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
 
       // If the question does not exist, add it to the selectedClass.questions array
       const newQuestion = new Question({
-        id: questionData.id,
         title: questionData.title,
         type: questionData.type,
         options: questionData.options,
@@ -38,11 +37,11 @@ router.post("/add-custom-questions", verifyJwt, async (req, res) => {
         scoringType: questionData.scoringType,
         countScore: questionData.countScore,
       });
+      newQuestion.save();
       selectedClass.questions.push(newQuestion);
-      await newQuestion.save();
     }
 
-    await selectedClass.save().catch((err) => console.log(err));
+    await selectedClass.save().catch();
 
     // Send a success response
     res.status(201).json({ message: "Added Question Successfully" });
