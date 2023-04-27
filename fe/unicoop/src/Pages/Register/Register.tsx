@@ -3,7 +3,6 @@ import styles from "./Register.module.scss";
 import StepOne from "./StepOne/StepOne";
 import StepTwo from "./StepTwo/StepTwo";
 import { RegisterInfo } from "../../interface";
-import { ToastContainer } from "react-toastify";
 
 type RegisterProps = {
   changeBoxContent: () => void;
@@ -66,13 +65,13 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
         />
       )}
 
-      <ToastContainer
+      {/* <ToastContainer
         className={styles.toast}
         position="top-center"
         hideProgressBar
         closeButton={false}
         rtl={false}
-      />
+      /> */}
     </div>
   );
 };

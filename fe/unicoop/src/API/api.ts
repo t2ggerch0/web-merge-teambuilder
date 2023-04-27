@@ -1,7 +1,7 @@
 import axios from "axios";
-import { viewToastSuccess, viewToastError } from "../helper";
-import { RegisterInfo } from "../interface";
-import { UserTypeType } from "../interface";
+import { viewToastSuccess, viewToastError, viewToastInfo } from "../helper";
+import { QuestionType, RegisterInfo } from "../interface";
+
 // import { CommonHeaderProperties } from "../interface";
 
 export const baseURL =
@@ -17,7 +17,7 @@ export const baseURL =
 export const api = {
   sendCode: async (email: string) => {
     try {
-      const response = await axios.post("/email", {
+      const response = await axios.post("/auth/email", {
         email,
       });
       if (response.status === 200) {
@@ -78,7 +78,7 @@ export const api = {
     }
     try {
       await axios
-        .post("/verify", {
+        .post("/auth/verify", {
           email,
           password,
           userType,
@@ -95,6 +95,187 @@ export const api = {
         });
     } catch (e) {
       viewToastError("인증코드가 올바르지 않습니다.");
+    }
+  },
+  getUserInfoByToken: async (token: string) => {
+    try {
+      return await axios
+        .get("/auth/user", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => {
+          return res.data;
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  login: async ({ email, password }: { email: string; password: string }) => {
+    try {
+      return await axios
+        .post("/auth/login", {
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res.data.code === 1) {
+            localStorage.setItem("token", res.data.token);
+            return res.data.token;
+          }
+        });
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e.response.data.message);
+        throw new Error(e.response.data.message);
+      }
+    }
+  },
+  deleteUser: async ({ email }: { email: string }) => {
+    try {
+      return axios.delete(`/auth/user?email=${email}`);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  createClass: async ({
+    name,
+    capacity,
+    startDate,
+    endDate,
+    token,
+  }: {
+    name: string;
+    capacity: number;
+    startDate: string;
+    endDate: string;
+    token: string;
+  }) => {
+    try {
+      return await axios
+        .post(
+          "/class/create-class",
+          {
+            name,
+            capacity,
+            startDate,
+            endDate,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        .then((res) => {
+          console.log(res.data.classId);
+          return res.data.classId ?? "";
+        });
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  joinClass: async ({ classId, token }: { classId: string; token: string }) => {
+    try {
+      return await axios
+        .post(
+          "/class/join-class",
+          {
+            classId,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((res) => {
+          console.log("res", res.data);
+        });
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  addDefaultQuestion: async ({
+    token,
+    classId,
+    countScores,
+    questionIndexes,
+    weights,
+  }: {
+    token: string;
+    classId: string;
+    questionIndexes: number[];
+    weights: number[];
+    countScores: string[];
+  }) => {
+    try {
+      return await axios.post(
+        "/class/add-default-questions",
+        {
+          classId,
+          questionIndexes,
+          weights,
+          countScores,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  addCustomQuestion: async ({
+    token,
+    classId,
+    questions,
+  }: {
+    token: string;
+    classId: string;
+    questions: QuestionType[];
+  }) => {
+    try {
+      return await axios.post(
+        "/class/add-custom-questions",
+        { classId, questions },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  getClassInfo: async (classId: string) => {
+    try {
+      return await axios.get(`/class?=${classId}`).then((res) => {
+        console.log(res.data);
+      });
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
+    }
+  },
+  getQuestionInfo: async (questionId: string) => {
+    try {
+      return await axios
+        .get(`/question?questionId=${questionId}`)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
+        viewToastError(e?.response?.data.message);
+      }
     }
   },
 };
