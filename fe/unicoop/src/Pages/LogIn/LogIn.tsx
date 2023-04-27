@@ -2,9 +2,6 @@ import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { ToastContainer } from "react-toastify";
-import { MyInfoType } from "../../interface";
-import { api } from "../../API/api";
 
 type LoginProps = {
   changeBoxContent(): void;
@@ -22,7 +19,7 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
     setPassword(value);
   };
 
-  const onClickLogin = async () => {
+  const onClickLogin = () => {
     loginSuccess({ email, password });
   };
 
@@ -59,15 +56,6 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
       <div className={styles.account_check} onClick={changeBoxContent}>
         아직 계정이 없으신가요?
       </div>
-
-      <ToastContainer
-        className={styles.toast}
-        position="top-center"
-        hideProgressBar
-        closeButton={false}
-        rtl={false}
-        theme="colored"
-      />
     </div>
   );
 };
