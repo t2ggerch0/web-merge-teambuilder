@@ -5,12 +5,8 @@ const verifyJwt = require("../../utils/verifyJwt");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const User = require("../../models/User");
-const Class = require("../../models/Class");
-const Question = require("../../models/Question");
 const verifyUserType = require("../../utils/verifyUserType");
 const verifyClassId = require("../../utils/verifyClassId");
-const defaultQuestionList = require("../../data/DefaultQuestionLists.json").questions;
 
 router.post("/end-answer", verifyJwt, async (req, res) => {
   try {
