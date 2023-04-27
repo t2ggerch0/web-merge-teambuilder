@@ -73,6 +73,7 @@ const submitAnswers = require("./routes/class/submitAnswers");
 
 const createQuestion = require("./routes/question/createQuestion");
 const getQuestion = require("./routes/question/getQuestion");
+const getQuestionList = require("./routes/question/getQuestionList");
 
 
 //======Signing API======//
@@ -340,7 +341,7 @@ app.use("/auth", getUsers);
  * @swagger
  * /class/create-class:
  *   post:
- *     summary: 클래스를 생성하고 클래스ID를 반환합니다.
+ *     summary: 클래스를 생성하고 유일한 accessKey를 반환합니다.
  *     tags:
  *       - class
  *     produces:
@@ -374,8 +375,8 @@ app.use("/auth", getUsers);
  *         schema:
  *           type: object
  *           properties:
- *             classId:
- *               type: string
+ *             accessKey:
+ *               type: number
  *             message:
  *               type: string
  *               example: Class created successfully
@@ -402,7 +403,7 @@ app.use("/class", createClass);
  * @swagger
  * /class/join-class:
  *   post:
- *     summary: 클래스ID로 클래스에 입장합니다.
+ *     summary: accessKey로 클래스에 입장합니다.
  *     tags:
  *       - class
  *     produces:
@@ -415,13 +416,13 @@ app.use("/class", createClass);
  *         type: string
  *       - name: body
  *         in: body
- *         description: 클래스ID
+ *         description: accessKey
  *         required: true
  *         schema:
  *           type: object
  *           properties:
- *             classId:
- *               type: string
+ *             accessKey:
+ *               type: number
  *     responses:
  *       201:
  *         description: joined class successfully
@@ -828,3 +829,39 @@ app.use("/question", createQuestion);
  *               example: Internal server error
  */
 app.use("/question", getQuestion);
+
+/**
+ * @swagger
+ * /question/list:
+ *   get:
+ *     tags:
+ *       - question
+ *     summary: 클래스별 질문 리스트
+ *     description: 클래스 ID로 해당 클래스에 등록된 모든 질문 리스트를 반환합니다.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: classId
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Question list retrieved successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             questions:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/Question'
+ *       500:
+ *         description: Internal server error
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Internal server error
+ */
+app.use("/question", getQuestionList);

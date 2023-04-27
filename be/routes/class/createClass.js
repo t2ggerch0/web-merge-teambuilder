@@ -18,6 +18,16 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Check if the user is a professor. returns user if verified
     const user = await verifyUserType(userId, "professor");
 
+    let keys = (await Class.find({},"accessKey")).map((doc) => doc.accessKey);
+    let targetKey;
+    while(true){
+      const accessKey = Math.floor(Math.random() * 1000000);
+      if(!keys.includes(accessKey)){
+        targetKey = accessKey;
+        break;
+      }
+    }
+
     // Create the new class with the request data
     const newClass = new Class({
       professor: userId,
@@ -25,6 +35,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       capacity: req.body.capacity,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
+      accessKey: targetKey
     });
 
     // Save the new class to the database
@@ -36,7 +47,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
 
     // Send a success response
     res.status(201).json({
-      classId: savedClass._id.toString(),
+      accessKey: savedClass.accessKey,
       message: "Class created successfully",
     });
   } catch (error) {

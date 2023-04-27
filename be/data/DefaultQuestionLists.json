@@ -5,7 +5,7 @@
       "type": "default",
       "options": ["20", "21", "22", "23", "24", "25 or more"],
       "isMandatory": false,
-      "weight": 5,
+      "weight": 3,
       "scoringType": "points",
       "countScore": "different"
     },
@@ -23,7 +23,7 @@
       "type": "default",
       "options": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
       "isMandatory": false,
-      "weight": 2,
+      "weight": 3,
       "scoringType": "multi",
       "countScore": "same"
     },
@@ -32,7 +32,7 @@
       "type": "default",
       "options": ["Good", "Average", "Bad"],
       "isMandatory": false,
-      "weight": 1,
+      "weight": 3,
       "scoringType": "single",
       "countScore": "different"
     },
@@ -41,7 +41,7 @@
       "type": "default",
       "options": ["Leader", "Follower"],
       "isMandatory": false,
-      "weight": 1,
+      "weight": 3,
       "scoringType": "single",
       "countScore": "different"
     }

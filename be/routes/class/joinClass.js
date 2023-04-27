@@ -16,13 +16,15 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     const user = await User.findById(userId);
 
     // get class id
-    const classId = req.body.classId;
+    const accessKey = req.body.accessKey;
 
-    // find class with classID
-    const targetClass = await verifyClassId(classId);
-
+    let targetClass = await Class.findOne({ accessKey: accessKey });
+    if (!targetClass) {
+      return res.status(403).json({ message: "Class not found" });
+    }
+    
     // check if user is already in class
-    if (user.classes.includes(classId)) {
+    if (user.classes.includes(targetClass._id)) {
       return res.status(403).json({ message: "User is already in class" });
     }
 
