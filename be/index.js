@@ -613,7 +613,7 @@ app.use("/class", getClass);
 
 /**
  * @swagger
- * /end-question:
+ * /class/end-question:
  *   post:
  *     tags:
  *       - class
@@ -665,7 +665,7 @@ app.use("/class", endAddingQuestion);
 
 /**
  * @swagger
- * /end-answer:
+ * /class/end-answer:
  *   post:
  *     tags:
  *       - class
