@@ -1,8 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styles from "./EditProject.module.scss";
 import { ClassType } from "../../../interface";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import VerifiedIcon from "@mui/icons-material/Verified";
+import { QuestionType } from "../../../interface";
+import { api } from "../../../API/api";
 
 type EditProjectProps = {
   classInfo: ClassType;
@@ -15,6 +16,23 @@ const EditProject: FC<EditProjectProps> = ({
   onClickClass,
   onFinishEditQuestion,
 }) => {
+  const [question, setQuestion] = useState<QuestionType[]>([]);
+
+  const getQuestion = async () => {
+    const result = await Promise.all(
+      classInfo.questions.map((id) => {
+        return api.getQuestionInfo(id).then((res: unknown) => {
+          return res as QuestionType;
+        });
+      })
+    );
+    setQuestion(result);
+  };
+
+  console.log("quesiotn", question);
+  useEffect(() => {
+    getQuestion();
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.header_container}>
@@ -54,11 +72,19 @@ const EditProject: FC<EditProjectProps> = ({
           </div>
         </div>
 
-        {classInfo.questions.map((q) => {
-          return <div className={styles.question_value}>{q}</div>;
+        {question.map((q) => {
+          return (
+            <div className={styles.question_value}>
+              <div>{q?.title}</div>
+              <div>답: {q.options.map((o) => o)}</div>
+              <div>필수 여부: {q.isMandatory}</div>
+              <div>가중치{q.weight}</div>
+              <div>점수 판단 기준:{q.countScore}</div>
+            </div>
+          );
         })}
       </div>
-
+      <hr />
       <div className={styles.answer_container}>
         <div className={styles.label}>answers:</div>
         {classInfo.answers}
