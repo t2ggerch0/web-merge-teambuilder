@@ -57,7 +57,7 @@ const ManageProject: FC<ManageProjectProps> = ({
     setClasses(result);
   };
   const onClickClass = (classId?: string) => {
-    setCurrentClass(classes.find((item) => item.id === classId));
+    setCurrentClass(classes.find((item) => item?.id === classId));
   };
 
   const onFinishEditQuestion = (classId?: string) => {
@@ -77,7 +77,7 @@ const ManageProject: FC<ManageProjectProps> = ({
           userType: res?.user.userType ?? "student",
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
-          id: res?.user.id ?? "",
+          id: res?.user?.id ?? "",
           major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
@@ -109,7 +109,7 @@ const ManageProject: FC<ManageProjectProps> = ({
             classes.map((item, index) => {
               return (
                 <Class
-                  key={`class_${item.id}`}
+                  key={`class_${item?.id}`}
                   classInfo={item}
                   order={index}
                   onClickClass={onClickClass}
