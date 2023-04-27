@@ -106,6 +106,8 @@ export const api = {
         });
     } catch (e) {
       console.log(e);
+      throw new Error("Invalid Token");
+      return e;
     }
   },
   login: async ({ email, password }: { email: string; password: string }) => {
