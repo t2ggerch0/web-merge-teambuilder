@@ -64,3 +64,5 @@ router.post("/submit-answers", verifyJwt, async (req, res) => {
   "<question_id_3>": ["<answer_1>"]
 }
 */
+
+module.exports = router;
