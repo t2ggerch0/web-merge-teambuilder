@@ -1,0 +1,20 @@
+.class_box {
+  width: 200px;
+  height: 200px;
+  box-shadow: 5px 5px 10px gray;
+  .color_box {
+    width: 100%;
+    height: 70%;
+  }
+  .class_info {
+    padding: 0px 10px;
+    .class_name {
+      font-weight: 600;
+      font-size: 20px;
+    }
+    .class_semester {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+}
