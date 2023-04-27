@@ -59,8 +59,7 @@ const Layout: FC<LayoutProps> = ({
               selectedMenu === Menu.ManagementProject &&
               styles.menu_item_selected
             }`}
-            onClick={onClickManageProject}
-          >
+            onClick={onClickManageProject}>
             프로젝트 관리
           </div>
 
@@ -70,8 +69,7 @@ const Layout: FC<LayoutProps> = ({
                 selectedMenu === Menu.RegisterProject &&
                 styles.menu_item_selected
               }`}
-              onClick={onClickRegisterProject}
-            >
+              onClick={onClickRegisterProject}>
               프로젝트 등록
             </div>
           )}
