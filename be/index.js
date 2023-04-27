@@ -377,6 +377,8 @@ app.use("/auth", getUsers);
  *           properties:
  *             accessKey:
  *               type: number
+ *             classId:
+ *               type: string
  *             message:
  *               type: string
  *               example: Class created successfully
