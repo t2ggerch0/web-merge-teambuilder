@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import useSWR from "swr";
-import axios, { HeadersDefaults } from "axios";
-=======
 import axios from "axios";
->>>>>>> 9bcaaff0f617e7684892e2556d3e73efb55cfaa5
 import { viewToastSuccess, viewToastError } from "../helper";
 import { QuestionType, RegisterInfo } from "../interface";
 
