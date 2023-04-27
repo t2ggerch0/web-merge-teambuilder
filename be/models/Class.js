@@ -58,6 +58,10 @@ const classSchema = new Schema({
     default: false,
     required: false,
   },
+  accessKey: {
+      type: Number,
+      required: true
+  },
 });
 
 module.exports = mongoos.model("Class", classSchema);

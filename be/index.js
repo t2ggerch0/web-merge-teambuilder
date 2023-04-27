@@ -340,7 +340,7 @@ app.use("/auth", getUsers);
  * @swagger
  * /class/create-class:
  *   post:
- *     summary: 클래스를 생성하고 클래스ID를 반환합니다.
+ *     summary: 클래스를 생성하고 유일한 accessKey를 반환합니다.
  *     tags:
  *       - class
  *     produces:
@@ -374,8 +374,8 @@ app.use("/auth", getUsers);
  *         schema:
  *           type: object
  *           properties:
- *             classId:
- *               type: string
+ *             accessKey:
+ *               type: number
  *             message:
  *               type: string
  *               example: Class created successfully
@@ -402,7 +402,7 @@ app.use("/class", createClass);
  * @swagger
  * /class/join-class:
  *   post:
- *     summary: 클래스ID로 클래스에 입장합니다.
+ *     summary: accessKey로 클래스에 입장합니다.
  *     tags:
  *       - class
  *     produces:
@@ -415,13 +415,13 @@ app.use("/class", createClass);
  *         type: string
  *       - name: body
  *         in: body
- *         description: 클래스ID
+ *         description: accessKey
  *         required: true
  *         schema:
  *           type: object
  *           properties:
- *             classId:
- *               type: string
+ *             accessKey:
+ *               type: number
  *     responses:
  *       201:
  *         description: joined class successfully
