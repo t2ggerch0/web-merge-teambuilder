@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./RegisterProject.module.scss";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-
 import {
   QuestionType,
   ProjectRegisterInfo,
@@ -15,6 +14,8 @@ import { useAuthContext } from "../../Context/UnicoopContext";
 import Layout from "../../Components/Layout/Layout";
 import ClassInfo from "./ClassInfo/ClassInfo";
 import DefaultQuestion from "./DefaultQuestion/DefaultQuestion";
+import CustomQuestion from "./CustomQuestion/CustomQuestion";
+import { viewToastError, viewToastSuccess } from "../../helper";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -105,20 +106,67 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     name: string;
     value: string;
   }) => {
+    console.log(name, value);
     setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
   };
 
   const onClickRegisterButton = () => {
-    const token = window.localStorage.getItem("token") ?? "";
-    api.createClass({
-      name: projectRegisterInfo.className,
-      capacity: projectRegisterInfo.capacity,
-      startDate: projectRegisterInfo.startDate,
-      endDate: projectRegisterInfo.endDate,
-      token,
-    });
-    // TODO : Default questoi의 count와 weight 전송
-    // TODO : Custom Question 추가 전송
+    if (
+      customQuestions.length > 0 &&
+      (customQuestions.some((q) => q.title.length === 0) ||
+        customQuestions.some((q) => q.options.some((a) => a.length === 0)) ||
+        customQuestions.some((q) => q.countScore.length === 0))
+    ) {
+      viewToastError("Missing Custom Question Info");
+    } else if (
+      projectRegisterInfo.capacity === 0 ||
+      projectRegisterInfo.className.length === 0
+    ) {
+      viewToastError("Missing Class Info");
+    } else {
+      const token = window.localStorage.getItem("token") ?? "";
+      api
+        .createClass({
+          name: projectRegisterInfo.className,
+          capacity: projectRegisterInfo.capacity,
+          startDate: projectRegisterInfo.startDate,
+          endDate: projectRegisterInfo.endDate,
+          token,
+        })
+        .then((classId) => {
+          // TODO : Default questoi의 count와 weight 전송
+          api
+            .addDefaultQuestion({
+              classId,
+              countScores: defaultQuestions.map((q) => {
+                return q.countScore;
+              }),
+              questionIndexes: defaultQuestions.map((q, index) => {
+                return index;
+              }),
+              token,
+              weights: defaultQuestions.map((q) => {
+                return q.weight;
+              }),
+            })
+            .then((res) => {
+              if (customQuestions.length > 0) {
+                // TODO : Custom Question 추가 전송
+                api
+                  .addCustomQuestion({
+                    classId,
+                    token,
+                    questions: customQuestions,
+                  })
+                  .then((res) => {
+                    viewToastSuccess("수업을 생성했습니다.");
+                  });
+              } else {
+                viewToastSuccess("수업을 생성했습니다.");
+              }
+            });
+        });
+    }
   };
 
   const onChangeDefaultQuestion = (updatedQuestionInfo: QuestionType) => {
@@ -138,31 +186,38 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   };
 
   const onClickAddNewCustomQuestion = () => {
-    setCustomQuestions([
-      ...customQuestions,
-      {
-        countScore: "same",
-        id: customQuestions.length.toString(),
-        isMandatory: true,
-        options: [""],
-        scoringType: "multi",
-        title: "",
-        type: "",
-        weight: 5,
-      },
-    ]);
+    setCustomQuestions(
+      [
+        ...customQuestions,
+        {
+          countScore: "",
+          id: customQuestions.length.toString(),
+          isMandatory: true,
+          options: [""],
+          scoringType: ScoringType.multi,
+          title: "",
+          type: "custom",
+          weight: 5,
+        },
+      ].map((item, index) => {
+        return {
+          ...item,
+          id: index.toString(),
+        };
+      })
+    );
   };
 
   const onClickAddAnswerToCustomQuestion = ({
     answer,
-    qeustionId,
+    questionId,
   }: {
-    qeustionId: string;
+    questionId: string;
     answer: string;
   }) => {
     setCustomQuestions([
       ...customQuestions.map((item) => {
-        if (item.id === qeustionId) {
+        if (item.id === questionId) {
           return {
             ...item,
             options: [...item.options, answer],
@@ -172,6 +227,30 @@ const RegisterProject: FC<RegisterProjectProps> = ({
         }
       }),
     ]);
+  };
+
+  const onChangeCustomQuestionInfo = (newCustomQuestionInfo: QuestionType) => {
+    setCustomQuestions([
+      ...customQuestions.map((item) => {
+        if (item.id === newCustomQuestionInfo.id) {
+          return newCustomQuestionInfo;
+        } else {
+          return item;
+        }
+      }),
+    ]);
+  };
+
+  const onDeleteCustomQuestionInfo = (newCustomQuestionInfoId: string) => {
+    setCustomQuestions(
+      customQuestions
+        .filter((item) => {
+          return item.id !== newCustomQuestionInfoId;
+        })
+        .map((data, index) => {
+          return { ...data, id: index.toString() };
+        })
+    );
   };
 
   useEffect(() => {
@@ -193,6 +272,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     }
   }, []);
 
+  console.log(customQuestions);
+
   return (
     <Layout
       pageTitle="프로젝트 등록"
@@ -211,138 +292,14 @@ const RegisterProject: FC<RegisterProjectProps> = ({
             onChangeDefaultQuestionInfo={onChangeDefaultQuestion}
           />
           <hr />
-          <div className={styles.custom_questions}>
-            <div className={styles.custom_questions_title}>
-              <div>팀 빌딩에 참고할 학생들의 정보를 추가할 수 있습니다</div>
-              <div
-                className={styles.add_question_button}
-                onClick={onClickAddNewCustomQuestion}>
-                + 추가하기
-              </div>
-            </div>
-            <div>
-              {customQuestions.map((item, index) => {
-                return (
-                  <div key={`q_${index}`} className={styles.question_wrapper}>
-                    <div>
-                      <div className={styles.question_row1}>
-                        <div className={styles.question_title}>
-                          <div>
-                            <div className={styles.question_index}>
-                              {`질문 ${defaultQuestions.length + index + 1}`}
-                            </div>
-                            <div>
-                              <span>필수</span>
-                              <input
-                                type="checkbox"
-                                checked={item.isMandatory}
-                                onChange={() => {}}
-                              />
-                            </div>
-                          </div>
-                          <input
-                            className={styles.question_content}
-                            value={item.title}
-                            placeholder="질문을 입력해주세요"
-                            onChange={() => {}}
-                          />
-
-                          <div className={styles.score_type_container}>
-                            <div>
-                              <input
-                                type="radio"
-                                name={`q_${index}_score`}
-                                value={"same"}
-                                checked={item.countScore === "same"}
-                                onChange={() => {}}
-                              />
-                              <span>same</span>
-                            </div>
-                            <div>
-                              <input
-                                type="radio"
-                                name={`q_${index}_score`}
-                                value={"different"}
-                                checked={item.countScore === "different"}
-                                onChange={() => {}}
-                              />
-                              <span>different</span>
-                            </div>
-                          </div>
-                          <div className={styles.weight}>
-                            <div>
-                              <div>weight: {item.weight}</div>
-                              <input
-                                className={styles.question_weight}
-                                type="range"
-                                min={0}
-                                max={5}
-                                value={item.weight}
-                                onChange={(e) => {}}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <span>scoringType</span>
-                          <input
-                            type="radio"
-                            name={`q_${item.id}_scoring_type`}
-                            value={ScoringType.single}
-                            onChange={() => {}}
-                          />
-                          <span>{ScoringType.single}</span>
-
-                          <input
-                            type="radio"
-                            name={`q_${item.id}_scoring_type`}
-                            value={ScoringType.multi}
-                            onChange={() => {}}
-                          />
-                          <span>{ScoringType.multi}</span>
-
-                          <input
-                            type="radio"
-                            name={`q_${item.id}_scoring_type`}
-                            value={ScoringType.points}
-                            onChange={() => {}}
-                          />
-                          <span>{ScoringType.points}</span>
-                        </div>
-                      </div>
-                      <div className={styles.question_answers}>
-                        {item.options.map((option, index) => {
-                          return (
-                            <div>
-                              <input
-                                key={`q_${index}`}
-                                className={styles.answer}
-                                placeholder="예시답안을 입력하세요"
-                                value={option}
-                                onChange={() => {}}
-                              />
-                              <span className={styles.cancel}>X</span>
-                            </div>
-                          );
-                        })}
-                        <div
-                          className={styles.add_answer_option_button}
-                          onClick={(e) => {
-                            onClickAddAnswerToCustomQuestion({
-                              answer: "",
-                              qeustionId: item.id,
-                            });
-                          }}>
-                          + 답 추가하기
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <CustomQuestion
+            data={customQuestions}
+            defaultQuestionLength={defaultQuestions.length}
+            onChangeData={onChangeCustomQuestionInfo}
+            onAddNewData={onClickAddNewCustomQuestion}
+            onAddNewOption={onClickAddAnswerToCustomQuestion}
+            onDeleteData={onDeleteCustomQuestionInfo}
+          />
         </div>
         <div className={styles.button}>
           <UnicoopButton onClick={onClickRegisterButton}>

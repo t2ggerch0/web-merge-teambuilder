@@ -11,7 +11,6 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
   data,
   onChangeDefaultQuestionInfo,
 }) => {
-  console.log(data);
   return (
     <div>
       <div className={styles.default_question}>

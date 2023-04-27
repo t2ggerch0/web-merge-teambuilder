@@ -17,6 +17,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
 }) => {
   const { capacity, className, endDate, startDate } = projectRegisterInfo;
   const onChangeInfo = (name: string, value: string) => {
+    console.log(name, value);
     onChangeClassInfo({ name, value });
   };
   const onChangeStartDate = (newDate: Date) => {
@@ -37,7 +38,9 @@ const ClassInfo: FC<ClassInfoProps> = ({
         placeholder="수업명"
         width={500}
         value={className}
-        onChange={(value) => onChangeInfo("className", value)}
+        onChange={(name, value) => {
+          onChangeInfo(name, value);
+        }}
       />
 
       <LabelInput
@@ -47,7 +50,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
         placeholder="00명"
         width={500}
         value={capacity}
-        onChange={(value) => onChangeInfo("capacity", value)}
+        onChange={(name, value) => onChangeInfo(name, value)}
       />
 
       <div className={styles.duration}>
