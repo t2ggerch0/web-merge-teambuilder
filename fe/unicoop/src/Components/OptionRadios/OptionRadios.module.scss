@@ -1,0 +1,53 @@
+.optionRadios {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+
+  .title {
+    font-size: 18px;
+    padding-left: 5px;
+  }
+
+  .subTitle {
+    font-size: 16px;
+    margin-left: 5px;
+  }
+
+  .selectBox {
+    display: flex;
+    flex-direction: column;
+    &.horizontal {
+      flex-direction: row;
+      width: 100%;
+      gap: 30px;
+    }
+    .option {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: #292929;
+      .radioButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        border-radius: 50%;
+        background-color: #f8f9fb;
+        &.checked {
+          background-color: rgba(20, 114, 255, 0.1);
+        }
+      }
+      .optionText {
+        font-size: 15px;
+        opacity: 0.5;
+        &.checked {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
