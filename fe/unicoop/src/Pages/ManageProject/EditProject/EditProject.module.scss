@@ -1,5 +1,5 @@
 .container {
-  width: 100%;
+  width: 50vw;
 
   .header_container {
     display: flex;
@@ -32,8 +32,11 @@
     .question_wrapper {
       display: flex;
       justify-content: space-between;
+      border: 2px solid rgb(76, 76, 182);
       .label {
         font-weight: 800;
+        width: 20%;
+        text-align: center;
       }
       .menu {
         .btn {
@@ -43,6 +46,15 @@
     .question_value {
       display: flex;
       justify-content: space-between;
+      div {
+        width: 20%;
+        text-align: center;
+
+        div {
+          width: 100%;
+          text-align: right;
+        }
+      }
     }
   }
   .answer_container {
