@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./App.module.scss";
 import Home from "./Pages/Home/Home";
 import Layout from "./Components/Layout/Layout";
@@ -7,9 +7,16 @@ import ManageProject from "./Pages/ManageProject/ManageProject";
 import Activity from "./Pages/Activity/Activity";
 import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Menu } from "./interface";
 
 const App = () => {
   const appRef = useRef<HTMLDivElement | null>(null);
+  const [menu, setMenu] = useState<Menu>(Menu.ManagementProejct);
+
+  const onClickMenu = (menuId: Menu) => {
+    setMenu(menuId);
+  };
+
   return (
     <div className={styles.app} ref={appRef}>
       <BrowserRouter>
@@ -18,19 +25,13 @@ const App = () => {
           <Route
             path="/registerproject"
             element={
-              <Layout
-                pageTitle="프로젝트 등록"
-                children={<RegisterProject />}
-              ></Layout>
+              <RegisterProject selectedMenu={menu} onChangeMenu={onClickMenu} />
             }
           />
           <Route
             path="/manageproject"
             element={
-              <Layout
-                pageTitle="프로젝트 관리"
-                children={<ManageProject />}
-              ></Layout>
+              <ManageProject selectedMenu={menu} onChangeMenu={onClickMenu} />
             }
           />
           <Route path={"/activity"} element={<Activity />} />

@@ -1,15 +1,11 @@
 import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
-import axios from "axios";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { ToastContainer } from "react-toastify";
-import { MyInfoType } from "../../interface";
-import { viewToastError } from "../../helper";
 
 type LoginProps = {
   changeBoxContent(): void;
-  loginSuccess(userInfo: MyInfoType): void;
+  loginSuccess({ email, password }: { email: string; password: string }): void;
 };
 
 const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
@@ -23,31 +19,8 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
     setPassword(value);
   };
 
-  const onClickLogin = async () => {
-    try {
-      await axios
-        .post("/login", {
-          email,
-          password,
-          userType: "student",
-        })
-        .then((res) => {
-          if (res.data.code === 1) {
-            localStorage.setItem("token", res.data.token);
-            loginSuccess({
-              name: res.data.user.name,
-              classes: res.data.user.classes,
-              email: res.data.user.email,
-              major: res.data.user.major,
-              password: res.data.user.password,
-              studentId: res.data.user.studentId,
-              userType: res.data.user.userType,
-            });
-          }
-        });
-    } catch (e) {
-      viewToastError("일치하는 회원정보가 없습니다!");
-    }
+  const onClickLogin = () => {
+    loginSuccess({ email, password });
   };
 
   return (
@@ -83,15 +56,6 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
       <div className={styles.account_check} onClick={changeBoxContent}>
         아직 계정이 없으신가요?
       </div>
-
-      <ToastContainer
-        className={styles.toast}
-        position="top-center"
-        hideProgressBar
-        closeButton={false}
-        rtl={false}
-        theme="colored"
-      />
     </div>
   );
 };

@@ -1,23 +1,24 @@
 .container {
-  .class_button {
-    width: 500px;
-    border: none;
-    background-color: #f1f1f1;
-
-    border-radius: 8px;
-    padding: 8px;
-    font-size: 14px;
-  }
-  .line {
+  .btn_wrapper {
+    margin: 20px;
     display: flex;
+    justify-content: flex-end;
+    .btn {
+      border: 1px solid black;
+      border-radius: 8px;
+      color: blue;
+      background-color: white;
+      padding: 8px;
+      font-size: 14px;
+    }
   }
-  .btn {
-    margin-left: 10px;
-    border: none;
-    background-color: #f1f1f1;
-    padding: 8px;
-    font-size: 14px;
+  .class_container {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
   }
+
   .modal {
     .modal_container {
       width: 500px;

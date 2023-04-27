@@ -5,6 +5,12 @@ export type UnicoopContext = {
   setMyInfo(e: null | MyInfoType): void;
 };
 
+export enum Menu {
+  ManagementProejct,
+  RegisterProject,
+  Acitivty,
+}
+
 export const unicoopContextDefault = {
   myInfo: null,
   setMyInfo: () => {},
@@ -20,6 +26,12 @@ export type RegisterInfo = {
   verifyCode: number;
 };
 
+export enum ScoringType {
+  points = "points",
+  single = "single",
+  multi = "multi",
+}
+
 export type ProjectRegisterInfo = {
   className: string;
   capacity: number;
@@ -30,20 +42,42 @@ export type ProjectRegisterInfo = {
 
 export type QuestionType = {
   title: string;
-  answer: string;
+  type: string;
   options: string[];
+  isMandatory: boolean;
+  weight: number;
+  scoringType: string;
+  countScore: string;
+  id: string;
 };
 
 export type UserTypeType = "student" | "professor" | "";
 
 export type MyInfoType = {
   name: string;
-  email?: string;
-  password?: string;
-  userType?: string;
-  classes?: string[];
-  major?: string;
-  studentId?: number;
+  email: string;
+  password: string;
+  userType: string;
+  classes: string[];
+  major: string;
+  studentId: number;
+  id: string;
+  token: string;
+};
+
+export type ClassType = {
+  id: string;
+  professor: string[];
+  name: string;
+  students: number[];
+  teams: number[];
+  questions: string[];
+  answers: string[];
+  capacity: number;
+  startDate: string;
+  endDate: string;
+  endQuestion: boolean;
+  endAnswer: boolean;
 };
 
 export type AxiosRequestHeaders = Record<string, string>;

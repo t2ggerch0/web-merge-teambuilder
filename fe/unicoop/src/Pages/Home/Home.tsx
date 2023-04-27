@@ -2,25 +2,52 @@ import React, { useEffect, useState } from "react";
 import styles from "./Home.module.scss";
 import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
-import { MyInfoType } from "../../interface";
 import { useAuthContext } from "../../Context/UnicoopContext";
+import { api } from "../../API/api";
+import Layout from "../../Components/Layout/Layout";
+import { ToastContainer } from "react-toastify";
+import { viewToastError, viewToastInfo } from "../../helper";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isLoginSuccess, setIsLoginSucess] = useState<boolean>(false);
   const userInfoHandle = useAuthContext();
+  const navigation = useNavigate();
   const changeBoxContent = () => {
     setIsLogin(!isLogin);
   };
-  const loginSuccess = (userInfo: MyInfoType) => {
-    setIsLoginSucess(true);
-    userInfoHandle.setMyInfo(userInfo);
+  const login = ({ email, password }: { email: string; password: string }) => {
+    api.login({ email, password }).then((token) => {
+      console.log("token", token);
+      window.localStorage.setItem("token", token);
+      getUserInfo({ token });
+      navigation("/manageproject");
+    });
+  };
+
+  const getUserInfo = ({ token }: { token: string }) => {
+    api.getUserInfoByToken(token).then((res) => {
+      console.log("userInfo", res?.user);
+      userInfoHandle.setMyInfo({
+        userType: res?.user.userType ?? "student",
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        major: res?.user.major ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        studentId: res?.user.studentId ?? -1,
+        token,
+      });
+      setIsLoginSucess(true);
+    });
   };
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-    if (token !== null) {
-      // TODO: token으로 회원 정보 가져오는 api호출
+    if (token) {
+      getUserInfo({ token });
     }
   }, []);
   return (
@@ -34,17 +61,20 @@ const Home = () => {
         </div>
         <div className={styles.join}>
           {isLogin ? (
-            isLoginSuccess ? (
-              <div>{userInfoHandle.myInfo?.name}님, 환영합니다!</div>
-            ) : (
-              <LogIn
-                changeBoxContent={changeBoxContent}
-                loginSuccess={loginSuccess}
-              />
+            !isLoginSuccess && (
+              <LogIn changeBoxContent={changeBoxContent} loginSuccess={login} />
             )
           ) : (
             <Register changeBoxContent={changeBoxContent} />
           )}
+          <ToastContainer
+            className={styles.toast}
+            position="top-center"
+            hideProgressBar
+            closeButton={false}
+            rtl={false}
+            theme="colored"
+          />
         </div>
       </div>
       <div className={styles.footer}></div>

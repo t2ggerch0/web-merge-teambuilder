@@ -1,24 +1,34 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styles from "./RegisterProject.module.scss";
-import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import DatePicker from "react-datepicker";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { ko } from "date-fns/esm/locale";
-import { QuestionType, ProjectRegisterInfo } from "../../interface";
+import {
+  QuestionType,
+  ProjectRegisterInfo,
+  Menu,
+  ScoringType,
+} from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
+import { api } from "../../API/api";
+import { ToastContainer } from "react-toastify";
+import { useAuthContext } from "../../Context/UnicoopContext";
+import Layout from "../../Components/Layout/Layout";
+import ClassInfo from "./ClassInfo/ClassInfo";
+import DefaultQuestion from "./DefaultQuestion/DefaultQuestion";
+import CustomQuestion from "./CustomQuestion/CustomQuestion";
+import { viewToastError, viewToastSuccess } from "../../helper";
+import { useNavigate } from "react-router-dom";
 
-type RegisterProjectProps = {};
+type RegisterProjectProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
 
-const dummyQuestions: QuestionType[] = [
-  {
-    title: "이번 프로젝트 동안 AI와 관련된 주제를 다루고 싶나요?",
-    answer: "",
-    options: ["네", "아니오", "잘 모르겠습니다"],
-  },
-];
-
-const RegisterProject: FC<RegisterProjectProps> = () => {
+const RegisterProject: FC<RegisterProjectProps> = ({
+  selectedMenu,
+  onChangeMenu,
+}) => {
+  const navigation = useNavigate();
+  const userInfoHandle = useAuthContext();
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>({
       capacity: 0,
@@ -27,101 +37,287 @@ const RegisterProject: FC<RegisterProjectProps> = () => {
       questions: [],
       startDate: "2023.01.01",
     });
-  const { capacity, className, endDate, questions, startDate } =
-    projectRegisterInfo;
 
-  const onChangeStartDate = (date: Date) => {
-    setProjectRegisterInfo({
-      ...projectRegisterInfo,
-      startDate: date.toISOString(),
-    });
-  };
+  const [defaultQuestions, setDefaultQuestions] = useState<QuestionType[]>([
+    {
+      id: "1",
+      title: "What is your Age?",
+      type: "default",
+      options: ["20", "21", "22", "23", "24", "25 or more"],
+      isMandatory: false,
+      weight: 5,
+      scoringType: "points",
+      countScore: "different",
+    },
+    {
+      id: "2",
+      title: "Personality",
+      type: "default",
+      options: ["Extrovert", "Introvert"],
+      isMandatory: false,
+      weight: 3,
+      scoringType: "single",
+      countScore: "different",
+    },
+    {
+      id: "3",
+      title: "Preferred Date",
+      type: "default",
+      options: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      isMandatory: false,
+      weight: 2,
+      scoringType: "multi",
+      countScore: "same",
+    },
+    {
+      id: "4",
+      title: "English Skills",
+      type: "default",
+      options: ["Good", "Average", "Bad"],
+      isMandatory: false,
+      weight: 1,
+      scoringType: "single",
+      countScore: "different",
+    },
+    {
+      id: "5",
+      title: "Preferred Role",
+      type: "default",
+      options: ["Leader", "Follower"],
+      isMandatory: false,
+      weight: 1,
+      scoringType: "single",
+      countScore: "different",
+    },
+  ]);
 
-  const onChangeEndDate = (date: Date) => {
-    setProjectRegisterInfo({
-      ...projectRegisterInfo,
-      endDate: date.toISOString(),
-    });
-  };
+  const [customQuestions, setCustomQuestions] = useState<QuestionType[]>([]);
 
-  const onChange = (name: string, value: string) => {
+  const onChangeClassInfo = ({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string;
+  }) => {
+    console.log(name, value);
     setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
   };
 
+  const onClickRegisterButton = () => {
+    if (
+      customQuestions.length > 0 &&
+      (customQuestions.some((q) => q.title.length === 0) ||
+        customQuestions.some((q) => q.options.some((a) => a.length === 0)) ||
+        customQuestions.some((q) => q.countScore.length === 0))
+    ) {
+      viewToastError("Missing Custom Question Info");
+    } else if (
+      projectRegisterInfo.capacity === 0 ||
+      projectRegisterInfo.className.length === 0
+    ) {
+      viewToastError("Missing Class Info");
+    } else {
+      const token = window.localStorage.getItem("token") ?? "";
+      api
+        .createClass({
+          name: projectRegisterInfo.className,
+          capacity: projectRegisterInfo.capacity,
+          startDate: projectRegisterInfo.startDate,
+          endDate: projectRegisterInfo.endDate,
+          token,
+        })
+        .then((classId) => {
+          // TODO : Default questoi의 count와 weight 전송
+          api
+            .addDefaultQuestion({
+              classId,
+              countScores: defaultQuestions.map((q) => {
+                return q.countScore;
+              }),
+              questionIndexes: defaultQuestions.map((q, index) => {
+                return index;
+              }),
+              token,
+              weights: defaultQuestions.map((q) => {
+                return q.weight;
+              }),
+            })
+            .then((res) => {
+              if (customQuestions.length > 0) {
+                // TODO : Custom Question 추가 전송
+                api
+                  .addCustomQuestion({
+                    classId,
+                    token,
+                    questions: customQuestions,
+                  })
+                  .then((res) => {
+                    viewToastSuccess("수업을 생성했습니다.");
+                  });
+              } else {
+                viewToastSuccess("수업을 생성했습니다.");
+              }
+              setTimeout(() => {
+                navigation("../manageproject");
+              }, 3000);
+            });
+        });
+    }
+  };
+
+  const onChangeDefaultQuestion = (updatedQuestionInfo: QuestionType) => {
+    setDefaultQuestions(
+      defaultQuestions.map((item) => {
+        if (item.id === updatedQuestionInfo.id) {
+          return {
+            ...item,
+            weight: updatedQuestionInfo.weight,
+            countScore: updatedQuestionInfo.countScore,
+          };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
+
+  const onClickAddNewCustomQuestion = () => {
+    setCustomQuestions(
+      [
+        ...customQuestions,
+        {
+          countScore: "",
+          id: customQuestions.length.toString(),
+          isMandatory: true,
+          options: [""],
+          scoringType: ScoringType.multi,
+          title: "",
+          type: "custom",
+          weight: 5,
+        },
+      ].map((item, index) => {
+        return {
+          ...item,
+          id: index.toString(),
+        };
+      })
+    );
+  };
+
+  const onClickAddAnswerToCustomQuestion = ({
+    answer,
+    questionId,
+  }: {
+    questionId: string;
+    answer: string;
+  }) => {
+    setCustomQuestions([
+      ...customQuestions.map((item) => {
+        if (item.id === questionId) {
+          return {
+            ...item,
+            options: [...item.options, answer],
+          };
+        } else {
+          return item;
+        }
+      }),
+    ]);
+  };
+
+  const onChangeCustomQuestionInfo = (newCustomQuestionInfo: QuestionType) => {
+    setCustomQuestions([
+      ...customQuestions.map((item) => {
+        if (item.id === newCustomQuestionInfo.id) {
+          return newCustomQuestionInfo;
+        } else {
+          return item;
+        }
+      }),
+    ]);
+  };
+
+  const onDeleteCustomQuestionInfo = (newCustomQuestionInfoId: string) => {
+    setCustomQuestions(
+      customQuestions
+        .filter((item) => {
+          return item.id !== newCustomQuestionInfoId;
+        })
+        .map((data, index) => {
+          return { ...data, id: index.toString() };
+        })
+    );
+  };
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token !== null) {
+      api.getUserInfoByToken(token).then((res) => {
+        userInfoHandle.setMyInfo({
+          userType: res?.user.userType ?? "student",
+          classes: res?.user.classes ?? [],
+          email: res?.user.email ?? "",
+          id: res?.user.id ?? "",
+          major: res?.user.major ?? "",
+          name: res?.user.name ?? "",
+          password: res?.user.password ?? "",
+          studentId: res?.user.studentId ?? -1,
+          token: token ?? "",
+        });
+      });
+    }
+  }, []);
+
   return (
-    <div className={styles.container}>
-      <LabelInput
-        className={styles.label}
-        title="수업명"
-        name="className"
-        placeholder="수업명"
-        width={500}
-        value={className}
-        onChange={onChange}
-      />
-
-      <LabelInput
-        className={styles.label}
-        title="정원"
-        name="capacity"
-        placeholder="00명"
-        width={500}
-        value={capacity}
-        onChange={onChange}
-      />
-
-      <div className={styles.duration}>
-        <span className={styles.duration_label}>기간</span>
-        <div className={styles.datepicker_container}>
-          <DatePicker
-            className={styles.datepicker}
-            locale={ko}
-            dateFormat={"yyyy.MM.dd"}
-            onChange={onChangeStartDate}
-            selected={new Date(startDate)}
+    <Layout
+      pageTitle="프로젝트 등록"
+      selectedMenu={selectedMenu}
+      onChangeMenu={onChangeMenu}>
+      <div className={styles.container}>
+        <ClassInfo
+          onChangeClassInfo={onChangeClassInfo}
+          projectRegisterInfo={projectRegisterInfo}
+        />
+        <hr />
+        <div>팀 빌딩에 참고할 학생들의 정보를 설정해주세요</div>
+        <div className={styles.questions}>
+          <DefaultQuestion
+            data={defaultQuestions}
+            onChangeDefaultQuestionInfo={onChangeDefaultQuestion}
+          />
+          <hr />
+          <CustomQuestion
+            data={customQuestions}
+            defaultQuestionLength={defaultQuestions.length}
+            onChangeData={onChangeCustomQuestionInfo}
+            onAddNewData={onClickAddNewCustomQuestion}
+            onAddNewOption={onClickAddAnswerToCustomQuestion}
+            onDeleteData={onDeleteCustomQuestionInfo}
           />
         </div>
-        <CalendarMonthIcon className={styles.calender} />
-        <span className={styles.text}>~</span>
-        <div className={styles.datepicker_container}>
-          <DatePicker
-            className={`${styles.datepicker} ${styles.datepicker_2}`}
-            locale={ko}
-            dateFormat={"yyyy.MM.dd"}
-            selected={new Date(endDate)}
-            onChange={onChangeEndDate}
-          />
+        <div className={styles.button}>
+          <UnicoopButton onClick={onClickRegisterButton}>
+            수업 만들기
+          </UnicoopButton>
         </div>
-        <CalendarMonthIcon className={styles.calender_2} />
+        <ToastContainer
+          className={styles.toast}
+          position="top-center"
+          hideProgressBar
+          closeButton={false}
+          rtl={false}
+        />
       </div>
-
-      <div className={styles.questions}>
-        <div className={styles.question}>
-          {dummyQuestions.map((item, index) => (
-            <div>
-              <div className={styles.question_title}>
-                <div className={styles.question_index}>질문 {index + 1}</div>
-                <div className={styles.question_content}>{item.title}</div>
-                <input
-                  className={styles.question_weight}
-                  type="range"
-                  value={50}
-                />
-              </div>
-              <div className={styles.question_answers}>
-                {item.options.map((option) => (
-                  <div className={styles.answer}>
-                    {option} <span className={styles.cancel}>X</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <UnicoopButton onClick={() => {}}>등록</UnicoopButton>
-    </div>
+    </Layout>
   );
 };
 
