@@ -5,7 +5,6 @@ import Class from "./Class/Class";
 import CodePopUp from "../../Components/CodePopUp/CodePopUp";
 import Layout from "../../Components/Layout/Layout";
 import { api } from "../../API/api";
-import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import EditProject from "./EditProject/EditProject";
 
@@ -22,26 +21,21 @@ const ManageProject: FC<ManageProjectProps> = ({
   onChangeMenu,
   userType = "student",
 }) => {
-  const navigation = useNavigate();
   const userInfoHandle = useAuthContext();
-  const dummyClassId = userInfoHandle.myInfo?.classes ?? [];
+  //const dummyClassId = userInfoHandle.myInfo?.classes ?? [];
   const [isPopOn, setIsPopOn] = useState<boolean>(false);
-  const [code, setCode] = useState<string>("");
   const [currentClass, setCurrentClass] = useState<ClassType | undefined>(
     undefined
   );
   const [classes, setClasses] = useState<ClassType[]>([]);
-  const onChangeCode = (newCode: string) => {
-    setCode(newCode);
-  };
   const onClickModal = () => {
     setIsPopOn(!isPopOn);
   };
 
-  const getClassesInfoAll = async () => {
+  /*const getClassesInfoAll = async () => {
     if (userInfoHandle.myInfo) {
     }
-  };
+  };*/
   const onClickClass = (classId?: string) => {
     setCurrentClass(classes.find((item) => item?.id === classId));
   };
@@ -92,29 +86,29 @@ const ManageProject: FC<ManageProjectProps> = ({
     <Layout
       pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <div className={styles.btn_wrapper}>
           {userInfoHandle.myInfo?.userType === "student" && (
             <button className={styles.btn} onClick={onClickModal}>
-              "프로젝트 입장하기"
+              프로젝트 입장하기
             </button>
           )}
         </div>
 
         <div
-          className={`${currentClass === undefined && styles.class_container}`}>
+          className={`${currentClass === undefined && styles.class_container}`}
+        >
           {currentClass === undefined ? (
-            classes.map((item, index) => {
-              return (
-                <Class
-                  key={`class_${item?.id}`}
-                  classInfo={item}
-                  order={index}
-                  onClickClass={onClickClass}
-                />
-              );
-            })
+            classes.map((item, index) => (
+              <Class
+                key={`class_${item?.id}`}
+                classInfo={item}
+                order={index}
+                onClickClass={onClickClass}
+              />
+            ))
           ) : (
             <EditProject
               classInfo={currentClass}

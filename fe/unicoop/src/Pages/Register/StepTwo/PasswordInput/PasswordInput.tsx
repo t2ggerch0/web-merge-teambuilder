@@ -54,6 +54,8 @@ const PasswordInput: FC<PasswordInputProps> = ({
           placeholder={"••••••••••••••"}
           isPassword={true}
           isReadOnly={false}
+          width={"70%"}
+          height={30}
           onChange={passwordOnChange}
         />
         {!isPasswordValid && (
@@ -72,6 +74,8 @@ const PasswordInput: FC<PasswordInputProps> = ({
           placeholder={"••••••••••••••"}
           isPassword={true}
           isReadOnly={false}
+          width={"70%"}
+          height={30}
           onChange={passwordConfirmOnChange}
         />
       </div>

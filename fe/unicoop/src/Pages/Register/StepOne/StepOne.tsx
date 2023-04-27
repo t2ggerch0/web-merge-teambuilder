@@ -39,6 +39,8 @@ const StepOne: FC<StepOneProps> = ({
         placeholder={"ex) 홍길동"}
         isPassword={false}
         isReadOnly={false}
+        width={"70%"}
+        height={30}
         onChange={onChange}
       />
 
@@ -57,10 +59,14 @@ const StepOne: FC<StepOneProps> = ({
         placeholder={"ex) 123456"}
         isPassword={false}
         isReadOnly={false}
+        width={"70%"}
+        height={30}
         onChange={onChange}
       />
 
-      <UnicoopButton onClick={onClickNext}>다음</UnicoopButton>
+      <UnicoopButton backgroundColor={"blue"} onClick={onClickNext}>
+        다음
+      </UnicoopButton>
     </div>
   );
 };

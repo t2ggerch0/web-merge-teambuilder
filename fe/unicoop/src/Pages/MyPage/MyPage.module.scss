@@ -24,4 +24,17 @@
     align-items: center;
     padding: 50px 100px;
   }
+  .project {
+    display: flex;
+    gap: 4px;
+    align-self: flex-end;
+    padding: 0 100px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
