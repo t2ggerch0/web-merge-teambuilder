@@ -29,6 +29,22 @@
   }
 
   .question_container {
+    .menu {
+      display: flex;
+      justify-content: space-between;
+      width: 70%;
+      margin: auto;
+      .btn {
+        background-color: rgb(76, 76, 182);
+        color: white;
+        font-weight: 400;
+        border: none;
+        border-radius: 10px;
+        height: 40px;
+        width: 20%;
+        margin-bottom: 10px;
+      }
+    }
     .question_wrapper {
       display: flex;
       justify-content: space-between;
@@ -37,10 +53,6 @@
         font-weight: 800;
         width: 20%;
         text-align: center;
-      }
-      .menu {
-        .btn {
-        }
       }
     }
     .question_value {
