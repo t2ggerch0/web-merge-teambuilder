@@ -14,7 +14,7 @@ export const UnicoopProvider = ({ children }: { children: ReactNode }) => {
   const [myInfo, setMyInfo] = useState<MyInfoType | null>(null);
 
   axios.defaults.baseURL = baseURL;
-  axios.defaults.withCredentials = true;
+  // axios.defaults.withCredentials = true;
   setHeaders(getMyToken());
 
   return (
