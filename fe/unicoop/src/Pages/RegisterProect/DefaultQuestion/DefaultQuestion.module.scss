@@ -1,20 +1,22 @@
 .default_question {
   min-width: 700px;
   .question_wrapper {
-    margin: 20px 0px;
+    margin: 20px 0;
   }
   .question_title {
     display: flex;
+    gap: 20px;
     height: 50px;
     .question_content {
       align-items: center;
       display: flex;
-      width: 200px;
+      width: 300px;
       border-radius: 8px;
       border: none;
       background-color: #f1f1f1;
-      padding: 8px;
-      font-size: 14px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: bold;
     }
     .question_index {
       color: blue;
@@ -30,17 +32,17 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     margin-top: 10px;
-    margin-left: 100px;
+    margin-left: 120px;
     width: 450px;
     gap: 5px;
     .answer {
       display: flex;
       justify-content: center;
       max-width: 80px;
-      border-radius: 8px;
+      border-radius: 16px;
       border: none;
-      background-color: #f1f1f1;
-      padding: 5px;
+      background-color: #f6f6f6;
+      padding: 3px 5px;
       font-size: 14px;
 
       .cancel {

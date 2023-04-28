@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styles from "./ActivitySidebar.module.scss";
+import { useNavigate } from "react-router-dom";
 
 type ActivitySidebarProps = {
   activityArray: Array<string>;
@@ -14,6 +15,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
   activityIndex,
   setActivityIndex,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>
@@ -39,7 +42,14 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
           + add tab
         </div>
       </div>
-      <div className={styles.unicoop}>UNICOOP</div>
+      <div
+        className={styles.unicoop}
+        onClick={() => {
+          navigate("/manageproject");
+        }}
+      >
+        UNICOOP
+      </div>
     </div>
   );
 };

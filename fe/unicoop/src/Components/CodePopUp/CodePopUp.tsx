@@ -29,7 +29,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn }) => {
       console.log(response);
       console.log(accessKey);
       setIsPopOn(false);
-      navigate(`/apply&id=${response.data}`);
+      navigate(`/manageproject`);
     } catch (e) {
       console.log(e);
       if (axios.isAxiosError(e) && e.response) {
