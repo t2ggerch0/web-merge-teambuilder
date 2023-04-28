@@ -89,6 +89,14 @@ const ManageProject: FC<ManageProjectProps> = ({
       onChangeMenu={onChangeMenu}
     >
       <div className={styles.container}>
+        {classes.length === 0 && (
+          <div className={styles.noClass}>
+            <div className={styles.title}>아직 등록된 프로젝트가 없습니다.</div>
+            <div className={styles.subtitle}>
+              교수님으로부터 받은 입장코드를 통해 지금 프로젝트에 등록하세요.
+            </div>
+          </div>
+        )}
         <div className={styles.btn_wrapper}>
           {userInfoHandle.myInfo?.userType === "student" && (
             <button className={styles.btn} onClick={onClickModal}>
