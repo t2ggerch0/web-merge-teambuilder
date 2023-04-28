@@ -22,9 +22,10 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     if (!targetClass) {
       return res.status(403).json({ message: "Class not found" });
     }
-    
+ 
+    let classId = targetClass._id;
     // check if user is already in class
-    if (user.classes.includes(targetClass._id)) {
+    if (user.classes.includes(classId)) {
       return res.status(403).json({ message: "User is already in class" });
     }
 
