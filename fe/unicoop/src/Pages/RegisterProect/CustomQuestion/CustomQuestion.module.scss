@@ -4,13 +4,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0px;
+    margin: 20px 0;
     .add_question_button {
       background-color: #dbd2e0;
       border: none;
       border-radius: 8px;
       text-align: center;
       width: 100px;
+      cursor: pointer;
     }
   }
 
@@ -65,7 +66,7 @@
             border: none;
             border-radius: 8px;
             height: 100%;
-            padding: 0px 10px;
+            padding: 0 10px;
           }
         }
         .scoring_type {

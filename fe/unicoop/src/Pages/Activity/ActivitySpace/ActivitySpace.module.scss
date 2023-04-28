@@ -16,6 +16,7 @@
     flex-direction: column;
     gap: 16px;
     flex: 1;
+    animation: fromTop 1s;
     .post {
       display: flex;
       flex-direction: column;
@@ -68,5 +69,16 @@
         opacity: 1;
       }
     }
+  }
+}
+
+@keyframes fromTop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
   }
 }

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  animation: fadeIn 1s;
 
   .title {
     font-size: 24px;
@@ -18,6 +19,15 @@
     &.selected {
       opacity: 1;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
