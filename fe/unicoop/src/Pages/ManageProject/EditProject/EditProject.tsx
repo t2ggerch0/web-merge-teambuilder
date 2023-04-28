@@ -11,7 +11,11 @@ type EditProjectProps = {
   onFinishEditQuestion(classId?: string): void;
 };
 
-const EditProject: FC<EditProjectProps> = ({ classInfo, onClickClass, onFinishEditQuestion }) => {
+const EditProject: FC<EditProjectProps> = ({
+  classInfo,
+  onClickClass,
+  onFinishEditQuestion,
+}) => {
   const [question, setQuestion] = useState<QuestionType[]>([]);
 
   const getQuestion = async () => {
@@ -58,7 +62,10 @@ const EditProject: FC<EditProjectProps> = ({ classInfo, onClickClass, onFinishEd
           <button className={styles.btn}>질문 추가</button>
           <button className={styles.btn}>질문 수정</button>
           <button className={styles.btn}>질문 삭제</button>
-          <button className={styles.btn} onClick={() => onFinishEditQuestion(classInfo.id)}>
+          <button
+            className={styles.btn}
+            onClick={() => onFinishEditQuestion(classInfo.id)}
+          >
             질문 편집 완료
           </button>
         </div>
