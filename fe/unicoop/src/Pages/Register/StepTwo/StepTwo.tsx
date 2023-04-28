@@ -5,6 +5,7 @@ import PasswordInput from "./PasswordInput/PasswordInput";
 import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
 import { api } from "../../../API/api";
 import { RegisterInfo } from "../../../interface";
+import { useNavigate } from "react-router-dom";
 
 type StepTwoProps = {
   studentId: number;
@@ -33,6 +34,8 @@ const StepTwo: FC<StepTwoProps> = ({
   changeBoxContent,
   registerInfo,
 }) => {
+  const navigate = useNavigate();
+
   const onClickPrevious = () => {
     setRegisterStep(1);
   };
@@ -46,6 +49,8 @@ const StepTwo: FC<StepTwoProps> = ({
         placeholder={"ex) 2023311234"}
         isPassword={false}
         isReadOnly={false}
+        width={"70%"}
+        height={30}
         onChange={onChange}
       />
 
@@ -56,6 +61,8 @@ const StepTwo: FC<StepTwoProps> = ({
         placeholder={"ex) 소프트웨어학과"}
         isPassword={false}
         isReadOnly={false}
+        width={"70%"}
+        height={30}
         onChange={onChange}
       />
 
@@ -74,16 +81,23 @@ const StepTwo: FC<StepTwoProps> = ({
       </div>
 
       <div className={styles.buttons}>
-        <UnicoopButton onClick={onClickPrevious}>이전</UnicoopButton>
+        <UnicoopButton width={190} onClick={onClickPrevious}>
+          이전
+        </UnicoopButton>
         <UnicoopButton
-          onClick={() =>
-            api.verifyCode({
-              changeBoxContent,
-              isPasswordValid,
-              passwordConfirm,
-              registerInfo,
-            })
-          }
+          backgroundColor={"#435EA4"}
+          width={190}
+          onClick={() => {
+            api
+              .verifyCode({
+                changeBoxContent,
+                isPasswordValid,
+                passwordConfirm,
+                registerInfo,
+              })
+              .then();
+            navigate("/");
+          }}
         >
           회원가입
         </UnicoopButton>

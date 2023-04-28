@@ -13,9 +13,9 @@ type ClassProps = {
 const Class: FC<ClassProps> = ({ classInfo, order, onClickClass }) => {
   const color = [
     "#98c4cb",
-    "#5f634f",
+    "#7a8066",
     "#cfebdf",
-    "#358641",
+    "#43a952",
     "#dbd2e0",
     "#f3bfb3",
     "#f7e5b7",
@@ -28,7 +28,8 @@ const Class: FC<ClassProps> = ({ classInfo, order, onClickClass }) => {
     <div className={styles.class_box} onClick={onClickBox}>
       <div
         className={styles.color_box}
-        style={{ backgroundColor: `${color[order]}` }}>
+        style={{ backgroundColor: `${color[order]}` }}
+      >
         <EditIcon />
       </div>
       <div className={styles.class_info}>

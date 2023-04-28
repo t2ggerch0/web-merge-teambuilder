@@ -4,13 +4,13 @@
   font-weight: bold;
 
   .title {
-    font-size: 18px;
-    padding-left: 5px;
+    font-size: 24px;
+    margin: 0 0 10px 5px;
   }
 
   .subTitle {
-    font-size: 16px;
-    margin-left: 5px;
+    font-size: 18px;
+    margin: 0 0 10px 30px;
   }
 
   .selectBox {
@@ -42,7 +42,7 @@
         }
       }
       .optionText {
-        font-size: 15px;
+        font-size: 18px;
         opacity: 0.5;
         &.checked {
           opacity: 1;

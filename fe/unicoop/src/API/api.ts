@@ -1,5 +1,4 @@
-import useSWR from "swr";
-import axios, { HeadersDefaults } from "axios";
+import axios from "axios";
 import { viewToastSuccess, viewToastError } from "../helper";
 import { QuestionType, RegisterInfo } from "../interface";
 
@@ -357,4 +356,40 @@ export const api = {
       }
     }
   },
+  /*joinClass: async ({
+    accessKey,
+    token,
+  }: {
+    accessKey: string;
+    token: string;
+  }) => {
+    console.log(accessKey);
+    try {
+      const response = await axios.post(`/class/join-class`, {
+        accessKey,
+      });
+    } catch (e) {
+      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        const statusCode = e.response.status;
+        if (statusCode === 409) {
+          viewToastError(
+            "이미 등록된 사용자가 있거나 잘못된 학교 이메일 정보입니다."
+          );
+        } else if (statusCode === 500) {
+          viewToastError(
+            "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          );
+        } else {
+          viewToastError(
+            "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          );
+        }
+      } else {
+        viewToastError(
+          "알 수 없는 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+        );
+      }
+    }
+  },*/
 };

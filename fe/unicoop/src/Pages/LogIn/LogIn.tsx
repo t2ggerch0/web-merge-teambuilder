@@ -2,6 +2,7 @@ import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
 import LabelInput from "../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import { useNavigate } from "react-router-dom";
 
 type LoginProps = {
   changeBoxContent(): void;
@@ -9,6 +10,8 @@ type LoginProps = {
 };
 
 const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -21,6 +24,7 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
 
   const onClickLogin = () => {
     loginSuccess({ email, password });
+    navigate("/");
   };
 
   return (
@@ -32,7 +36,7 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
         value={email}
         title={"이메일"}
         placeholder={"unicoop@g.skku.edu"}
-        width={"100%"}
+        width={"70%"}
         padding={12}
         isPassword={false}
         isReadOnly={false}
@@ -44,14 +48,16 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
         value={password}
         title={"비밀번호"}
         placeholder={"비밀번호를 입력하세요"}
-        width={"100%"}
+        width={"70%"}
         padding={12}
         isPassword={true}
         isReadOnly={false}
         onChange={onChangePassword}
       />
 
-      <UnicoopButton onClick={onClickLogin}>로그인</UnicoopButton>
+      <UnicoopButton backgroundColor={"#435EA4"} onClick={onClickLogin}>
+        로그인
+      </UnicoopButton>
 
       <div className={styles.account_check} onClick={changeBoxContent}>
         아직 계정이 없으신가요?

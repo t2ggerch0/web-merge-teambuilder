@@ -18,6 +18,9 @@ const EditProfile = () => {
           placeholder={""}
           isPassword={false}
           isReadOnly={true}
+          width={"300px"}
+          height={"30px"}
+          fontSize={18}
           onChange={() => {}}
         />
       </div>
@@ -30,6 +33,9 @@ const EditProfile = () => {
           placeholder={""}
           isPassword={false}
           isReadOnly={true}
+          width={"300px"}
+          height={"30px"}
+          fontSize={18}
           onChange={() => {}}
         />
       </div>
@@ -42,6 +48,9 @@ const EditProfile = () => {
           placeholder={""}
           isPassword={false}
           isReadOnly={true}
+          width={"300px"}
+          height={"30px"}
+          fontSize={18}
           onChange={() => {}}
         />
       </div>
@@ -54,12 +63,18 @@ const EditProfile = () => {
           placeholder={""}
           isPassword={false}
           isReadOnly={true}
+          width={"300px"}
+          height={"30px"}
+          fontSize={18}
           onChange={() => {}}
         />
       </div>
       <div className={styles.buttons}>
-        <UnicoopButton onClick={() => {}}>수정 완료</UnicoopButton>
+        <UnicoopButton backgroundColor={"#6E43A4"} onClick={() => {}}>
+          수정 완료
+        </UnicoopButton>
         <UnicoopButton
+          backgroundColor={"#292929"}
           onClick={() => {
             api.deleteAccount(email).then();
           }}

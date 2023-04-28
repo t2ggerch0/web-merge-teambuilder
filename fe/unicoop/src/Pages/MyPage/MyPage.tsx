@@ -4,8 +4,11 @@ import { useAuthContext } from "../../Context/UnicoopContext";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
 import ViewProjects from "./ViewProjects/ViewProjects";
 import EditProfile from "./EditProfile/EditProfile";
+import { ArrowForward } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const userInfoHandle = useAuthContext();
   const [isViewProject, setIsViewProject] = useState<boolean>(true);
 
@@ -17,6 +20,7 @@ const MyPage = () => {
         </div>
         <div className={styles.buttons}>
           <UnicoopButton
+            backgroundColor={"#2c220d"}
             onClick={() => {
               setIsViewProject(true);
             }}
@@ -24,6 +28,7 @@ const MyPage = () => {
             참여한 프로젝트 보기
           </UnicoopButton>
           <UnicoopButton
+            backgroundColor={"darkGreen"}
             onClick={() => {
               setIsViewProject(false);
             }}
@@ -34,6 +39,15 @@ const MyPage = () => {
       </div>
       <div className={styles.body}>
         {isViewProject ? <ViewProjects /> : <EditProfile />}
+      </div>
+      <div
+        className={styles.project}
+        onClick={() => {
+          navigate("/manageProject");
+        }}
+      >
+        <ArrowForward />
+        Go to Projects
       </div>
     </div>
   );

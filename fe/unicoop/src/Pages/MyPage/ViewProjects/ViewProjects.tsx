@@ -5,7 +5,7 @@ import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
 const ViewProjects = () => {
   return (
     <div className={styles.viewProjects}>
-      <div className={styles.title}>내 프로젝트 ()</div>
+      <div className={styles.title}>내 프로젝트 (1)</div>
       <div className={styles.table}>
         <div className={styles.header}>
           <div className={styles.from}>From</div>
@@ -25,8 +25,12 @@ const ViewProjects = () => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <UnicoopButton onClick={() => {}}>Share</UnicoopButton>
-        <UnicoopButton onClick={() => {}}>Export</UnicoopButton>
+        <UnicoopButton backgroundColor={"navy"} onClick={() => {}}>
+          Share
+        </UnicoopButton>
+        <UnicoopButton backgroundColor={"red"} onClick={() => {}}>
+          Export
+        </UnicoopButton>
       </div>
     </div>
   );

@@ -1,1 +1,31 @@
-.apply {}
+.apply {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  height: 100vh;
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 100px 300px;
+    background-color: #bebebe;
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .subtitle {
+      font-size: 24px;
+    }
+  }
+  .questions {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    padding: 0 300px;
+  }
+  .button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}

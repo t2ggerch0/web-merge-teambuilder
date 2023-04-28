@@ -18,7 +18,7 @@ const Layout: FC<LayoutProps> = ({
   selectedMenu = 0,
   onChangeMenu,
 }) => {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const userInfoHandle = useAuthContext();
 
   const onClickLogout = () => {
@@ -36,32 +36,31 @@ const Layout: FC<LayoutProps> = ({
         token: "",
         userType: "",
       });
-      navigation("/");
+      navigate("/");
     }, 3000);
   };
 
   const onClickManageProject = () => {
     onChangeMenu(Menu.ManagementProject);
-    navigation("/manageproject");
+    navigate("/manageproject");
   };
 
   const onClickRegisterProject = () => {
     onChangeMenu(Menu.RegisterProject);
-    navigation("/registerproject");
+    navigate("/registerproject");
   };
   return (
     <div className={styles.container}>
       <div className={styles.left_bar}>
-        <div className={styles.title}>Capstone Team F</div>
+        <div className={styles.title}>UNICOOP</div>
         <div className={styles.menu}>
           <div
             className={`${styles.menu_item} ${
               selectedMenu === Menu.ManagementProject &&
               styles.menu_item_selected
             }`}
-            onClick={onClickManageProject}>
-            프로젝트 관리
-          </div>
+            onClick={onClickManageProject}
+          ></div>
 
           {userInfoHandle.myInfo?.userType === "professor" && (
             <div
@@ -69,12 +68,20 @@ const Layout: FC<LayoutProps> = ({
                 selectedMenu === Menu.RegisterProject &&
                 styles.menu_item_selected
               }`}
-              onClick={onClickRegisterProject}>
+              onClick={onClickRegisterProject}
+            >
               프로젝트 등록
             </div>
           )}
         </div>
-        <div className={styles.logo}>UNICOOP</div>
+        <div
+          className={styles.myPage}
+          onClick={() => {
+            navigate("/mypage");
+          }}
+        >
+          Go to My Page
+        </div>
       </div>
 
       <div className={styles.right_container}>
