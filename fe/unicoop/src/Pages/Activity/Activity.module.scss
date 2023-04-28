@@ -1,4 +1,14 @@
 .activity {
   display: flex;
   height: 100vh;
+  animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

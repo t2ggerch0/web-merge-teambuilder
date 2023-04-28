@@ -6,6 +6,7 @@
   padding: 24px 48px;
   border-radius: 24px;
   background-color: #f1f1f1;
+  animation: fromBottom 1s;
   .title {
     font-size: 24px;
     font-weight: bold;
@@ -46,4 +47,15 @@
 }
 .file {
   width: 20%;
+}
+
+@keyframes fromBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
 }

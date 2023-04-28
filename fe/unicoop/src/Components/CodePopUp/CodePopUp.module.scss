@@ -28,6 +28,7 @@
   padding: 30px 50px;
   position: absolute;
   color: #292929;
+  animation: fadeIn 1s;
 
   .text {
     width: 280px;
@@ -48,5 +49,14 @@
     &:focus {
       outline: none;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
