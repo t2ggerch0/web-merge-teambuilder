@@ -5,7 +5,7 @@
 
   .left_bar {
     width: 13%;
-    min-width: 120px;
+    min-width: 150px;
     background-color: #868686;
     color: white;
     font-weight: 800;
@@ -24,15 +24,16 @@
       flex-direction: column;
       justify-content: space-around;
       font-weight: 300;
-      color: gray;
+
       .menu_item {
         text-align: center;
         font-size: 25px;
+        color: rgb(35, 32, 32) !important;
       }
-        &:hover {
-          color: white;
-          font-weight: 600;
-        }
+      &:hover {
+        color: white;
+        font-weight: 600;
+      }
       .menu_item_selected {
         color: white;
         font-weight: 800;
@@ -97,7 +98,6 @@
     }
   }
 }
-
 
 @keyframes fromTop {
   from {
