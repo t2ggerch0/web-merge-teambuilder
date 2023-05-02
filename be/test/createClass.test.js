@@ -6,10 +6,10 @@ describe("Create Class API Tests", () => {
   let token = null;
 
   before(async () => {
-    // get token
+    // get professor login data
     const loginData = {
-      email: "juns98@g.skku.edu",
-      password: "1234",
+      email: "juns98@naver.com",
+      password: "abc123!!",
     };
 
     const res = await request(app).post("/auth/login").send(loginData);
