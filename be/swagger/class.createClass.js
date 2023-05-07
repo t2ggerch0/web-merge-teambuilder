@@ -39,7 +39,7 @@
  *               items:
  *                 type: integer
  *               example: [2, 2]
- *             leaderPosition:
+ *             hostPosition:
  *               type: string
  *               example: "frontend"
  *             recruitStartDate:
@@ -57,7 +57,7 @@
  *             isSecret:
  *               type: boolean
  *               example: false
- *             isLeaderParticipating:
+ *             isHostParticipating:
  *               type: boolean
  *               example: true
  *             questionIds:
