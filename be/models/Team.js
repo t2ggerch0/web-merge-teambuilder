@@ -5,7 +5,11 @@ const teamSchema = new Schema({
   name: {
     type: String,
   },
-  students: [
+  leader: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  members: [
     {
       type: Schema.Types.ObjectId,
       ref: "User",
