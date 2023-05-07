@@ -1,21 +1,22 @@
 /**
  * @swagger
- * /question:
+ * /class/guest:
  *   get:
  *     tags:
- *       - question
- *     summary: 질문 정보
- *     description: 질문ID로 질문 정보를 반환합니다.
+ *       - class
+ *     summary: 토큰으로 내가 게스트인 클래스 정보를 반환합니다.
+ *     description: 토큰으로 내가 게스트인 클래스 정보를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: questionId
- *         in: query
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
  *         required: true
  *         type: string
  *     responses:
  *       200:
- *         description: Question information retrieved successfully
+ *         description: Class information retrieved successfully
  *       500:
  *         description: Internal server error
  *         schema:

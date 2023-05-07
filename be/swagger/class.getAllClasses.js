@@ -1,6 +1,6 @@
 // /**
 //  * @swagger
-//  * /class:
+//  * /class/all:
 //  *   get:
 //  *     tags:
 //  *       - class
@@ -8,12 +8,6 @@
 //  *     description: 모든 class 정보를 반환합니다.
 //  *     produces:
 //  *       - application/json
-//  *     parameters:
-//  *       - name: Authorization
-//  *         description: JWT token
-//  *         in: header
-//  *         required: false
-//  *         type: string
 //  *    responses:
 //  *      200:
 //  *         description: Class information retrieved successfully

@@ -6,7 +6,7 @@ dotenv.config();
 
 const Class = require("../../models/Class");
 
-router.get("/list", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { classId } = req.query;
 

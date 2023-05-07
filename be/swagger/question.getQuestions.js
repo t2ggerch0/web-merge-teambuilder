@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /question/list:
+ * /question:
  *   get:
  *     tags:
  *       - question
@@ -16,13 +16,6 @@
  *     responses:
  *       200:
  *         description: Question list retrieved successfully
- *         schema:
- *           type: object
- *           properties:
- *             questions:
- *               type: array
- *               items:
- *                 $ref: '#/definitions/Question'
  *       500:
  *         description: Internal server error
  *         schema:

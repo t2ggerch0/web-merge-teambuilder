@@ -31,7 +31,7 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     // check if user is already in class
     if (user.classes.includes(targetClass._id)) {
       return res.status(403).json({ message: "User is already in class" });
-    } else if (targetClass.members.includes(userId)) {
+    } else if (targetClass.guest.includes(userId)) {
       return res.status(403).json({ message: "User is already in class" });
     }
 
@@ -61,14 +61,14 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     }
 
     const answerObject = new Answer({
-      member: userId,
+      guest: userId,
       answer: answerChoices,
     });
     targetClass.answers.push(answerObject);
 
-    // Add the user to the class's list of members
-    if (!targetClass.members.includes(userId)) {
-      targetClass.members.push(userId);
+    // Add the user to the class's list of guests
+    if (!targetClass.guest.includes(userId)) {
+      targetClass.guest.push(userId);
     }
 
     // Save targetClass to the database

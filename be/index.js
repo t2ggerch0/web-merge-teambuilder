@@ -68,15 +68,16 @@ const getUsers = require("./routes/auth/getUsers");
 //======class api======//
 // get
 const getClass = require("./routes/class/getClass");
+const getHostClasses = require("./routes/class/getHostClasses");
+const getGuestClasses = require("./routes/class/getGuestClasses");
 const getAllClasses = require("./routes/class/getAllClasses");
 
 // post
 const createClass = require("./routes/class/createClass");
 const joinClass = require("./routes/class/joinClass");
 
-// question api
-const getQuestion = require("./routes/question/getQuestion");
-const getQuestionList = require("./routes/question/getQuestionList");
+//======question api======//
+const getQuestions = require("./routes/question/getQuestions");
 
 //======Signing API======//
 
@@ -91,10 +92,11 @@ app.use("/auth", getUsers);
 app.use("/class", createClass);
 app.use("/class", joinClass);
 app.use("/class", getClass);
+app.use("/class", getHostClasses);
+app.use("/class", getGuestClasses);
 app.use("/class", getAllClasses);
 
 //======Question API======//
-app.use("/question", getQuestion);
-app.use("/question", getQuestionList);
+app.use("/question", getQuestions);
 
 module.exports = { app, server };

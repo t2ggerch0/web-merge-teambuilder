@@ -7,7 +7,7 @@ const User = require("../../models/User");
 
 router.post("/verify", async (req, res) => {
   try {
-    const { email, password, userType, verifyCode, name, studentId, major } = req.body;
+    const { email, password, verifyCode, name} = req.body;
 
     // Check verify code
     const defaultUser = await User.findOne({ email }, { verifyCode: 1 });
@@ -15,14 +15,17 @@ router.post("/verify", async (req, res) => {
       return res.status(400).json({ code: 0, message: "invalid verify code" });
     }
 
+    // Check for duplicate name
+    const existingNameUser = await User.findOne({ name: name });
+    if (existingNameUser) {
+      return res.status(409).json({ code: 0, message: "duplicated name" });
+    }
+
     // Update user.
     const hashedPassword = await bcrypt.hash(password, 10);
     defaultUser.password = hashedPassword;
-    defaultUser.userType = userType;
     defaultUser.verifyCode = -1;
     defaultUser.name = name;
-    defaultUser.studentId = studentId;
-    defaultUser.major = major;
     await defaultUser.save();
 
     return res.status(200).json({ code: 1 });
