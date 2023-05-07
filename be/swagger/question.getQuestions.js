@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /question/list:
+ * /question:
  *   get:
  *     tags:
  *       - question

@@ -75,9 +75,8 @@ const getAllClasses = require("./routes/class/getAllClasses");
 const createClass = require("./routes/class/createClass");
 const joinClass = require("./routes/class/joinClass");
 
-// question api
-const getQuestion = require("./routes/question/getQuestion");
-const getQuestionList = require("./routes/question/getQuestionList");
+//======question api======//
+const getQuestions = require("./routes/question/getQuestions");
 
 //======Signing API======//
 
@@ -96,7 +95,6 @@ app.use("/class", getGuestClasses);
 app.use("/class", getAllClasses);
 
 //======Question API======//
-app.use("/question", getQuestion);
-app.use("/question", getQuestionList);
+app.use("/question", getQuestions);
 
 module.exports = { app, server };
