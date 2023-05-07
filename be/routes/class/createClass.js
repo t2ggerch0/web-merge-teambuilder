@@ -45,11 +45,11 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       positionCounts.push(0);
     }
 
-    // check if leader is participating
+    // check if host is participating
     if (req.body.isHostParticipating) {
       const hostPosition = req.body.hostPosition;
 
-      // check if leader position is one of the position types
+      // check if host position is one of the position types
       if (!req.body.positionTypes.includes(hostPosition)) {
         return res.status(403).json({ message: "Invalid host position" });
       }
@@ -106,7 +106,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Save the new class to the database
     const savedClass = await newClass.save();
 
-    // Add the new class to the leader's list of classes
+    // Add the new class to the host's list of classes
 
     user.classes.push(savedClass._id);
     await user.save();

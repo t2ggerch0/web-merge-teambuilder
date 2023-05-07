@@ -2,7 +2,7 @@ const mongoos = require("mongoose");
 const { Schema } = mongoos;
 
 const answerSchema = new Schema({
-  member: {
+  guest: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
