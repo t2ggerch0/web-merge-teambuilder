@@ -67,7 +67,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     targetClass.answers.push(answerObject);
 
     // Add the user to the class's list of guests
-    if (!targetClass.guests.includes(userId)) {
+    console.log(targetClass);
+    console.log(targetClass.guests);
+    if (targetClass.guests != null && !targetClass.guests.includes(userId)) {
       targetClass.guests.push(userId);
     }
 
