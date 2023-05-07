@@ -19,15 +19,9 @@
  *               type: string
  *             password:
  *               type: string
- *             userType:
- *               type: string
  *             verifyCode:
  *               type: number
  *             name:
- *               type: string
- *             studentId:
- *               type: number
- *             major:
  *               type: string
  *     responses:
  *       200:
