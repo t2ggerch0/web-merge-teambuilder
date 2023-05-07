@@ -47,7 +47,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
 
     // check if leader is participating
     if (req.body.isHostParticipating) {
-      const leaderPosition = req.body.HostPosition;
+      const hostPosition = req.body.hostPosition;
 
       // check if leader position is one of the position types
       if (!req.body.positionTypes.includes(hostPosition)) {
