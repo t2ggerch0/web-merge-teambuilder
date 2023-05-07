@@ -15,6 +15,12 @@ router.post("/verify", async (req, res) => {
       return res.status(400).json({ code: 0, message: "invalid verify code" });
     }
 
+    // Check for duplicate name
+    const existingNameUser = await User.findOne({ name: name });
+    if (existingNameUser) {
+      return res.status(409).json({ code: 0, message: "duplicated name" });
+    }
+
     // Update user.
     const hashedPassword = await bcrypt.hash(password, 10);
     defaultUser.password = hashedPassword;

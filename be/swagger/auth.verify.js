@@ -43,6 +43,17 @@
  *             message:
  *               type: string
  *               example: invalid verify code
+ *       409:
+ *         description: 이미 등록된 이름이 있음
+ *         schema:
+ *           type: object
+ *           properties:
+ *             code:
+ *               type: integer
+ *               example: 0
+ *             message:
+ *               type: string
+ *               example: duplicated name
  *       500:
  *         description: 서버 내부 오류
  *         schema:
