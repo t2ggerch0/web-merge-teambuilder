@@ -14,10 +14,6 @@ const questionSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  isMandatory: {
-    type: Boolean,
-    required: true,
-  },
   weight: {
     type: Number,
     required: true,

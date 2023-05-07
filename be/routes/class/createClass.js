@@ -46,17 +46,17 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     }
 
     // check if leader is participating
-    if (req.body.isLeaderParticipating) {
-      const leaderPosition = req.body.leaderPosition;
+    if (req.body.isHostParticipating) {
+      const leaderPosition = req.body.HostPosition;
 
       // check if leader position is one of the position types
-      if (!req.body.positionTypes.includes(leaderPosition)) {
-        return res.status(403).json({ message: "Invalid leader position" });
+      if (!req.body.positionTypes.includes(hostPosition)) {
+        return res.status(403).json({ message: "Invalid host position" });
       }
 
-      // add position counts of leader position
-      const leaderPositionIndex = req.body.positionTypes.indexOf(leaderPosition);
-      positionCounts[leaderPositionIndex] += 1;
+      // add position counts of host position
+      const hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
+      positionCounts[hostPositionIndex] += 1;
     }
 
     //------ Create Questions ------//
@@ -77,7 +77,6 @@ router.post("/create-class", verifyJwt, async (req, res) => {
         id: questionIds[i],
         title: questionData.title,
         options: questionData.options,
-        isMandatory: questionData.isMandatory,
         weight: questionData.weight,
         countScore: questionData.countScore,
       });
@@ -87,7 +86,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
 
     // Create the new class with the request data
     const newClass = new Class({
-      leader: userId,
+      host: userId,
       questions: questions,
       className: req.body.className,
       classType: req.body.classType,
@@ -100,7 +99,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       activityStartDate: req.body.activityStartDate,
       activityEndDate: req.body.activityEndDate,
       isSecret: req.body.isSecret,
-      isLeaderParticipating: req.body.isLeaderParticipating,
+      isHostParticipating: req.body.isHostParticipating,
       accessKey: targetKey,
     });
 
@@ -132,13 +131,13 @@ router.post("/create-class", verifyJwt, async (req, res) => {
   "classDescription": "This is a class about web development",
   "positionTypes": ["frontend", "backend"],
   "positionComposition": [2, 2],
-  "leaderPosition": "frontend",
+  "hostPosition": "frontend",
   "recruitStartDate": "2021-05-01",
   "recruitEndDate": "2021-05-10",
   "activityStartDate": "2021-05-11",
   "activityEndDate": "2021-06-11",
   "isSecret": false,
-  "isLeaderParticipating": true
+  "isHostParticipating": true
   "questionIds": [0, 1, 2, 3]
 }
 

@@ -2,11 +2,11 @@ const mongoos = require("mongoose");
 const { Schema } = mongoos;
 
 const classSchema = new Schema({
-  leader: {
+  host: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  members: [
+  guest: [
     {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -81,7 +81,7 @@ const classSchema = new Schema({
     required: true,
     default: false,
   },
-  isLeaderParticipating: {
+  isHostParticipating: {
     type: Boolean,
     required: true,
   },

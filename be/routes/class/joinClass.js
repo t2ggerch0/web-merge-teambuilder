@@ -66,9 +66,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     });
     targetClass.answers.push(answerObject);
 
-    // Add the user to the class's list of members
-    if (!targetClass.members.includes(userId)) {
-      targetClass.members.push(userId);
+    // Add the user to the class's list of guests
+    if (!targetClass.guests.includes(userId)) {
+      targetClass.guests.push(userId);
     }
 
     // Save targetClass to the database
