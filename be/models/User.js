@@ -12,11 +12,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    // userType: {
-    //     type: String,
-    //     enum: ["professor", "student", "default"],
-    //     required: true,
-    // },
     verifyCode: {
       type: Number,
       required: true,

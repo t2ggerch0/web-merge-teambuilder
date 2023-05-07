@@ -7,7 +7,7 @@ const User = require("../../models/User");
 
 router.post("/verify", async (req, res) => {
   try {
-    const { email, password, userType, verifyCode, name, studentId, major } = req.body;
+    const { email, password, verifyCode, name} = req.body;
 
     // Check verify code
     const defaultUser = await User.findOne({ email }, { verifyCode: 1 });
@@ -18,7 +18,6 @@ router.post("/verify", async (req, res) => {
     // Update user.
     const hashedPassword = await bcrypt.hash(password, 10);
     defaultUser.password = hashedPassword;
-    defaultUser.userType = userType;
     defaultUser.verifyCode = -1;
     defaultUser.name = name;
     defaultUser.studentId = studentId;
