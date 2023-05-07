@@ -2,7 +2,7 @@
  * @swagger
  * /class/create-class:
  *   post:
- *     summary: 클래스를 생성하고 유일한 accessKey를 반환합니다.
+ *     summary: Create a new class
  *     tags:
  *       - class
  *     produces:
@@ -11,52 +11,89 @@
  *       - name: Authorization
  *         description: JWT token
  *         in: header
- *         required: false
+ *         required: true
  *         type: string
  *       - name: body
  *         in: body
- *         description: The class to create
+ *         description: The class data to create
  *         required: true
  *         schema:
  *           type: object
  *           properties:
- *             name:
+ *             className:
  *               type: string
- *             capacity:
- *               type: integer
- *             startDate:
+ *               example: "Creating web application using public API"
+ *             classType:
  *               type: string
- *               format: date
- *             endDate:
+ *               example: "web"
+ *             classDescription:
  *               type: string
- *               format: date
+ *               example: "This is a class about web development"
+ *             positionTypes:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: ["frontend", "backend"]
+ *             positionComposition:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *                 example: [2, 2]
+ *             leaderPosition:
+ *               type: string
+ *               example: "frontend"
+ *             recruitStartDate:
+ *               type: string
+ *               example: "2023-05-10"
+ *             recruitEndDate:
+ *               type: string
+ *               example: "2023-05-20"
+ *             activityStartDate:
+ *               type: string
+ *               example: "2023-05-21"
+ *             activityEndDate:
+ *               type: string
+ *               example: "2023-06-21"
+ *             isSecret:
+ *               type: boolean
+ *               example: false
+ *             isLeaderParticipating:
+ *               type: boolean
+ *               example: true
+ *             questionIds:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *                 example: [0, 1, 2, 3]
  *     responses:
  *       201:
- *         description: Class created successfully
+ *         description: Successfully created a new class
  *         schema:
  *           type: object
  *           properties:
  *             accessKey:
- *               type: number
+ *               type: integer
+ *               example: 123456
  *             classId:
  *               type: string
+ *               example: "6095b5f5b5ab8e1f02e4f3d4"
  *             message:
  *               type: string
- *               example: Class created successfully
+ *               example: "Class created successfully"
  *       403:
- *         description: Only professors can create a class
+ *         description: Error creating a new class
  *         schema:
  *           type: object
  *           properties:
  *             message:
  *               type: string
- *               example: Only professors can create a class
+ *               example: "Invalid position types and composition"
  *       500:
- *         description: Internal server error
+ *         description: An error occurred while creating the class
  *         schema:
  *           type: object
  *           properties:
  *             message:
  *               type: string
- *               example: Internal server error
+ *               example: "An error occurred while creating the class"
  */

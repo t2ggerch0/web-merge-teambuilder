@@ -2,13 +2,16 @@ const request = require("supertest");
 const assert = require("assert");
 const { app, server } = require("../index");
 
-describe("Create Class API Tests", () => {
+// test class id
+const classId = "64562a8c63b971cf3a7d9480";
+
+describe("Join Class API Tests", () => {
   let token = null;
 
   before(async () => {
-    // get professor login data
+    // get student login data
     const loginData = {
-      email: "juns98@naver.com",
+      email: "juns98@kakao.com",
       password: "abc123!!",
     };
 
@@ -24,23 +27,30 @@ describe("Create Class API Tests", () => {
   describe("POST /class/create-class", () => {
     it("should return status 201 and success true if class created successfully", (done) => {
       const classData = {
-        className: "testClass2",
-        classType: "web",
-        classDescription: "test create class",
-        positionTypes: ["frontend", "backend"],
-        positionComposition: [2, 2],
-        leaderPosition: "frontend",
-        recruitStartDate: "2021-05-01",
-        recruitEndDate: "2021-05-10",
-        activityStartDate: "2021-05-11",
-        activityEndDate: "2021-06-11",
-        isSecret: false,
-        isLeaderParticipating: true,
-        questionIds: [0, 1, 2, 3],
+        classId: classId,
+        position: "frontend",
+        answers: [
+          {
+            questionId: "0",
+            answer: 2,
+          },
+          {
+            questionId: "1",
+            answer: 1,
+          },
+          {
+            questionId: "2",
+            answer: [0, 3, 19],
+          },
+          {
+            questionId: "3",
+            answer: 0,
+          },
+        ],
       };
 
       request(app)
-        .post("/class/create-class")
+        .post("/class/join-class")
         .set("Authorization", `Bearer ${token}`)
         .send(classData)
         .expect(201)

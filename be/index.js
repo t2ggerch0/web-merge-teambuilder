@@ -30,7 +30,7 @@ dotenv.config();
 
 // DB
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URL, { bufferCommands: false });
+mongoose.connect(process.env.MONGODB_URL);
 
 // swagger
 const { swaggerUi, specs } = require("./swagger");
@@ -50,7 +50,7 @@ app.get("/", (req, res) => {
 });
 
 const port = 1398;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
@@ -73,14 +73,8 @@ const getAllClasses = require("./routes/class/getAllClasses");
 // post
 const createClass = require("./routes/class/createClass");
 const joinClass = require("./routes/class/joinClass");
-const addDefaultQuestions = require("./routes/class/addDefaultQuestions");
-const addCustomQuestions = require("./routes/class/addCustomQuestions");
-const endAddingQuestion = require("./routes/class/endAddingQuestion");
-const endAddingAnswer = require("./routes/class/endAddingAnswer");
-const submitAnswers = require("./routes/class/submitAnswers");
 
 // question api
-const createQuestion = require("./routes/question/createQuestion");
 const getQuestion = require("./routes/question/getQuestion");
 const getQuestionList = require("./routes/question/getQuestionList");
 
@@ -96,15 +90,11 @@ app.use("/auth", getUsers);
 
 app.use("/class", createClass);
 app.use("/class", joinClass);
-app.use("/class", addDefaultQuestions);
-app.use("/class", addCustomQuestions);
 app.use("/class", getClass);
 app.use("/class", getAllClasses);
-app.use("/class", endAddingQuestion);
-app.use("/class", endAddingAnswer);
-app.use("/class", submitAnswers);
 
 //======Question API======//
-app.use("/question", createQuestion);
 app.use("/question", getQuestion);
 app.use("/question", getQuestionList);
+
+module.exports = { app, server };
