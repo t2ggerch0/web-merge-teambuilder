@@ -21,7 +21,7 @@ router.get("/host", verifyJwt, async (req, res) => {
     let hostClasses = [];
     for (let index = 0; index < classes.length; index++) {
       let targetClass = await Class.findById(classes[index]);
-      if(userId == targetClass.leader){
+      if(userId == targetClass.host){
         hostClasses.push(targetClass);
       }
     }
