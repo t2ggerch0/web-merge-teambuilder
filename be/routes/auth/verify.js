@@ -26,8 +26,6 @@ router.post("/verify", async (req, res) => {
     defaultUser.password = hashedPassword;
     defaultUser.verifyCode = -1;
     defaultUser.name = name;
-    defaultUser.studentId = studentId;
-    defaultUser.major = major;
     await defaultUser.save();
 
     return res.status(200).json({ code: 1 });
