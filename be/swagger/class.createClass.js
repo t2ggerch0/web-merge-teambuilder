@@ -33,12 +33,12 @@
  *               type: array
  *               items:
  *                 type: string
- *                 example: ["frontend", "backend"]
+ *                 example: "frontend", "backend"
  *             positionComposition:
  *               type: array
  *               items:
  *                 type: integer
- *                 example: [2, 2]
+ *                 example: 2, 2
  *             hostPosition:
  *               type: string
  *               example: "frontend"
@@ -64,7 +64,7 @@
  *               type: array
  *               items:
  *                 type: integer
- *                 example: [0, 1, 2, 3]
+ *                 example: 0, 1, 2, 3
  *     responses:
  *       201:
  *         description: Successfully created a new class
