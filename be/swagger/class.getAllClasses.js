@@ -1,6 +1,6 @@
 // /**
 //  * @swagger
-//  * /class:
+//  * /class/all:
 //  *   get:
 //  *     tags:
 //  *       - class
