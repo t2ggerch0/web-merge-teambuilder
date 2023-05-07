@@ -1,17 +1,16 @@
 /**
  * @swagger
- * /class/guest:
+ * /class:
  *   get:
  *     tags:
  *       - class
- *     summary: 토큰으로 내가 게스트인 클래스 정보를 반환합니다.
- *     description: 토큰으로 내가 게스트인 클래스 정보를 반환합니다.
+ *     summary: 클래스 ID로 특정 클래스를 반환합니다.
+ *     description: 클래스 ID로 특정 클래스를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         description: JWT token
- *         in: header
+ *       - name: classId
+ *         in: query
  *         required: true
  *         type: string
  *     responses:
