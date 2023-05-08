@@ -2,7 +2,7 @@
  * @swagger
  * /team/message:
  *   post:
- *     summary: Send a new message to a team chat.
+ *     summary: 메시지를 생성합니다.
  *     tags:
  *       - team
  *     produces:
@@ -24,7 +24,7 @@
  *                 example: "The content of the message."
  *             teamId:
  *                 type: string
- *                 example: "The ID of the team that the message will be sent to."
+ *                 example: "6458eb87449770eae6745c3b"
  *     responses:
  *       200:
  *         description: The message was successfully sent.

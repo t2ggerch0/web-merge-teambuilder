@@ -5,7 +5,6 @@
  *     tags:
  *       - team
  *     summary: 유저가 속한 특정 클래스의 팀 정보를 반환합니다.
- *     description: 유저가 속한 특정 클래스의 팀 정보를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:

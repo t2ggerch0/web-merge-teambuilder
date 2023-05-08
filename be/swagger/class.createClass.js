@@ -2,7 +2,7 @@
  * @swagger
  * /class/create-class:
  *   post:
- *     summary: Create a new class
+ *     summary: 클래스를 생성합니다.
  *     tags:
  *       - class
  *     produces:
