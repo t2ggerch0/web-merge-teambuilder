@@ -32,3 +32,5 @@ router.post('/message', verifyJwt, async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+module.exports = router;
