@@ -81,6 +81,7 @@ const getQuestions = require("./routes/question/getQuestions");
 
 //======team api======//
 const getTeam = require("./routes/team/getTeam");
+const postMessage = require("./routes/team/postMessage");
 
 //======Signing API======//
 
@@ -104,5 +105,6 @@ app.use("/question", getQuestions);
 
 //======Team API ======//
 app.use("/team", getTeam);
+app.use("/team", postMessage);
 
 module.exports = { app, server };
