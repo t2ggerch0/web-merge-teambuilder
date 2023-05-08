@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /message:
+ * /team/message:
  *   post:
  *     summary: Send a new message to a team chat.
  *     tags:
