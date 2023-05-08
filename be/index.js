@@ -79,6 +79,9 @@ const joinClass = require("./routes/class/joinClass");
 //======question api======//
 const getQuestions = require("./routes/question/getQuestions");
 
+//======team api======//
+const getTeam = require("./routes/team/getTeam");
+
 //======Signing API======//
 
 app.use("/auth", checkEmail);
@@ -98,5 +101,8 @@ app.use("/class", getAllClasses);
 
 //======Question API======//
 app.use("/question", getQuestions);
+
+//======Team API ======//
+app.use("/team", getTeam);
 
 module.exports = { app, server };
