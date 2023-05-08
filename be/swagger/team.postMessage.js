@@ -28,6 +28,15 @@
  *     responses:
  *       200:
  *         description: The message was successfully sent.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             sender:
+ *                 type: string
+ *                 example: 60c6e7c9c9e8435138136d20
+ *             message:
+ *                 type: string
+ *                 example: "The content of the message."
  *       404:
  *         description: Team not found
  *         schema:
