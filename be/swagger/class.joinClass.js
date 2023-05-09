@@ -2,7 +2,7 @@
  * @swagger
  * /class/join-class:
  *   post:
- *     summary: Join a class
+ *     summary: 특정 클래스에 입장합니다.
  *     tags:
  *       - class
  *     produces:

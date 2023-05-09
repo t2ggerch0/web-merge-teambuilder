@@ -4,8 +4,7 @@
  *   get:
  *     tags:
  *       - question
- *     summary: 클래스별 질문 리스트
- *     description: 클래스 ID로 해당 클래스에 등록된 모든 질문 리스트를 반환합니다.
+ *     summary: 특정 클래스의 질문 리스트를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:

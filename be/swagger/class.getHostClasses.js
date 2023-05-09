@@ -5,7 +5,6 @@
  *     tags:
  *       - class
  *     summary: 토큰으로 내가 호스트인 클래스 정보를 반환합니다.
- *     description: 토큰으로 내가 호스트인 클래스 정보를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:

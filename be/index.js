@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./build/index.html"));
 });
 
-const port = 1398;
+const port = 3000;
 const server = app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
@@ -79,6 +79,10 @@ const joinClass = require("./routes/class/joinClass");
 //======question api======//
 const getQuestions = require("./routes/question/getQuestions");
 
+//======team api======//
+const getTeam = require("./routes/team/getTeam");
+const postMessage = require("./routes/team/postMessage");
+
 //======Signing API======//
 
 app.use("/auth", checkEmail);
@@ -98,5 +102,9 @@ app.use("/class", getAllClasses);
 
 //======Question API======//
 app.use("/question", getQuestions);
+
+//======Team API ======//
+app.use("/team", getTeam);
+app.use("/team", postMessage);
 
 module.exports = { app, server };

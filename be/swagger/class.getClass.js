@@ -5,7 +5,6 @@
  *     tags:
  *       - class
  *     summary: 클래스 ID로 특정 클래스를 반환합니다.
- *     description: 클래스 ID로 특정 클래스를 반환합니다.
  *     produces:
  *       - application/json
  *     parameters:
