@@ -1,6 +1,6 @@
 import axios from "axios";
 import { viewToastSuccess, viewToastError } from "../helper";
-import { QuestionType, RegisterInfo } from "../interface";
+import { ProjectRegisterInfo, QuestionType, RegisterInfo } from "../interface";
 
 export const baseURL =
   "https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app";
@@ -174,33 +174,51 @@ export const api = {
     }
   },
   createClass: async ({
-    name,
-    capacity,
-    startDate,
-    endDate,
+    data,
     token,
   }: {
-    name: string;
-    capacity: number;
-    startDate: string;
-    endDate: string;
+    data: ProjectRegisterInfo;
     token: string;
   }) => {
     try {
+      const {
+        activityEndDate,
+        activityStartDate,
+        classDescription,
+        className,
+        classType,
+        hostPosition,
+        isHostParticipating,
+        isSecret,
+
+        positionTypes,
+        questionIds,
+        recruitEndDate,
+        recruitStartDate,
+      } = data;
       return await axios
         .post(
           "/class/create-class",
           {
-            name,
-            capacity,
-            startDate,
-            endDate,
+            activityEndDate,
+            activityStartDate,
+            classDescription,
+            className,
+            classType,
+            hostPosition: isHostParticipating ? hostPosition : "",
+            isHostParticipating,
+            isSecret,
+            positionComposition: positionTypes.map((data) => data.composition),
+            positionTypes: positionTypes.map((data) => data.typeName),
+            questionIds,
+            recruitEndDate,
+            recruitStartDate,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         )
         .then((res) => {
-          console.log(res.data.classId);
-          return res.data.classId ?? "";
+          console.log(res.data);
+          return res.data ?? "";
         });
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {

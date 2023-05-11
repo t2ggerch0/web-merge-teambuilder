@@ -64,8 +64,7 @@ const EditProject: FC<EditProjectProps> = ({
           <button className={styles.btn}>질문 삭제</button>
           <button
             className={styles.btn}
-            onClick={() => onFinishEditQuestion(classInfo.id)}
-          >
+            onClick={() => onFinishEditQuestion(classInfo.id)}>
             질문 편집 완료
           </button>
         </div>
@@ -87,7 +86,7 @@ const EditProject: FC<EditProjectProps> = ({
                     return <div>{option}</div>;
                   })}
                 </div>
-                <div>{q.isMandatory ? q.isMandatory : "X"}</div>
+
                 <div>{q.weight}</div>
                 <div>{q.countScore}</div>
               </div>

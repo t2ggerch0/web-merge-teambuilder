@@ -1,8 +1,23 @@
+.row {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+.button {
+  margin-left: 10px !important;
+  width: 100px;
+}
 .label {
-  margin-bottom: 10px;
+  margin: 10px 0;
+  font-weight: 800 !important;
+  color: black !important;
+  min-width: 100px !important;
+  font-family: "Pretendard" !important;
+  // margin-right: 10px;
 }
 .duration {
   display: flex;
+  align-items: center;
   margin-bottom: 10px;
   .duration_label {
     width: 100px;
@@ -10,11 +25,11 @@
   .datepicker_container {
     .datepicker {
       outline: none;
-      width: 230px;
-      height: 20px;
+      width: 100px;
+      // height: 20px;
 
       border: none;
-      background-color: #f1f1f1;
+      // background-color: #f1f1f1;
 
       border-radius: 8px;
       padding: 8px;
@@ -43,4 +58,25 @@
     position: relative;
     right: 90px;
   }
+}
+.is_secret {
+  display: flex;
+  width: 300px;
+}
+
+.position_type {
+  display: flex;
+  width: 300px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.position_composition {
+  width: 80px !important;
+  margin-right: 5px !important;
+}
+.host_participation {
+  display: flex;
+  align-items: center;
+  height: 100px;
 }

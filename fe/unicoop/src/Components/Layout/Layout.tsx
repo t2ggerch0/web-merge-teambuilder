@@ -59,27 +59,23 @@ const Layout: FC<LayoutProps> = ({
               selectedMenu === Menu.ManagementProject &&
               styles.menu_item_selected
             }`}
-            onClick={onClickManageProject}
-          ></div>
+            onClick={onClickManageProject}>
+            프로젝트 관리
+          </div>
 
-          {userInfoHandle.myInfo?.userType === "professor" && (
-            <div
-              className={`${styles.menu_item} ${
-                selectedMenu === Menu.RegisterProject &&
-                styles.menu_item_selected
-              }`}
-              onClick={onClickRegisterProject}
-            >
-              프로젝트 등록
-            </div>
-          )}
+          <div
+            className={`${styles.menu_item} ${
+              selectedMenu === Menu.RegisterProject && styles.menu_item_selected
+            }`}
+            onClick={onClickRegisterProject}>
+            프로젝트 등록
+          </div>
         </div>
         <div
           className={styles.myPage}
           onClick={() => {
             navigate("/mypage");
-          }}
-        >
+          }}>
           Go to My Page
         </div>
       </div>

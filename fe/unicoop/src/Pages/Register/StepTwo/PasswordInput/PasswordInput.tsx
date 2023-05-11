@@ -37,7 +37,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
       setIsPasswordValid(true);
     }
     onChange(name, value);
-    console.log(value, strength);
+    // console.log(value, strength);
   };
 
   const passwordConfirmOnChange = (name: string, value: string) => {
