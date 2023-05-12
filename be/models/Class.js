@@ -86,9 +86,15 @@ const classSchema = new Schema({
     required: true,
   },
   accessKey: {
-    type: Number,
+    type: String,
     required: false,
   },
+  hasAccess: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoos.model("Class", classSchema);
