@@ -1,17 +1,70 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styles from "./DefaultQuestion.module.scss";
+import { Dayjs } from "dayjs";
 import { QuestionType } from "../../../interface";
-import Tooltip from "@mui/material/Tooltip";
 
 type DefaultQuestionProps = {
-  data: QuestionType[];
-  onChangeDefaultQuestionInfo(newInfo: QuestionType): void;
+  questionIds: number[];
+  onChangeDefaultQuestionInfo({
+    name,
+    value,
+  }: {
+    name: string;
+    value: string | number | string[] | number[] | Dayjs;
+  }): void;
 };
 
+const questionLists = [
+  {
+    id: 0,
+    title: "Coding Experience",
+    options: ["0~1", "1~3", "3~5", "5~10", "10+"],
+    weight: 5,
+    countScore: "same",
+  },
+  {
+    id: 1,
+    title: "How much time to spend?",
+    options: ["Extrovert", "Introvert"],
+    weight: 5,
+    countScore: "same",
+  },
+  {
+    id: 2,
+    title: "Preferred Date and Time",
+    options: [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    ],
+    weight: 10,
+    countScore: "same",
+  },
+  {
+    id: 3,
+    title: "Preferred Role",
+    options: ["Leader", "Follower"],
+    weight: 5,
+    countScore: "different",
+  },
+];
+
 const DefaultQuestion: FC<DefaultQuestionProps> = ({
-  data,
+  questionIds,
   onChangeDefaultQuestionInfo,
-}) => {
+}: DefaultQuestionProps) => {
+  const [data, setData] = useState<QuestionType[]>(questionLists);
+
+  const onDeleteQuestion = (targetId: number) => {
+    let newQuestionIds = questionIds.filter(
+      (questionId) => questionId !== targetId
+    );
+    onChangeDefaultQuestionInfo({ name: "questionIds", value: newQuestionIds });
+  };
+
+  useEffect(() => {
+    setData(
+      questionLists.filter((question) => questionIds.includes(question.id))
+    );
+  }, [questionIds]);
   return (
     <div>
       <div className={styles.default_question}>
@@ -21,7 +74,8 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
               <div className={styles.question_title}>
                 <div className={styles.question_index}>질문 {index + 1}</div>
                 <div className={styles.question_content}>{item.title}</div>
-                <div className={styles.score_type_container}>
+                <div onClick={() => onDeleteQuestion(item.id)}>삭제하기</div>
+                {/* <div className={styles.score_type_container}>
                   <Tooltip
                     placement="top"
                     title="서로 같은 응답을 한 경우에 점수를 부여합니다."
@@ -84,7 +138,7 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
                       />
                     </div>
                   </Tooltip>
-                </div>
+                </div> */}
               </div>
               <div className={styles.question_answers}>
                 {item.options.map((option, index) => (

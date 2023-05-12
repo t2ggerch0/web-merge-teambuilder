@@ -1,12 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./RegisterProject.module.scss";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import {
-  QuestionType,
-  ProjectRegisterInfo,
-  Menu,
-  ScoringType,
-} from "../../interface";
+import { ProjectRegisterInfo, Menu, positionTypes } from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from "../../API/api";
 import { ToastContainer } from "react-toastify";
@@ -14,9 +9,9 @@ import { useAuthContext } from "../../Context/UnicoopContext";
 import Layout from "../../Components/Layout/Layout";
 import ClassInfo from "./ClassInfo/ClassInfo";
 import DefaultQuestion from "./DefaultQuestion/DefaultQuestion";
-import CustomQuestion from "./CustomQuestion/CustomQuestion";
 import { viewToastError, viewToastSuccess } from "../../helper";
 import { useNavigate } from "react-router-dom";
+import dayjs, { Dayjs } from "dayjs";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -31,96 +26,46 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   const userInfoHandle = useAuthContext();
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>({
-      capacity: 0,
       className: "",
-      endDate: "2023.06.09",
-      questions: [],
-      startDate: "2023.03.02",
-    });
-
-  const [defaultQuestions, setDefaultQuestions] = useState<QuestionType[]>([
-    {
-      id: "1",
-      title: "What is your grade?",
-      type: "default",
-      options: ["freshman", "sophomore", "junior", "senior"],
-      isMandatory: false,
-      weight: 3,
-      countScore: "different",
-    },
-    {
-      id: "2",
-      title: "Personality",
-      type: "default",
-      options: ["Extrovert", "Introvert"],
-      isMandatory: false,
-      weight: 3,
-
-      countScore: "different",
-    },
-    {
-      id: "3",
-      title: "Preferred Date",
-      type: "default",
-      options: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
+      classType: "web",
+      classDescription: "",
+      positionTypes: [
+        { typeName: "frontend", composition: 1 },
+        { typeName: "backend", composition: 1 },
       ],
-      isMandatory: false,
-      weight: 3,
 
-      countScore: "same",
-    },
-    {
-      id: "4",
-      title: "English Skills",
-      type: "default",
-      options: ["Good", "Average", "Bad"],
-      isMandatory: false,
-      weight: 3,
-
-      countScore: "different",
-    },
-    {
-      id: "5",
-      title: "Preferred Role",
-      type: "default",
-      options: ["Leader", "Follower"],
-      isMandatory: false,
-      weight: 3,
-
-      countScore: "different",
-    },
-  ]);
-
-  const [customQuestions, setCustomQuestions] = useState<QuestionType[]>([]);
+      hostPosition: "frontend",
+      recruitStartDate: dayjs(new Date()),
+      recruitEndDate: dayjs(new Date()),
+      activityStartDate: dayjs(new Date()),
+      activityEndDate: dayjs(new Date()),
+      isSecret: true,
+      isHostParticipating: true,
+      questionIds: [0, 1, 2, 3],
+    });
 
   const onChangeClassInfo = ({
     name,
     value,
   }: {
     name: string;
-    value: string;
+    value:
+      | string
+      | number
+      | string[]
+      | number[]
+      | Dayjs
+      | boolean
+      | positionTypes[];
   }) => {
     console.log(name, value);
+
     setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
   };
 
   const onClickRegisterButton = () => {
     if (
-      customQuestions.length > 0 &&
-      (customQuestions.some((q) => q.title.length === 0) ||
-        customQuestions.some((q) => q.options.some((a) => a.length === 0)) ||
-        customQuestions.some((q) => q.countScore.length === 0))
-    ) {
-      viewToastError("Missing Custom Question Info");
-    } else if (
-      projectRegisterInfo.capacity === 0 ||
+      projectRegisterInfo.classDescription.length === 0 ||
       projectRegisterInfo.className.length === 0
     ) {
       viewToastError("Missing Class Info");
@@ -128,132 +73,19 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       const token = window.localStorage.getItem("token") ?? "";
       api
         .createClass({
-          name: projectRegisterInfo.className,
-          capacity: projectRegisterInfo.capacity,
-          startDate: projectRegisterInfo.startDate,
-          endDate: projectRegisterInfo.endDate,
-          token,
+          data: projectRegisterInfo,
+          token: token,
         })
-        .then((classId) => {
-          api
-            .addDefaultQuestion({
-              classId,
-              countScores: defaultQuestions.map((q) => {
-                return q.countScore;
-              }),
-              questionIndexes: defaultQuestions.map((q, index) => {
-                return index;
-              }),
-              token,
-              weights: defaultQuestions.map((q) => {
-                return q.weight;
-              }),
-            })
-            .then((res) => {
-              if (customQuestions.length > 0) {
-                api
-                  .addCustomQuestion({
-                    classId,
-                    token,
-                    questions: customQuestions,
-                  })
-                  .then((res) => {
-                    viewToastSuccess("수업을 생성했습니다.");
-                  });
-              } else {
-                viewToastSuccess("수업을 생성했습니다.");
-              }
-              updateUserInfo();
-              setTimeout(() => {
-                navigation("../manageproject");
-              }, 3000);
-            });
+        .then((res) => {
+          console.log(res);
+          viewToastSuccess("수업을 생성했습니다.");
+
+          updateUserInfo();
+          setTimeout(() => {
+            navigation("../manageproject");
+          }, 3000);
         });
     }
-  };
-
-  const onChangeDefaultQuestion = (updatedQuestionInfo: QuestionType) => {
-    setDefaultQuestions(
-      defaultQuestions.map((item) => {
-        if (item.id === updatedQuestionInfo.id) {
-          return {
-            ...item,
-            weight: updatedQuestionInfo.weight,
-            countScore: updatedQuestionInfo.countScore,
-          };
-        } else {
-          return item;
-        }
-      })
-    );
-  };
-
-  const onClickAddNewCustomQuestion = () => {
-    setCustomQuestions(
-      [
-        ...customQuestions,
-        {
-          countScore: "",
-          id: customQuestions.length.toString(),
-          isMandatory: true,
-          options: [""],
-
-          title: "",
-          type: "custom",
-          weight: 3,
-        },
-      ].map((item, index) => {
-        return {
-          ...item,
-          id: index.toString(),
-        };
-      })
-    );
-  };
-
-  const onClickAddAnswerToCustomQuestion = ({
-    answer,
-    questionId,
-  }: {
-    questionId: string;
-    answer: string;
-  }) => {
-    setCustomQuestions([
-      ...customQuestions.map((item) => {
-        if (item.id === questionId) {
-          return {
-            ...item,
-            options: [...item.options, answer],
-          };
-        } else {
-          return item;
-        }
-      }),
-    ]);
-  };
-
-  const onChangeCustomQuestionInfo = (newCustomQuestionInfo: QuestionType) => {
-    setCustomQuestions([
-      ...customQuestions.map((item) => {
-        if (item.id === newCustomQuestionInfo.id) {
-          return newCustomQuestionInfo;
-        } else {
-          return item;
-        }
-      }),
-    ]);
-  };
-
-  const onDeleteCustomQuestionInfo = (newCustomQuestionInfoId: string) => {
-    setCustomQuestions(
-      customQuestions
-        .filter((item) => {
-          return item.id !== newCustomQuestionInfoId;
-        })
-        .map((data, index) => {
-          return { ...data, id: index.toString() };
-        })
-    );
   };
 
   const updateUserInfo = () => {
@@ -261,7 +93,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     if (token) {
       api.getUserInfoByToken(token).then((res) => {
         userInfoHandle.setMyInfo({
-          userType: res?.user.userType ?? "student",
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
           id: res?.user.id ?? "",
@@ -305,21 +136,13 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           projectRegisterInfo={projectRegisterInfo}
         />
         <hr />
-        <div>팀 빌딩에 참고할 학생들의 정보를 설정해주세요</div>
+
         <div className={styles.questions}>
           <DefaultQuestion
-            data={defaultQuestions}
-            onChangeDefaultQuestionInfo={onChangeDefaultQuestion}
+            questionIds={projectRegisterInfo.questionIds}
+            onChangeDefaultQuestionInfo={onChangeClassInfo}
           />
           <hr />
-          <CustomQuestion
-            data={customQuestions}
-            defaultQuestionLength={defaultQuestions.length}
-            onChangeData={onChangeCustomQuestionInfo}
-            onAddNewData={onClickAddNewCustomQuestion}
-            onAddNewOption={onClickAddAnswerToCustomQuestion}
-            onDeleteData={onDeleteCustomQuestionInfo}
-          />
         </div>
         <div className={styles.button}>
           <UnicoopButton onClick={onClickRegisterButton}>

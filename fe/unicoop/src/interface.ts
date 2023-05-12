@@ -1,4 +1,5 @@
 import { HeadersDefaults } from "axios";
+import { Dayjs } from "dayjs";
 
 export type UnicoopContext = {
   myInfo: null | MyInfoType;
@@ -34,21 +35,30 @@ export enum ScoringType {
 
 export type ProjectRegisterInfo = {
   className: string;
-  capacity: number;
-  startDate: string;
-  endDate: string;
-  questions: QuestionType[];
+  classType: string;
+  classDescription: string;
+  positionTypes: positionTypes[];
+  hostPosition: string;
+  recruitStartDate: Dayjs;
+  recruitEndDate: Dayjs;
+  activityStartDate: Dayjs;
+  activityEndDate: Dayjs;
+  isSecret: boolean;
+  isHostParticipating: boolean;
+  questionIds: number[];
+};
+
+export type positionTypes = {
+  typeName: string;
+  composition: number;
 };
 
 export type QuestionType = {
+  id: number;
   title: string;
-  type: string;
-  options: string[];
-  isMandatory: boolean;
+  options: string[] | number[];
   weight: number;
-  scoringType?: string;
   countScore: string;
-  id: string;
 };
 
 export type UserTypeType = "student" | "professor" | "";
@@ -57,7 +67,7 @@ export type MyInfoType = {
   name: string;
   email: string;
   password: string;
-  userType: string;
+  userType?: string;
   classes: string[];
   major: string;
   studentId: number;
