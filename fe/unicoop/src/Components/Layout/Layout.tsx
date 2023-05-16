@@ -19,22 +19,19 @@ const Layout: FC<LayoutProps> = ({
   onChangeMenu,
 }) => {
   const navigate = useNavigate();
-  const userInfoHandle = useAuthContext();
+  const { myInfo, setMyInfo } = useAuthContext();
 
   const onClickLogout = () => {
     window.localStorage.removeItem("token");
     viewToastInfo("로그아웃되었습니다.");
     setTimeout(() => {
-      userInfoHandle.setMyInfo({
+      setMyInfo({
         classes: [],
         email: "",
         id: "",
-        major: "",
         name: "",
         password: "",
-        studentId: -1,
         token: "",
-        userType: "",
       });
       navigate("/");
     }, 3000);
@@ -56,26 +53,34 @@ const Layout: FC<LayoutProps> = ({
         <div className={styles.menu}>
           <div
             className={`${styles.menu_item} ${
-              selectedMenu === Menu.ManagementProject &&
-              styles.menu_item_selected
+              selectedMenu === Menu.ManagementProject && styles.selected
             }`}
-            onClick={onClickManageProject}>
-            프로젝트 관리
+            onClick={onClickManageProject}
+          >
+            <span className={styles.text}>프로젝트 관리</span>
+            {selectedMenu === Menu.ManagementProject && (
+              <div className={styles.circle} />
+            )}
           </div>
 
           <div
             className={`${styles.menu_item} ${
-              selectedMenu === Menu.RegisterProject && styles.menu_item_selected
+              selectedMenu === Menu.RegisterProject && styles.selected
             }`}
-            onClick={onClickRegisterProject}>
-            프로젝트 등록
+            onClick={onClickRegisterProject}
+          >
+            <span className={styles.text}>프로젝트 등록</span>
+            {selectedMenu === Menu.RegisterProject && (
+              <div className={styles.circle} />
+            )}
           </div>
         </div>
         <div
           className={styles.myPage}
           onClick={() => {
             navigate("/mypage");
-          }}>
+          }}
+        >
           Go to My Page
         </div>
       </div>
@@ -84,7 +89,7 @@ const Layout: FC<LayoutProps> = ({
         <div className={styles.page_title}>
           <div>{pageTitle}</div>
           <div className={styles.user_menu}>
-            <div>{`${userInfoHandle.myInfo?.name ?? ""} 님`}</div>
+            <div>{`${myInfo?.name ?? ""} 님`}</div>
 
             <div className={styles.logout} onClick={onClickLogout}>
               로그아웃

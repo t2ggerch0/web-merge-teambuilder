@@ -26,21 +26,18 @@ const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
         placeholder={"ex) unicoop@g.skku.edu"}
         isPassword={false}
         isReadOnly={false}
-        width={"70%"}
         height={30}
         onChange={onChange}
       />
-      <div className={styles.buttonWrapper}>
-        <UnicoopButton
-          fontSize={12}
-          backgroundColor={"#cc4730"}
-          borderRadius={12}
-          padding={"12px 16px"}
-          onClick={() => sendCode(email)}
-        >
-          인증받기
-        </UnicoopButton>
-      </div>
+      <UnicoopButton
+        fontSize={14}
+        backgroundColor={"#cc4730"}
+        borderRadius={8}
+        padding={"12px 20px"}
+        onClick={() => sendCode(email)}
+      >
+        인증받기
+      </UnicoopButton>
     </form>
   );
 };

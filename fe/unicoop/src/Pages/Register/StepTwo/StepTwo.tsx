@@ -1,15 +1,12 @@
 import React, { FC } from "react";
 import styles from "./StepTwo.module.scss";
-import LabelInput from "../../../Components/LabelInput/LabelInput";
 import PasswordInput from "./PasswordInput/PasswordInput";
 import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
-import { api } from "../../../API/api";
+import { authApi } from "../../../API/authApi";
 import { RegisterInfo } from "../../../interface";
 import { useNavigate } from "react-router-dom";
 
 type StepTwoProps = {
-  studentId: number;
-  major: string;
   password: string;
   isPasswordValid: boolean;
   setIsPasswordValid(e: boolean): void;
@@ -22,8 +19,6 @@ type StepTwoProps = {
 };
 
 const StepTwo: FC<StepTwoProps> = ({
-  studentId,
-  major,
   password,
   isPasswordValid,
   setIsPasswordValid,
@@ -42,30 +37,6 @@ const StepTwo: FC<StepTwoProps> = ({
 
   return (
     <div className={styles.stepTwo}>
-      <LabelInput
-        name={"studentId"}
-        value={studentId !== 0 ? studentId : ""}
-        title={"학번"}
-        placeholder={"ex) 2023311234"}
-        isPassword={false}
-        isReadOnly={false}
-        width={"70%"}
-        height={30}
-        onChange={onChange}
-      />
-
-      <LabelInput
-        name={"major"}
-        value={major}
-        title={"전공"}
-        placeholder={"ex) 소프트웨어학과"}
-        isPassword={false}
-        isReadOnly={false}
-        width={"70%"}
-        height={30}
-        onChange={onChange}
-      />
-
       <PasswordInput
         password={password}
         isPasswordValid={isPasswordValid}
@@ -88,7 +59,7 @@ const StepTwo: FC<StepTwoProps> = ({
           backgroundColor={"#435EA4"}
           width={190}
           onClick={() => {
-            api
+            authApi
               .verifyCode({
                 changeBoxContent,
                 isPasswordValid,

@@ -1,14 +1,11 @@
 import React, { FC } from "react";
 import styles from "./StepOne.module.scss";
-import UserTypeInput from "./UserTypeInput/UserTypeInput";
 import LabelInput from "../../../Components/LabelInput/LabelInput";
 import EmailInput from "./EmailInput/EmailInput";
 import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
-import { api } from "../../../API/api";
-import { UserTypeType } from "../../../interface";
+import { authApi } from "../../../API/authApi";
 
 type StepOneProps = {
-  userType: UserTypeType;
   name: string;
   email: string;
   verifyCode: number;
@@ -17,7 +14,6 @@ type StepOneProps = {
 };
 
 const StepOne: FC<StepOneProps> = ({
-  userType,
   name,
   email,
   verifyCode,
@@ -30,8 +26,6 @@ const StepOne: FC<StepOneProps> = ({
 
   return (
     <div className={styles.stepOne}>
-      <UserTypeInput userType={userType} setUserType={onChange} />
-
       <LabelInput
         name={"name"}
         value={name}
@@ -48,7 +42,7 @@ const StepOne: FC<StepOneProps> = ({
         email={email}
         setEmail={onChange}
         sendCode={(email) => {
-          api.sendCode(email).then();
+          authApi.sendCode(email).then();
         }}
       />
 

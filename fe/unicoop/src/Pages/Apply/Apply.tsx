@@ -1,29 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Apply.module.scss";
-import OptionRadios from "../../Components/OptionRadios/OptionRadios";
-/*import useSWR, { mutate } from "swr";
-import { swrFetcher } from "../../API/api";
+import useSWR from "swr";
+import { swrFetcher } from "../../API/authApi";
+import { viewToastError } from "../../helper";
+import { useParams } from "react-router-dom";
 import { QuestionType } from "../../interface";
+import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
-import { viewToastError } from "../../helper";*/
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
 
 const Apply = () => {
-  /*const { data, error, isValidating } = useSWR<Array<QuestionType>>(
-    "/questions",
-    swrFetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { projectId } = useParams();
+
+  const [answers, setAnswers] = useState<
+    Array<{ questionId: string; answer: number }>
+  >([]);
+
+  /*useEffect(() => {
+    const data = authApi.getQuestions("645d16f0ecc97092d68543e2");
+    console.log(data);
+  }, []);*/
+  const [checkedOptions, setCheckedOptions] = useState<Array<number>>([
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ]);
+
+  const { data, error, isValidating } = useSWR<{
+    questions: Array<QuestionType>;
+  }>(`/question?classId=${projectId}`, swrFetcher);
   if (!data || isValidating) {
     return <Loader />;
   }
   if (error) {
     viewToastError(error);
-  }*/
+  }
 
-  const onChange = (/*name: string, value: string*/) => {};
+  /*const data = {
+    questions: [
+      {
+        _id: "a",
+        id: 0,
+        title: "exp",
+        options: ["1 year", "2 years"],
+        weight: 5,
+        countScore: "same",
+      },
+      {
+        _id: "b",
+        id: 1,
+        title: "time",
+        options: ["1 hour", "3 hours"],
+        weight: 3,
+        countScore: "different",
+      },
+    ],
+  };*/
+
+  const onChange = (e: object) => {};
 
   return (
     <div className={styles.apply}>
@@ -34,24 +66,22 @@ const Apply = () => {
         </div>
       </div>
       <div className={styles.questions}>
-        <OptionRadios
-          title={"1. Preferred method of communication"}
-          subtitle={"팀 협업 시 선호하는 커뮤니케이션 방법은 무엇인가요?"}
-          name={"communication"}
-          isHorizontal={true}
-          options={["대면", "비대면"]}
-          checkedValue={"1"}
-          onChange={onChange}
-        />
-        <OptionRadios
-          title={"2. Time you are willing to dedicate to the project per week"}
-          subtitle={"일주일에 몇 시간을 이번 팀 프로젝트에 사용하실 건가요?"}
-          name={"time"}
-          isHorizontal={true}
-          options={["5시간 미만", "5-10시간", "10-15시간", "15시간 이상"]}
-          checkedValue={"1"}
-          onChange={onChange}
-        />
+        {data.questions.map((q, index) => (
+          <OptionRadios
+            title={q.title}
+            subtitle={""}
+            name={q.title}
+            isHorizontal={true}
+            options={q.options}
+            checkedOption={checkedOptions[index]}
+            setCheckedOption={(e) => {
+              const newOptions = checkedOptions.slice();
+              newOptions[index] = e;
+              setCheckedOptions(newOptions);
+            }}
+            onChange={onChange}
+          />
+        ))}
       </div>
       <div className={styles.button}>
         <UnicoopButton

@@ -7,9 +7,10 @@ type OptionRadiosProps = {
   subtitle: string;
   name: string;
   isHorizontal: boolean;
-  options: Array<string>;
-  checkedValue: string;
-  onChange(name: string, value: string): void;
+  options: Array<string | number>;
+  checkedOption: number;
+  setCheckedOption(e: number): void;
+  onChange(e: Object): void;
 };
 
 const OptionRadios: FC<OptionRadiosProps> = ({
@@ -18,9 +19,16 @@ const OptionRadios: FC<OptionRadiosProps> = ({
   name,
   isHorizontal,
   options,
-  checkedValue,
+  checkedOption,
+  setCheckedOption,
   onChange,
 }) => {
+  //const [selectedOption, setSelectedOption] = useState<string>("");
+  const onClickOption = (option: number) => {
+    //setSelectedOption(option);
+    setCheckedOption(option);
+  };
+
   return (
     <div className={styles.optionRadios}>
       {title !== "" && (
@@ -34,20 +42,20 @@ const OptionRadios: FC<OptionRadiosProps> = ({
           isHorizontal ? styles.horizontal : ""
         }`}
       >
-        {options.map((e) => (
+        {options.map((e, index) => (
           <div
             className={styles.option}
             key={name + e}
             onClick={() => {
-              onChange(name, e);
+              onClickOption(index);
             }}
           >
             <span
               className={`${styles.radioButton} ${
-                checkedValue === e ? styles.checked : ""
+                checkedOption === index ? styles.checked : ""
               }`}
             >
-              {checkedValue === e ? (
+              {checkedOption === index ? (
                 <CheckOutlined
                   style={{
                     strokeWidth: 2,
@@ -61,7 +69,7 @@ const OptionRadios: FC<OptionRadiosProps> = ({
             </span>
             <span
               className={`${styles.optionText} ${
-                checkedValue === e ? styles.checked : ""
+                checkedOption === index ? styles.checked : ""
               }`}
             >
               {e}

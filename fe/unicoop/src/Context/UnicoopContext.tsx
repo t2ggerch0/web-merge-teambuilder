@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import axios from "axios";
-import { baseURL, setHeaders } from "../API/api";
+import { getMyToken } from "../helper";
+import { baseURL, setHeaders, authApi } from "../API/authApi";
 import {
   UnicoopContext,
   unicoopContextDefault,
   MyInfoType,
 } from "../interface";
-import { getMyToken } from "../helper";
 
 const AuthContext = createContext<UnicoopContext>(unicoopContextDefault);
 
@@ -16,6 +22,31 @@ export const UnicoopProvider = ({ children }: { children: ReactNode }) => {
   axios.defaults.baseURL = baseURL;
   // axios.defaults.withCredentials = true;
   setHeaders(getMyToken());
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await refreshAuth();
+      } catch (e) {}
+    };
+    init().then();
+  }, []);
+
+  const refreshAuth = async () => {
+    try {
+      const token = getMyToken();
+      if (token) {
+        const data = await authApi.getMyInfo(token);
+        if (data) {
+          setMyInfo(data);
+        } else {
+          throw new Error("error");
+        }
+      }
+    } catch (e) {
+      throw new Error("error");
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ myInfo, setMyInfo }}>
