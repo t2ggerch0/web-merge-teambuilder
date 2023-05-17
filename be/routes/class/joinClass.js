@@ -45,6 +45,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     const positionIndex = targetClass.positionTypes.indexOf(position);
     targetClass.positionCounts[positionIndex] += 1;
 
+    // update User's position
+    user.positionIndexes.push(positionIndex);
+
     //------ Verify answers ------//
     // get user answers to questions
     const answers = req.body.answers;
