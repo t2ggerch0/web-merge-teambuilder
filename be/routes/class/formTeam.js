@@ -8,6 +8,7 @@ dotenv.config();
 const verifyClassId = require("../../utils/verifyClassId");
 const User = require("../../models/User");
 const CreateGraph = require("../../utils/createGraph");
+const CreateTeam = require("../../utils/createTeam");
 
 router.post("/form-team", verifyJwt, async (req, res) => {
   try {
@@ -78,8 +79,13 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     //====== Form Teams ======//
     // get question ids
     const questionIds = targetClass.questionIds;
+
+    // create Graph
     let graph = CreateGraph(validGuests, validAnswers, questionIds);
     console.log(graph);
+
+    // create team using graph
+    CreateTeam(graph.guests, graph.edges, positionComposition);
 
     // save class
     await targetClass.save();
