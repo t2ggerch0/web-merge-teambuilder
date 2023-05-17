@@ -87,7 +87,10 @@ export type ClassType = {
   endQuestion: boolean;
   endAnswer: boolean;
 };
-
+export type TeamMessage = {
+  message: string;
+  teamId: number;
+};
 export type NewClassType = {
   _id: string;
   host: string;

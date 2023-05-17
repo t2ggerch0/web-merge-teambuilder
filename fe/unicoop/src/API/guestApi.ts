@@ -33,4 +33,16 @@ export const guestApi = {
       }
     }
   },
+  getClass: async (token: string) => {
+    try {
+      const response = await axios.get("class/guest", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data ?? "";
+    } catch (e) {
+      viewToastError(
+        "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+      );
+    }
+  },
 };
