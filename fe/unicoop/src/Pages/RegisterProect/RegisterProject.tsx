@@ -1,17 +1,23 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./RegisterProject.module.scss";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
-import { ProjectRegisterInfo, Menu, positionTypes } from "../../interface";
-import "react-datepicker/dist/react-datepicker.css";
-import { api } from "../../API/api";
-import { ToastContainer } from "react-toastify";
-import { useAuthContext } from "../../Context/UnicoopContext";
+import { Dayjs } from "dayjs";
 import Layout from "../../Components/Layout/Layout";
 import ClassInfo from "./ClassInfo/ClassInfo";
 import DefaultQuestion from "./DefaultQuestion/DefaultQuestion";
-import { viewToastError, viewToastSuccess } from "../../helper";
+import { authApi } from "../../API/authApi";
+import { hostApi } from "../../API/hostApi";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import dayjs, { Dayjs } from "dayjs";
+import { useAuthContext } from "../../Context/UnicoopContext";
+import { viewToastError, viewToastSuccess } from "../../helper";
+import {
+  ProjectRegisterInfo,
+  Menu,
+  positionTypes,
+  defaultQuestions,
+} from "../../interface";
+import "react-datepicker/dist/react-datepicker.css";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -22,27 +28,10 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   selectedMenu,
   onChangeMenu,
 }) => {
-  const navigation = useNavigate();
-  const userInfoHandle = useAuthContext();
+  const navigate = useNavigate();
+  const { myInfo, setMyInfo } = useAuthContext();
   const [projectRegisterInfo, setProjectRegisterInfo] =
-    useState<ProjectRegisterInfo>({
-      className: "",
-      classType: "web",
-      classDescription: "",
-      positionTypes: [
-        { typeName: "frontend", composition: 1 },
-        { typeName: "backend", composition: 1 },
-      ],
-
-      hostPosition: "frontend",
-      recruitStartDate: dayjs(new Date()),
-      recruitEndDate: dayjs(new Date()),
-      activityStartDate: dayjs(new Date()),
-      activityEndDate: dayjs(new Date()),
-      isSecret: true,
-      isHostParticipating: true,
-      questionIds: [0, 1, 2, 3],
-    });
+    useState<ProjectRegisterInfo>(defaultQuestions);
 
   const onChangeClassInfo = ({
     name,
@@ -58,8 +47,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       | boolean
       | positionTypes[];
   }) => {
-    console.log(name, value);
-
     setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
   };
 
@@ -71,35 +58,25 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       viewToastError("Missing Class Info");
     } else {
       const token = window.localStorage.getItem("token") ?? "";
-      api
-        .createClass({
-          data: projectRegisterInfo,
-          token: token,
-        })
-        .then((res) => {
-          console.log(res);
-          viewToastSuccess("수업을 생성했습니다.");
+      const response = hostApi.createClass(projectRegisterInfo, token).then();
+      console.log(response);
+      viewToastSuccess("수업을 생성했습니다.");
 
-          updateUserInfo();
-          setTimeout(() => {
-            navigation("../manageproject");
-          }, 3000);
-        });
+      updateUserInfo();
+      navigate("../manageproject");
     }
   };
 
   const updateUserInfo = () => {
-    const token = userInfoHandle.myInfo?.token ?? "";
+    const token = myInfo?.token ?? "";
     if (token) {
-      api.getUserInfoByToken(token).then((res) => {
-        userInfoHandle.setMyInfo({
+      authApi.getMyInfo(token).then((res) => {
+        setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
           id: res?.user.id ?? "",
-          major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
-          studentId: res?.user.studentId ?? -1,
           token: token ?? "",
         });
       });
@@ -109,16 +86,13 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   useEffect(() => {
     let token = localStorage.getItem("token");
     if (token !== null) {
-      api.getUserInfoByToken(token).then((res) => {
-        userInfoHandle.setMyInfo({
-          userType: res?.user.userType ?? "student",
+      authApi.getMyInfo(token).then((res) => {
+        setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
           id: res?.user.id ?? "",
-          major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
-          studentId: res?.user.studentId ?? -1,
           token: token ?? "",
         });
       });
@@ -129,7 +103,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     <Layout
       pageTitle="프로젝트 등록"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <ClassInfo
           onChangeClassInfo={onChangeClassInfo}

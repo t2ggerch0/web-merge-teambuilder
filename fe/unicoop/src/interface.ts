@@ -1,5 +1,5 @@
 import { HeadersDefaults } from "axios";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export type UnicoopContext = {
   myInfo: null | MyInfoType;
@@ -20,18 +20,9 @@ export const unicoopContextDefault = {
 export type RegisterInfo = {
   name: string;
   email: string;
-  userType: UserTypeType;
-  studentId: number;
-  major: string;
   password: string;
   verifyCode: number;
 };
-
-export enum ScoringType {
-  points = "points",
-  single = "single",
-  multi = "multi",
-}
 
 export type ProjectRegisterInfo = {
   className: string;
@@ -48,6 +39,18 @@ export type ProjectRegisterInfo = {
   questionIds: number[];
 };
 
+export type JoinProjectType = {
+  classId: string;
+  accessKey: number;
+  position: string;
+  answers: Array<AnswersType>;
+};
+
+export type AnswersType = {
+  questionId: string;
+  answer: number;
+};
+
 export type positionTypes = {
   typeName: string;
   composition: number;
@@ -61,23 +64,18 @@ export type QuestionType = {
   countScore: string;
 };
 
-export type UserTypeType = "student" | "professor" | "";
-
 export type MyInfoType = {
   name: string;
   email: string;
   password: string;
-  userType?: string;
   classes: string[];
-  major: string;
-  studentId: number;
   id: string;
   token: string;
 };
 
 export type ClassType = {
-  id: string;
-  professor: string[];
+  _id: string;
+  professor: string;
   name: string;
   students: number[];
   teams: number[];
@@ -88,6 +86,47 @@ export type ClassType = {
   endDate: string;
   endQuestion: boolean;
   endAnswer: boolean;
+};
+
+export type NewClassType = {
+  _id: string;
+  host: string;
+  guest: Array<string>;
+  teams: Array<string>;
+  questions: Array<string>;
+  answers: Array<string>;
+  className: string;
+  classDescription: string;
+  classType: string;
+  positionTypes: Array<string>;
+  positionComposition: Array<number>;
+  positionCounts: Array<number>;
+  recruitStartDate: Date;
+  recruitEndDate: Date;
+  activityStartDate: Date;
+  activityEndDate: Date;
+  isSecret: boolean;
+  isHostParticipating: boolean;
+  accessKey: number;
+};
+
+export const defaultQuestions: ProjectRegisterInfo = {
+  className: "",
+  classType: "web",
+  classDescription: "",
+  positionTypes: [
+    { typeName: "frontend", composition: 1 },
+    { typeName: "backend", composition: 1 },
+  ],
+
+  hostPosition: "frontend",
+  recruitStartDate: dayjs(new Date()),
+  recruitEndDate: dayjs(new Date()),
+  activityStartDate: dayjs(new Date()),
+  activityEndDate: dayjs(new Date()),
+  isSecret: true,
+  isHostParticipating: true,
+  questionIds: [0, 1, 2, 3],
 };
 
 export type AxiosRequestHeaders = Record<string, string>;

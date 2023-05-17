@@ -2,18 +2,26 @@ import React from "react";
 import styles from "./EditProfile.module.scss";
 import LabelInput from "../../../Components/LabelInput/LabelInput";
 import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
-import { api } from "../../../API/api";
+import { authApi } from "../../../API/authApi";
+import { useAuthContext } from "../../../Context/UnicoopContext";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
-  const email = "";
+  const { myInfo } = useAuthContext();
+  const navigate = useNavigate();
+
+  const deleteAccount = (email: string) => {
+    authApi.deleteAccount(email).then();
+    navigate("/");
+  };
 
   return (
     <div className={styles.editProfile}>
       <div className={styles.row}>
-        <div className={styles.title}>학교</div>
+        <div className={styles.title}>이름</div>
         <LabelInput
-          name={"school"}
-          value={"성균관대학교"}
+          name={"name"}
+          value={myInfo?.name ?? ""}
           title={""}
           placeholder={""}
           isPassword={false}
@@ -24,41 +32,12 @@ const EditProfile = () => {
           onChange={() => {}}
         />
       </div>
-      <div className={styles.row}>
-        <div className={styles.title}>학번</div>
-        <LabelInput
-          name={"studentId"}
-          value={"20231234"}
-          title={""}
-          placeholder={""}
-          isPassword={false}
-          isReadOnly={true}
-          width={"300px"}
-          height={"30px"}
-          fontSize={18}
-          onChange={() => {}}
-        />
-      </div>
-      <div className={styles.row}>
-        <div className={styles.title}>전공</div>
-        <LabelInput
-          name={"major"}
-          value={"소프트웨어학과"}
-          title={""}
-          placeholder={""}
-          isPassword={false}
-          isReadOnly={true}
-          width={"300px"}
-          height={"30px"}
-          fontSize={18}
-          onChange={() => {}}
-        />
-      </div>
+
       <div className={styles.row}>
         <div className={styles.title}>이메일</div>
         <LabelInput
           name={"email"}
-          value={"unicoop@g.skku.edu"}
+          value={myInfo?.email ?? ""}
           title={""}
           placeholder={""}
           isPassword={false}
@@ -76,7 +55,7 @@ const EditProfile = () => {
         <UnicoopButton
           backgroundColor={"#292929"}
           onClick={() => {
-            api.deleteAccount(email).then();
+            deleteAccount(myInfo?.email ?? "");
           }}
         >
           회원 탈퇴

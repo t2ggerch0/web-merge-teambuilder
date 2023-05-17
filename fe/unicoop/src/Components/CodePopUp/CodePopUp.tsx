@@ -1,72 +1,26 @@
 import React, { useState, FC } from "react";
 import styles from "./CodePopUp.module.scss";
-import axios from "axios";
 import Modal from "react-modal";
 import UnicoopButton from "../UnicoopButton/UnicoopButton";
 import { useNavigate } from "react-router-dom";
-import { viewToastError } from "../../helper";
-import { setHeaders } from "../../API/api";
-import { useAuthContext } from "../../Context/UnicoopContext";
+import { NewClassType } from "../../interface";
 
 type PopUpProps = {
   isPopOn: boolean;
   setIsPopOn(e: boolean): void;
+  projectInfo: NewClassType;
 };
 
-const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn }) => {
+const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
   const navigate = useNavigate();
-  const userInfoHandle = useAuthContext();
   const [inputKey, setInputKey] = useState<string>("");
 
-  const joinClass = async (accessKey: string) => {
-    console.log(accessKey);
-    try {
-      setHeaders(userInfoHandle.myInfo?.token ?? "");
-      const response = await axios.post(`/class/join-class`, {
-        accessKey,
-      });
-
-      console.log(response);
-      console.log(accessKey);
-      setIsPopOn(false);
-      navigate(`/manageproject`);
-    } catch (e) {
-      console.log(e);
-      if (axios.isAxiosError(e) && e.response) {
-        const statusCode = e.response.status;
-        if (statusCode === 409) {
-          viewToastError(
-            "이미 등록된 사용자가 있거나 잘못된 학교 이메일 정보입니다."
-          );
-        } else if (statusCode === 500) {
-          viewToastError(
-            "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
-          );
-        } else {
-          viewToastError(
-            "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
-          );
-        }
-      } else {
-        viewToastError(
-          "알 수 없는 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
-        );
-      }
+  const enterCode = (inputKey: string) => {
+    if (inputKey === projectInfo.accessKey.toString()) {
+      navigate(`/apply/${projectInfo._id}`);
+      console.log("yes");
     }
   };
-
-  /*const submitCode = (accessKey: string) => {
-    if (userInfoHandle.myInfo?.token) {
-      api
-        .joinClass({
-          accessKey,
-          token: userInfoHandle.myInfo?.token,
-        })
-        .then();
-      setIsPopOn(false);
-      navigate(`/apply&id=${response.data}`);
-    }
-  };*/
 
   return (
     <Modal
@@ -91,7 +45,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn }) => {
         <UnicoopButton
           backgroundColor={"navy"}
           onClick={() => {
-            joinClass(inputKey).then();
+            enterCode(inputKey);
           }}
         >
           입장하기

@@ -1,33 +1,23 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import styles from "./ManageProject.module.scss";
-import { ClassType, Menu, UserTypeType } from "../../interface";
-import Class from "./Class/Class";
-import CodePopUp from "../../Components/CodePopUp/CodePopUp";
 import Layout from "../../Components/Layout/Layout";
-import { api } from "../../API/api";
-import { useAuthContext } from "../../Context/UnicoopContext";
-import EditProject from "./EditProject/EditProject";
+import { ClassType, Menu } from "../../interface";
 
 type ManageProjectProps = {
-  something?: string;
-  userType?: UserTypeType;
   selectedMenu: Menu;
   onChangeMenu(menuId: Menu): void;
 };
 
 const ManageProject: FC<ManageProjectProps> = ({
-  something,
   selectedMenu,
   onChangeMenu,
-  userType = "student",
 }) => {
-  const userInfoHandle = useAuthContext();
-  //const dummyClassId = userInfoHandle.myInfo?.classes ?? [];
   const [isPopOn, setIsPopOn] = useState<boolean>(false);
   const [currentClass, setCurrentClass] = useState<ClassType | undefined>(
     undefined
   );
-  const [classes, setClasses] = useState<ClassType[]>([]);
+  //const [classes, setClasses] = useState<ClassType[]>([]);
+
   const onClickModal = () => {
     setIsPopOn(!isPopOn);
   };
@@ -35,37 +25,32 @@ const ManageProject: FC<ManageProjectProps> = ({
   /*const getClassesInfoAll = async () => {
     if (userInfoHandle.myInfo) {
     }
-  };*/
+  };
   const onClickClass = (classId?: string) => {
-    setCurrentClass(classes.find((item) => item?.id === classId));
+    setCurrentClass(classes.find((item) => item?._id === classId));
   };
 
   const onFinishEditQuestion = (classId?: string) => {
     if (classId && userInfoHandle.myInfo?.token) {
-      api.endQuestion({
+      authApi.endQuestion({
         token: userInfoHandle.myInfo?.token,
         classId,
       });
     }
-  };
+  };*/
 
-  useEffect(() => {
-    let token = window.localStorage.getItem("token") ?? "";
-    console.log("token", token);
-
-    api
-      .getUserInfoByToken(token)
+  /*useEffect(() => {
+    let token = getMyToken();
+    authApi
+      .getMyInfo(token)
       .then((res) => {
         console.log("res", res.user);
         userInfoHandle.setMyInfo({
-          userType: res?.user.userType ?? "student",
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
           id: res?.user?._id ?? "",
-          major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
-          studentId: res?.user.studentId ?? -1,
           token,
         });
         return res.user.classes as string[];
@@ -73,14 +58,42 @@ const ManageProject: FC<ManageProjectProps> = ({
       .then(async (classes) => {
         const result = await Promise.all(
           classes.map((id) => {
-            return api.getClassInfo(id).then((res) => {
+            return authApi.getClassInfo(id).then((res) => {
               return res as ClassType;
             });
           })
         );
         setClasses(result);
       });
-  }, []);
+  }, []);*/
+
+  // useSWR을 활용한 class/host GET Method
+
+  /*const { data, error } = useSWR<{ hostClasses: Array<NewClassType> }>(
+    `/class/host`,
+    swrFetcher
+  );
+  if (!data) {
+    return <div></div>;
+  } else {
+    console.log(data);
+  }
+  if (error) {
+    console.log(error);
+  }*/
+
+  /*const classId = "645d16f0ecc97092d68543e2";
+
+  const { data, error } = useSWR<{ targetClass: NewClassType }>(
+    `/class?classId=${classId}`,
+    swrFetcher
+  );
+  if (!data) {
+    return <div></div>;
+  }
+  if (error) {
+    console.log(error);
+  }*/
 
   return (
     <Layout
@@ -89,29 +102,27 @@ const ManageProject: FC<ManageProjectProps> = ({
       onChangeMenu={onChangeMenu}
     >
       <div className={styles.container}>
-        {classes.length === 0 && (
+        {/*classes.length === 0 && (
           <div className={styles.noClass}>
             <div className={styles.title}>아직 등록된 프로젝트가 없습니다.</div>
             <div className={styles.subtitle}>
               교수님으로부터 받은 입장코드를 통해 지금 프로젝트에 등록하세요.
             </div>
           </div>
-        )}
+        )*/}
         <div className={styles.btn_wrapper}>
-          {userInfoHandle.myInfo?.userType === "student" && (
-            <button className={styles.btn} onClick={onClickModal}>
-              프로젝트 입장하기
-            </button>
-          )}
+          <button className={styles.btn} onClick={onClickModal}>
+            프로젝트 입장하기
+          </button>
         </div>
 
         <div
           className={`${currentClass === undefined && styles.class_container}`}
         >
-          {currentClass === undefined ? (
+          {/*currentClass === undefined ? (
             classes.map((item, index) => (
               <Class
-                key={`class_${item?.id}`}
+                key={`class_${item?._id}`}
                 classInfo={item}
                 order={index}
                 onClickClass={onClickClass}
@@ -123,10 +134,16 @@ const ManageProject: FC<ManageProjectProps> = ({
               onClickClass={onClickClass}
               onFinishEditQuestion={onFinishEditQuestion}
             />
-          )}
+          )*/}
         </div>
-
-        {isPopOn && <CodePopUp isPopOn={isPopOn} setIsPopOn={setIsPopOn} />}
+        {/*<ProjectBox projectInfo={data.hostClasses[0]} />*/}
+        {/*isPopOn && (
+          <CodePopUp
+            projectInfo={data.hostClasses[0] ?? {}}
+            isPopOn={isPopOn}
+            setIsPopOn={setIsPopOn}
+          />
+        )*/}
       </div>
     </Layout>
   );

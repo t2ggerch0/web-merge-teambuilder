@@ -3,22 +3,21 @@ import styles from "./Home.module.scss";
 import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
 import { useAuthContext } from "../../Context/UnicoopContext";
-import { api } from "../../API/api";
-import Layout from "../../Components/Layout/Layout";
+import { authApi } from "../../API/authApi";
 import { ToastContainer } from "react-toastify";
-import { viewToastError, viewToastInfo } from "../../helper";
 import { useNavigate } from "react-router-dom";
+import { getMyToken, viewToastError } from "../../helper";
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [isLoginSuccess, setIsLoginSucess] = useState<boolean>(false);
-  const userInfoHandle = useAuthContext();
-  const navigation = useNavigate();
+  const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
+  const { setMyInfo } = useAuthContext();
+  const navigate = useNavigate();
   const changeBoxContent = () => {
     setIsLogin(!isLogin);
   };
   const login = ({ email, password }: { email: string; password: string }) => {
-    api.login({ email, password }).then((token) => {
+    authApi.login({ email, password }).then((token) => {
       console.log("token", token);
       window.localStorage.setItem("token", token);
       getUserInfo({ token });
@@ -26,35 +25,33 @@ const Home = () => {
   };
 
   const getUserInfo = ({ token }: { token: string }) => {
-    api
-      .getUserInfoByToken(token)
+    authApi
+      .getMyInfo(token)
       .then((res) => {
         console.log("userInfo", res?.user);
-        userInfoHandle.setMyInfo({
-          userType: res?.user.userType ?? "student",
+        setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
           id: res?.user._id ?? "",
-          major: res?.user.major ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
-          studentId: res?.user.studentId ?? -1,
-          token,
+          token: token ?? "",
         });
-        setIsLoginSucess(true);
-        navigation("/manageproject");
+        setIsLoginSuccess(true);
+        navigate("/manageproject");
       })
       .catch((e) => {
-        viewToastError("Invalid Token");
+        viewToastError(e);
       });
   };
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
+    let token = getMyToken();
     if (token) {
       getUserInfo({ token });
     }
   }, []);
+
   return (
     <div className={styles.home}>
       <div className={styles.body}>

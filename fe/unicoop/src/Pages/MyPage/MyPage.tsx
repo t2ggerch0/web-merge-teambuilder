@@ -9,15 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const userInfoHandle = useAuthContext();
+  const { myInfo } = useAuthContext();
   const [isViewProject, setIsViewProject] = useState<boolean>(true);
 
   return (
     <div className={styles.myPage}>
       <div className={styles.header}>
-        <div className={styles.hello}>
-          {userInfoHandle.myInfo?.name}님, 안녕하세요!
-        </div>
+        <div className={styles.hello}>{myInfo?.name}님, 안녕하세요!</div>
         <div className={styles.buttons}>
           <UnicoopButton
             backgroundColor={"#2c220d"}
