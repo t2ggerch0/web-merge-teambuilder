@@ -18,10 +18,9 @@ const classSchema = new Schema({
       ref: "Team",
     },
   ],
-  questions: [
+  questionIds: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Question",
+      type: Number,
     },
   ],
   answers: [
