@@ -84,8 +84,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   };
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token !== null) {
+    let token = localStorage.getItem("token") ?? "";
+    if (token.length > 0) {
       authApi.getMyInfo(token).then((res) => {
         setMyInfo({
           classes: res?.user.classes ?? [],
@@ -93,7 +93,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           id: res?.user.id ?? "",
           name: res?.user.name ?? "",
           password: res?.user.password ?? "",
-          token: token ?? "",
+          token: token,
         });
       });
     }
@@ -103,8 +103,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     <Layout
       pageTitle="프로젝트 등록"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
         <ClassInfo
           onChangeClassInfo={onChangeClassInfo}

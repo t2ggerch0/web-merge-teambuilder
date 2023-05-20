@@ -73,6 +73,15 @@ export type MyInfoType = {
   token: string;
 };
 
+export const dummyMyInfo: MyInfoType = {
+  classes: [],
+  email: "",
+  id: "",
+  name: "",
+  password: "",
+  token: "",
+};
+
 export type ClassType = {
   _id: string;
   professor: string;
