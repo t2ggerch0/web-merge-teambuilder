@@ -9,7 +9,7 @@ const answerSchema = new Schema({
   },
   answer: [
     {
-      type: Number,
+      type: Schema.Types.Mixed,
       required: true,
     },
   ],
