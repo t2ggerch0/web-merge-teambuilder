@@ -25,4 +25,19 @@ export const hostApi = {
       }
     }
   },
+  getClass: async (token: string) => {
+    try {
+      return await axios
+        .get("class/host", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          return res.data ?? "";
+        });
+    } catch (e) {
+      viewToastError(
+        "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+      );
+    }
+  },
 };

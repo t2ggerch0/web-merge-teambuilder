@@ -2,6 +2,10 @@ import React, { FC, useState } from "react";
 import styles from "./ManageProject.module.scss";
 import Layout from "../../Components/Layout/Layout";
 import { ClassType, Menu } from "../../interface";
+import { hostApi } from "../../API/hostApi";
+import { useAuthContext } from "../../Context/UnicoopContext";
+import { guestApi } from "../../API/guestApi";
+import { teamApi } from "../../API/teamApi";
 
 type ManageProjectProps = {
   selectedMenu: Menu;
@@ -17,10 +21,20 @@ const ManageProject: FC<ManageProjectProps> = ({
     undefined
   );
   //const [classes, setClasses] = useState<ClassType[]>([]);
+  const { myInfo, setMyInfo } = useAuthContext();
 
   const onClickModal = () => {
     setIsPopOn(!isPopOn);
   };
+
+  const myHostClasses = hostApi.getClass(myInfo?.token ?? "").then((res) => {
+    console.log("host class", res.hostClasses);
+    return res;
+  });
+
+  const myGuestClasses = guestApi.getClass(myInfo?.token ?? "").then((res) => {
+    console.log("guest class", res.guestClasses);
+  });
 
   /*const getClassesInfoAll = async () => {
     if (userInfoHandle.myInfo) {
@@ -99,8 +113,7 @@ const ManageProject: FC<ManageProjectProps> = ({
     <Layout
       pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
         {/*classes.length === 0 && (
           <div className={styles.noClass}>
@@ -117,8 +130,7 @@ const ManageProject: FC<ManageProjectProps> = ({
         </div>
 
         <div
-          className={`${currentClass === undefined && styles.class_container}`}
-        >
+          className={`${currentClass === undefined && styles.class_container}`}>
           {/*currentClass === undefined ? (
             classes.map((item, index) => (
               <Class
