@@ -125,7 +125,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     await targetClass.save();
 
     // Send a success response
-    res.status(201).json({ message: "Added Answer Successfully" });
+    res.status(201).json({ message: "Successfully formed a team" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
