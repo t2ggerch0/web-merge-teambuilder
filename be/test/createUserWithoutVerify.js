@@ -29,6 +29,7 @@ const createUserWithoutVerify = async () => {
 
     await newUser.save();
     console.log("User saved");
+    return { email, password };
   } catch (error) {
     console.error(error);
   }

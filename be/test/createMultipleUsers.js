@@ -1,9 +1,14 @@
 const createUserWithoutVerify = require("./createUserWithoutVerify");
 
-const createMultipleUsers = (number) => {
+let users = [];
+const createMultipleUsers = async (number) => {
   for (let i = 0; i < number; i++) {
-    createUserWithoutVerify();
+    const user = await createUserWithoutVerify();
+    users.push(user);
   }
+  return users;
 };
 
-createMultipleUsers(30);
+// createMultipleUsers(30);
+
+module.exports = createMultipleUsers;
