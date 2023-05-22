@@ -10,6 +10,8 @@ const CreateGraph = (guests, answers, questionIds) => {
   let graph = { guests: [], edges: [] };
   for (let i = 0; i < guests.length; i++) {
     const guestA = guests[i];
+    console.log("answers:", answers[i]);
+    console.log(answers[i].answer);
 
     // add a node for the user
     graph.guests.push({ id: guestA });
