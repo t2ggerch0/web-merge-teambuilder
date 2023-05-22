@@ -51,14 +51,17 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     //------ Verify answers ------//
     // get user answers to questions
     const answers = req.body.answers;
+    console.log("answers: ", answers);
+    console.log(answers.length);
+    console.log(targetClass.questionIds.length);
 
     // check if answers are valid
-    if (answers.length !== targetClass.questions.length) {
+    if (answers.length !== targetClass.questionIds.length) {
       return res.status(403).json({ message: "Invalid answer length" });
     }
 
     // add answers to class
-    const answerChoices = [];
+    let answerChoices = [];
     for (let i = 0; i < answers.length; i++) {
       answerChoices.push(answers[i].answer);
     }
@@ -68,6 +71,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
       answer: answerChoices,
     });
     targetClass.answers.push(answerObject);
+
+    // save answerObject to the database
+    await answerObject.save();
 
     // Add the user to the class's list of guests
     if (!targetClass.guest.includes(userId)) {
