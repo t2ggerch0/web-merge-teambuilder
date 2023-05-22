@@ -9,6 +9,11 @@ const verifyClassId = require("../../utils/verifyClassId");
 const User = require("../../models/User");
 const CreateGraph = require("../../utils/createGraph");
 const CreateTeam = require("../../utils/createTeam");
+const Answer = require("../../models/Answer");
+const { all } = require("axios");
+const Class = require("../../models/Class");
+const CreateGroupsGreedy = require("../../utils/createGroupsGreedy");
+const Team = require("../../models/Team");
 
 router.post("/form-team", verifyJwt, async (req, res) => {
   try {
@@ -30,7 +35,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     }
 
     // check if team is already formed
-    if (targetClass.team.length > 0) {
+    if (targetClass.teams.length > 0) {
       return res.status(403).json({ message: "Team is already formed" });
     }
 
@@ -50,11 +55,13 @@ router.post("/form-team", verifyJwt, async (req, res) => {
       }
     }
 
+    console.log(targetClass);
+
     // get valid guest by time order
     const allGuests = targetClass.guest;
     const allAnswers = targetClass.answers;
-    let validGuests;
-    let validAnswers;
+    let validGuests = [];
+    let validAnswers = [];
     let positionCounter = [];
     let maxPositionCounter = [];
     for (let i = 0; i < positionComposition.length; i++) {
@@ -71,7 +78,9 @@ router.post("/form-team", verifyJwt, async (req, res) => {
 
       if (positionCounter[positionIndex] < maxPositionCounter[positionIndex]) {
         validGuests.push(guest);
-        validAnswers.push(allAnswers[i]);
+        // get answer of guest
+        const answerObject = await Answer.findById(allAnswers[i]);
+        validAnswers.push(answerObject);
         positionCounter[positionIndex] += 1;
       }
     }
@@ -80,12 +89,37 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // get question ids
     const questionIds = targetClass.questionIds;
 
+    console.log("validGuests: ", validGuests);
+    console.log("validAnswers: ", validAnswers);
+    console.log("questionIds: ", questionIds);
+
     // create Graph
     let graph = CreateGraph(validGuests, validAnswers, questionIds);
     console.log(graph);
 
     // create team using graph
-    CreateTeam(graph.guests, graph.edges, positionComposition);
+    let teams = CreateTeam(graph.guests, graph.edges, positionComposition);
+
+    console.log("teams: ", teams);
+    console.log(teams[0].length);
+
+    //====== Create Teams ======//
+    // create teams
+    let teamLength = teams[0].length;
+    for (let i = 0; i < teamLength; i++) {
+      let team = teams[0];
+      let members = [];
+      for (let j = 0; j < teamLength; j++) {
+        members.push(team[j]._id);
+      }
+      let teamObject = new Team({
+        name: "Team " + (i + 1).toString(),
+        class: targetClass._id,
+        members: members,
+      });
+      await teamObject.save();
+      await targetClass.teams.push(teamObject._id);
+    }
 
     // save class
     await targetClass.save();
@@ -104,7 +138,5 @@ module.exports = router;
 /*
 {
     "classId": "60b9b0b9b3b3b3b3b3b3b3b3",
-
-
 }
 */
