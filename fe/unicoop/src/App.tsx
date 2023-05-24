@@ -34,7 +34,7 @@ const App = () => {
             }
           />
           <Route path={"/apply/:projectId"} element={<Apply />} />
-          <Route path={"/activity"} element={<Activity />} />
+          <Route path={"/activity/:projectId"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter>

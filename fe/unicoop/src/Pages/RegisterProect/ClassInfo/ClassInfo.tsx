@@ -1,7 +1,6 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import styles from "./ClassInfo.module.scss";
-import { styled } from "@mui/material/styles";
 import { ProjectRegisterInfo, positionTypes } from "../../../interface";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -19,6 +18,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { Add, Delete } from "@mui/icons-material";
 
 type ClassInfoProps = {
   projectRegisterInfo: ProjectRegisterInfo;
@@ -62,19 +62,20 @@ const ClassInfo: FC<ClassInfoProps> = ({
   };
 
   return (
-    <div>
-      <hr />
+    <div className={styles.classInfo}>
       <div className={styles.row}>
         <span className={styles.label}>프로젝트 이름</span>
         <TextField
+          required
           value={className}
           onChange={(e) => {
             onChangeInfo("className", e.target.value.toString());
           }}
           label="프로젝트 이름"
-          variant="outlined"
+          variant="standard"
         />
       </div>
+
       <div className={styles.row}>
         <span className={styles.label}>프로젝트 설명</span>
         <TextField
@@ -93,23 +94,30 @@ const ClassInfo: FC<ClassInfoProps> = ({
       </div>
 
       <FormControl>
-        <FormLabel className={styles.label}>프로젝트 공개</FormLabel>
-        <RadioGroup
-          row
-          defaultValue={isSecret ? "비공개" : "공개"}
-          onChange={() => {
-            onChangeClassInfo({ name: "isSecret", value: !isSecret });
-          }}>
-          <FormControlLabel value="공개" control={<Radio />} label="공개" />
-          <FormControlLabel value="비공개" control={<Radio />} label="비공개" />
-        </RadioGroup>
+        <div className={styles.row}>
+          <FormLabel className={styles.label}>프로젝트 공개</FormLabel>
+          <RadioGroup
+            row
+            defaultValue={isSecret ? "비공개" : "공개"}
+            onChange={() => {
+              onChangeClassInfo({ name: "isSecret", value: !isSecret });
+            }}
+          >
+            <FormControlLabel value="공개" control={<Radio />} label="공개" />
+            <FormControlLabel
+              value="비공개"
+              control={<Radio />}
+              label="비공개"
+            />
+          </RadioGroup>
+        </div>
       </FormControl>
 
-      <div>
-        <span className={styles.label}>포지션 유형</span>
-        <div>
-          {positionTypes.map((position) => {
-            return (
+      <div className={styles.positionForm}>
+        <div className={styles.row}>
+          <span className={styles.label}>포지션 유형</span>
+          <div className={styles.positionList}>
+            {positionTypes.map((position) => (
               <div className={styles.position_type}>
                 <TextField
                   contentEditable={false}
@@ -119,7 +127,10 @@ const ClassInfo: FC<ClassInfoProps> = ({
                 />
                 <Button
                   className={styles.button}
-                  variant="outlined"
+                  variant="text"
+                  size="small"
+                  color="error"
+                  startIcon={<Delete />}
                   onClick={() => {
                     let newPositionType = positionTypes.filter(
                       (data) => data.typeName !== position.typeName
@@ -128,71 +139,76 @@ const ClassInfo: FC<ClassInfoProps> = ({
                       name: "positionTypes",
                       value: newPositionType,
                     });
-                  }}>
-                  삭제하기
+                  }}
+                >
+                  삭제
                 </Button>
               </div>
-            );
-          })}
+            ))}
+            <div className={styles.position_type}>
+              <TextField
+                className={styles.label}
+                value={newPositionType}
+                onChange={(e) => setNewPositionType(e.target.value)}
+                placeholder="유형 추가"
+                variant="outlined"
+              />
+              <Button
+                className={styles.button}
+                variant="text"
+                size="small"
+                color="secondary"
+                startIcon={<Add />}
+                onClick={() => {
+                  onChangeClassInfo({
+                    name: "positionTypes",
+                    value: [
+                      ...positionTypes,
+                      { typeName: newPositionType, composition: 1 },
+                    ],
+                  });
+
+                  setNewPositionType("");
+                }}
+              >
+                추가
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className={styles.position_type}>
+      </div>
+
+      <div className={styles.row}>
+        <div className={styles.label}>포지션 구성</div>
+        {positionTypes.map((position) => (
           <TextField
-            className={styles.label}
-            value={newPositionType}
-            onChange={(e) => setNewPositionType(e.target.value)}
+            label={position.typeName}
+            className={styles.position_composition}
+            value={position.composition}
+            onChange={(e) => {
+              let newComposition: positionTypes[] = positionTypes.map(
+                (data) => {
+                  if (data.typeName === position.typeName) {
+                    return {
+                      ...data,
+                      composition: Number(e.target.value),
+                    };
+                  } else {
+                    return data;
+                  }
+                }
+              );
+              onChangeClassInfo({
+                name: "positionTypes",
+                value: newComposition,
+              });
+            }}
             placeholder="유형 추가"
             variant="outlined"
           />
-          <Button
-            className={styles.button}
-            variant="outlined"
-            onClick={() => {
-              onChangeClassInfo({
-                name: "positionTypes",
-                value: [
-                  ...positionTypes,
-                  { typeName: newPositionType, composition: 1 },
-                ],
-              });
+        ))}
+      </div>
 
-              setNewPositionType("");
-            }}>
-            추가하기
-          </Button>
-        </div>
-      </div>
-      <div>
-        <div className={styles.label}>포지션 구성</div>
-        {positionTypes.map((position) => {
-          return (
-            <TextField
-              label={position.typeName}
-              className={styles.position_composition}
-              value={position.composition}
-              onChange={(e) => {
-                let newComposition: positionTypes[] = positionTypes.map(
-                  (data) => {
-                    if (data.typeName === position.typeName) {
-                      return {
-                        ...data,
-                        composition: Number(e.target.value),
-                      };
-                    } else {
-                      return data;
-                    }
-                  }
-                );
-                onChangeClassInfo({
-                  name: "positionTypes",
-                  value: newComposition,
-                });
-              }}
-              placeholder="유형 추가"
-              variant="outlined"
-            />
-          );
-        })}
-      </div>
       <div className={styles.host_participation}>
         <span className={styles.label}>호스트 참여</span>
         <Checkbox
@@ -221,14 +237,13 @@ const ClassInfo: FC<ClassInfoProps> = ({
                     name: "hostPosition",
                     value: e.target.value as string,
                   });
-                }}>
-                {positionTypes.map((position) => {
-                  return (
-                    <MenuItem value={position.typeName}>
-                      {position.typeName}
-                    </MenuItem>
-                  );
-                })}
+                }}
+              >
+                {positionTypes.map((position) => (
+                  <MenuItem value={position.typeName}>
+                    {position.typeName}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>

@@ -1,82 +1,91 @@
-.row {
-  margin: 10px 0;
+.classInfo {
   display: flex;
-  align-items: center;
-}
-.button {
-  margin-left: 10px !important;
-  width: 100px;
-}
-.label {
-  margin: 10px 0;
-  font-weight: 800 !important;
-  color: black !important;
-  min-width: 100px !important;
-  font-family: "Pretendard" !important;
-  // margin-right: 10px;
-}
-.duration {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  .duration_label {
-    width: 100px;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  .row {
+    display: flex;
+    gap: 8px;
   }
-  .datepicker_container {
-    .datepicker {
-      outline: none;
+  .label {
+    font-weight: 800 !important;
+    color: black !important;
+    min-width: 100px !important;
+    font-family: "Pretendard" !important;
+  }
+  .positionForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .positionList {
+      display: flex;
+      //flex-direction: column;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+  }
+  .duration {
+    display: flex;
+    align-items: center;
+    .duration_label {
       width: 100px;
-      // height: 20px;
-
-      border: none;
-      // background-color: #f1f1f1;
-
-      border-radius: 8px;
-      padding: 8px;
-      font-size: 14px;
     }
-    .datepicker_2 {
+    .datepicker_container {
+      .datepicker {
+        outline: none;
+        width: 100px;
+        // height: 20px;
+
+        border: none;
+        // background-color: #f1f1f1;
+
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 14px;
+      }
+      .datepicker_2 {
+        position: relative;
+        right: 84px;
+      }
+    }
+    .calender {
       position: relative;
-      right: 84px;
+      right: 75px;
+      top: 2px;
+      width: 100px;
+      height: 30px;
+    }
+    .calender_2 {
+      position: relative;
+      right: 160px;
+      top: 2px;
+      width: 100px;
+      height: 30px;
+    }
+    .text {
+      position: relative;
+      right: 90px;
     }
   }
-  .calender {
-    position: relative;
-    right: 75px;
-    top: 2px;
-    width: 100px;
-    height: 30px;
+  .is_secret {
+    display: flex;
+    width: 300px;
   }
-  .calender_2 {
-    position: relative;
-    right: 160px;
-    top: 2px;
-    width: 100px;
-    height: 30px;
-  }
-  .text {
-    position: relative;
-    right: 90px;
-  }
-}
-.is_secret {
-  display: flex;
-  width: 300px;
-}
 
-.position_type {
-  display: flex;
-  width: 300px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 5px;
-}
-.position_composition {
-  width: 80px !important;
-  margin-right: 5px !important;
-}
-.host_participation {
-  display: flex;
-  align-items: center;
-  height: 100px;
+  .position_type {
+    display: flex;
+    //width: 300px;
+    gap: 4px;
+    align-items: center;
+    //justify-content: space-between;
+  }
+  .position_composition {
+    width: 80px !important;
+    margin-right: 5px !important;
+  }
+  .host_participation {
+    display: flex;
+    align-items: center;
+    height: 100px;
+  }
 }

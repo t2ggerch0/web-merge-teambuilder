@@ -122,6 +122,20 @@ export type NewClassType = {
   accessKey: number;
 };
 
+export type TeamInfo = {
+  _id: string;
+  name: string;
+  leader: string;
+  members: Array<string>;
+  chat: Array<ChatInfo>;
+};
+
+export type ChatInfo = {
+  sender: string;
+  message: string;
+  createdAt: Date;
+};
+
 export const defaultQuestions: ProjectRegisterInfo = {
   className: "",
   classType: "web",

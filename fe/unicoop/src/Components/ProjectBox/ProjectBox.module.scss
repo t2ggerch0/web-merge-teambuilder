@@ -1,8 +1,27 @@
 .projectBox {
   width: 200px;
   height: 200px;
+  padding: 20px;
   box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.1);
   border-radius: 24px;
+  cursor: pointer;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    margin-top: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #c9c9c9;
+    border-radius: 10px;
+  }
+  &:hover {
+    -webkit-animation: shadow-drop-2-center 0.4s
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: shadow-drop-2-center 0.4s
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
   .colorBox {
     width: calc(100% - 32px);
     height: calc(70% - 32px);
@@ -12,22 +31,26 @@
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     padding: 16px;
-    &:hover {
-      -webkit-animation: shadow-drop-2-center 0.4s
-      cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-      animation: shadow-drop-2-center 0.4s
-      cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    }
   }
   .class_info {
-    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
     .class_name {
       font-weight: 600;
-      font-size: 20px;
+      font-size: 22px;
+    }
+    .class_description {
+      opacity: 0.8;
     }
     .class_semester {
-      font-size: 15px;
       font-weight: 500;
+    }
+    .class_key {
+      align-self: flex-end;
+      font-weight: bold;
+      font-size: 12px;
     }
   }
 }

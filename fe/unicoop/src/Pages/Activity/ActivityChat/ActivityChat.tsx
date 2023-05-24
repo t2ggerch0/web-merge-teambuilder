@@ -1,16 +1,28 @@
-import React, { useState, FC } from "react";
-import styles from "./ActivitySpace.module.scss";
+import React, { useState, FC, useEffect } from "react";
+import styles from "./ActivityChat.module.scss";
 import SendIcon from "@mui/icons-material/Send";
+import { useAuthContext } from "../../../Context/UnicoopContext";
+import { useParams } from "react-router-dom";
+import { TeamInfo } from "../../../interface";
+import { guestApi } from "../../../API/guestApi";
 
-type ActivitySpaceProps = {
-  activity: string;
-};
+type ActivityChatProps = {};
 
-const ActivitySpace: FC<ActivitySpaceProps> = ({ activity }) => {
+const ActivityChat: FC<ActivityChatProps> = () => {
+  const { projectId } = useParams();
+  const { myInfo, setMyInfo } = useAuthContext();
+  const [teamInfo, setTeamInfo] = useState<{ targetTeam: TeamInfo }>();
   const [text, setText] = useState<string>("");
+
+  useEffect(() => {
+    guestApi.getTeamInfo(projectId ?? "", myInfo?.token ?? "").then((res) => {
+      console.log("team info", res);
+    });
+  }, []);
+
   return (
-    <div className={styles.activitySpace}>
-      <div className={styles.title}>{activity}</div>
+    <div className={styles.activityChat}>
+      <div className={styles.title}>팀 채팅</div>
 
       <div className={styles.body}>
         <div className={styles.post}>
@@ -46,4 +58,4 @@ const ActivitySpace: FC<ActivitySpaceProps> = ({ activity }) => {
   );
 };
 
-export default ActivitySpace;
+export default ActivityChat;
