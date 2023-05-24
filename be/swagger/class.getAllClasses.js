@@ -7,11 +7,6 @@
  *     summary: 모든 class 정보를 반환
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: classId
- *         in: query
- *         required: true
- *         type: string
  *     responses:
  *       200:
  *         description: Class information retrieved successfully
