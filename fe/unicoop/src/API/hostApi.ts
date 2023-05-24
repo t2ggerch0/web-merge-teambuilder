@@ -25,7 +25,7 @@ export const hostApi = {
       }
     }
   },
-  getClass: async (token: string) => {
+  getHostClass: async (token: string) => {
     try {
       return await axios
         .get("class/host", {

@@ -1,6 +1,6 @@
 .container {
   width: calc(100vw - 40px);
-  height: calc(100vh - 32px);
+  //height: calc(100vh - 32px);
   display: flex;
   padding: 16px;
   gap: 8px;
@@ -8,14 +8,14 @@
   .left_bar {
     width: 13%;
     min-width: 150px;
-    background-color: rgba(0, 232, 0, 0.5);
+    background-color: rgba(0, 232, 0, 0.2);
     color: #292929;
     border-radius: 24px;
     font-weight: 800;
-    flex-direction: column;
-    justify-content: space-around;
     display: flex;
-    padding: 30px 50px;
+    flex-direction: column;
+    gap: 150px;
+    padding: 60px 50px;
     animation: fromLeft 1s;
     .title {
       text-align: center;
@@ -52,6 +52,7 @@
     }
 
     .myPage {
+      justify-self: flex-end;
       text-align: center;
       cursor: pointer;
       opacity: 0.5;
