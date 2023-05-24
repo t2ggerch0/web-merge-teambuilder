@@ -22,6 +22,11 @@ const userSchema = new Schema(
         ref: "Class",
       },
     ],
+    positionIndexes: [
+      {
+        type: Number,
+      },
+    ],
     name: String,
   },
   {

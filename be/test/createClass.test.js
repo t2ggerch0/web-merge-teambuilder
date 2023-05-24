@@ -29,14 +29,15 @@ describe("Create Class API Tests", () => {
         classDescription: "test create class",
         positionTypes: ["frontend", "backend"],
         positionComposition: [2, 2],
-        leaderPosition: "frontend",
+        hostPosition: "frontend",
         recruitStartDate: "2021-05-01",
         recruitEndDate: "2021-05-10",
         activityStartDate: "2021-05-11",
         activityEndDate: "2021-06-11",
         isSecret: false,
-        isLeaderParticipating: true,
+        isHostParticipating: true,
         questionIds: [0, 1, 2, 3],
+        hostAnswer: [0, 1, [2, 5], 3],
       };
 
       request(app)

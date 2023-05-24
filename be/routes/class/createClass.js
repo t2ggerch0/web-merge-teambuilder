@@ -11,6 +11,7 @@ const verifyJwt = require("../../utils/verifyJwt");
 const verifyUserType = require("../../utils/verifyUserType");
 
 const questionLists = require("../../data/questionsList");
+const Answer = require("../../models/Answer");
 
 router.post("/create-class", verifyJwt, async (req, res) => {
   try {
@@ -40,7 +41,8 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     }
 
     // create position counts
-    const positionCounts = [];
+    let positionCounts = [];
+    let answerObject;
     for (let i = 0; i < req.body.positionTypes.length; i++) {
       positionCounts.push(0);
     }
@@ -53,6 +55,16 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       if (!req.body.positionTypes.includes(hostPosition)) {
         return res.status(403).json({ message: "Invalid host position" });
       }
+
+      // get answer of host
+      const hostAnswer = req.body.hostAnswer;
+      answerObject = new Answer({
+        guest: userId,
+        answers: hostAnswer,
+      });
+
+      // save answer to database
+      await answerObject.save();
 
       // add position counts of host position
       const hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
@@ -67,27 +79,12 @@ router.post("/create-class", verifyJwt, async (req, res) => {
         return res.status(403).json({ message: "Invalid question id" });
       }
     }
-    // create questions to class
-    const questions = [];
-    for (let i = 0; i < questionIds.length; i++) {
-      const questionData = questionLists[questionIds[i]];
-
-      // create question object
-      const newQuestion = new Question({
-        id: questionIds[i],
-        title: questionData.title,
-        options: questionData.options,
-        weight: questionData.weight,
-        countScore: questionData.countScore,
-      });
-      newQuestion.save();
-      questions.push(newQuestion);
-    }
 
     // Create the new class with the request data
     const newClass = new Class({
       host: userId,
-      questions: questions,
+      guest: req.body.isHostParticipating ? [userId] : [],
+      questionIds: questionIds,
       className: req.body.className,
       classType: req.body.classType,
       classDescription: req.body.classDescription,
@@ -101,6 +98,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       isSecret: req.body.isSecret,
       isHostParticipating: req.body.isHostParticipating,
       accessKey: targetKey,
+      answers: req.body.isHostParticipating ? [answerObject._id] : [],
     });
 
     // Save the new class to the database
@@ -138,7 +136,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
   "activityEndDate": "2021-06-11",
   "isSecret": false,
   "isHostParticipating": true
-  "questionIds": [0, 1, 2, 3]
+  "questionIds": [0, 1, 2, 3],
+  "hostAnswer": [0, 1, [2,5], 3],
+
 }
 
 */

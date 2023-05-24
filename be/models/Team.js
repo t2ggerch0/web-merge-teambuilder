@@ -5,34 +5,37 @@ const teamSchema = new Schema({
   name: {
     type: String,
   },
+  class: {
+    type: Schema.Types.ObjectId,
+    ref: "Class",
+  },
   leader: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
   },
   members: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
+      ref: "User",
+    },
   ],
   chat: [
     {
       sender: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
       },
       message: {
         type: String,
-        required: true
+        required: true,
       },
       createdAt: {
         type: Date,
-        default: Date.now
-      }
-    }
-  ]
+        default: Date.now,
+      },
+    },
+  ],
 });
 
 module.exports = mongoos.model("Team", teamSchema);
