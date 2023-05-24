@@ -37,7 +37,11 @@ const Activity = () => {
         activityIndex={activityIndex}
         setActivityIndex={setActivityIndex}
       />
-      {activityIndex === 0 ? <ActivityChat /> : <ActivityTeam />}
+      {activityIndex === 0 ? (
+        <ActivityChat />
+      ) : (
+        <ActivityTeam classData={data} />
+      )}
       <ActivityInfo />
     </div>
   );
