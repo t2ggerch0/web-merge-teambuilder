@@ -37,11 +37,20 @@ const deleteRandomTeams = async () => {
   }
 };
 
+const deleteUser = async (email) => {
+  try {
+    const deletionResult = await User.deleteOne({ email: email });
+    console.log("Deleted " + deletionResult.deletedCount + " user");
+  } catch (error) {
+    console.error("An error occurred while deleting user:", error);
+  }
+};
 //========Main========//
 async function main() {
   await deleteRandomUsers();
   await deleteRandomClasses();
   await deleteRandomTeams();
+  //await deleteUser("juns98@naver.com");
   process.exit();
 }
 main();

@@ -19,7 +19,7 @@ describe("Form team  API Tests", () => {
       // get host login data
       const loginData = {
         email: "juns98@naver.com",
-        password: "abc123!!",
+        password: "abcd123!!",
       };
 
       const res = await request(app).post("/auth/login").send(loginData);

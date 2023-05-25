@@ -16,6 +16,7 @@ router.get("/", verifyJwt, async (req, res) => {
 
     // get class IDs
     let { classId } = req.query;
+    console.log(classId);
     let targetClass = await Class.findById(classId).populate("teams");
     let teams = targetClass.teams;
 
@@ -23,7 +24,7 @@ router.get("/", verifyJwt, async (req, res) => {
     let targetTeam = null;
     let isFound = false;
     for (let i = 0; i < teams.length; i++) {
-      if(isFound){
+      if (isFound) {
         break;
       }
 
@@ -35,16 +36,18 @@ router.get("/", verifyJwt, async (req, res) => {
 
       // 멤버 탐색
       let members = teams[i].members;
+      console.log("members: ", members);
+      console.log("userId: ", userId);
       for (let j = 0; j < members.length; j++) {
-        if(userId == members[j]){
+        if (userId == members[j]) {
           targetTeam = teams[i];
           isFound = true;
           break;
         }
       }
     }
-    
-    if(!targetTeam){
+
+    if (!targetTeam) {
       return res.status(403).json({ message: "User has no team" });
     }
 

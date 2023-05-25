@@ -69,6 +69,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       // add position counts of host position
       const hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
       positionCounts[hostPositionIndex] += 1;
+
+      // add user position index
+      user.positionIndexes.push(hostPositionIndex);
     }
 
     //------ Create Questions ------//
