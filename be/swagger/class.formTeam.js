@@ -2,7 +2,7 @@
  * @swagger
  * /class/form-team:
  *   post:
- *     summary: Form a team for a class
+ *     summary: 클래스의 호스트로서 팀을 생성합니다.
  *     tags:
  *       - class
  *     parameters:
