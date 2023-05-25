@@ -8,6 +8,7 @@ app.use(
   cors({
     origin: [
       "https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app",
+      "https://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/class/guest",
       "http://port-0-unicoop-nx562olfpi8ozh.sel3.cloudtype.app/class/join-class",
       "https://localhost:3000",
       "http://localhost:3000",
