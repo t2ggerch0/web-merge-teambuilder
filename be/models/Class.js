@@ -96,4 +96,4 @@ const classSchema = new Schema({
   ],
 });
 
-module.exports = mongoos.model("Class", classSchema);
+module.exports = mongoose.model("Class", classSchema);
