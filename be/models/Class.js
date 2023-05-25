@@ -1,5 +1,5 @@
-const mongoos = require("mongoose");
-const { Schema } = mongoos;
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const classSchema = new Schema({
   host: {
