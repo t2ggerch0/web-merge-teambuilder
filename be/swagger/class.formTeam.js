@@ -2,22 +2,25 @@
  * @swagger
  * /class/form-team:
  *   post:
- *     summary: Form a team for a class
- *     tags: [Class]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               classId:
- *                 type: string
- *                 description: The ID of the class to form a team for
- *             example:
- *               classId: "60b9b0b9b3b3b3b3b3b3b3b3"
+ *     summary: 클래스의 호스트로서 팀을 생성합니다.
+ *     tags:
+ *       - class
+ *     parameters:
+ *       - name: Authorization
+ *         description: JWT token
+ *         in: header
+ *         required: true
+ *         type: string
+ *       - name: body
+ *         in: body
+ *         description: The ID of the class to form a team for
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             classId:
+ *               type: string
+ *               example: "6095b5f5b5ab8e1f02e4f3d4"
  *     responses:
  *       201:
  *         description: Successfully formed a team
