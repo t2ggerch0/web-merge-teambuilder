@@ -22,9 +22,10 @@ router.post("/join-class", verifyJwt, async (req, res) => {
 
     // check if class requires access key
     if (targetClass.isSecret) {
-      // check if user hasAccess
-      if (!targetClass.hasAccess.includes(userId)) {
-        return res.status(403).json({ message: "User does not have access" });
+      // verify access key
+      const accessKey = req.body.accessKey;
+      if (accessKey !== targetClass.accessKey) {
+        return res.status(403).json({ message: "Invalid access key" });
       }
     }
 
