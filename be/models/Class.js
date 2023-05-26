@@ -1,5 +1,5 @@
-const mongoos = require("mongoose");
-const { Schema } = mongoos;
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const classSchema = new Schema({
   host: {
@@ -96,4 +96,4 @@ const classSchema = new Schema({
   ],
 });
 
-module.exports = mongoos.model("Class", classSchema);
+module.exports = mongoose.model("Class", classSchema);

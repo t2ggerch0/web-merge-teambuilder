@@ -22,9 +22,10 @@ router.post("/join-class", verifyJwt, async (req, res) => {
 
     // check if class requires access key
     if (targetClass.isSecret) {
-      // check if user hasAccess
-      if (!targetClass.hasAccess.includes(userId)) {
-        return res.status(403).json({ message: "User does not have access" });
+      // verify access key
+      const accessKey = req.body.accessKey;
+      if (accessKey !== targetClass.accessKey) {
+        return res.status(403).json({ message: "Invalid access key" });
       }
     }
 
@@ -46,7 +47,7 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     targetClass.positionCounts[positionIndex] += 1;
 
     // update User's position
-    user.positionIndexes.push(positionIndex);
+    user.positionIndexByClass.push({class:targetClass._id, positionIndex: positionIndex});
 
     //------ Verify answers ------//
     // get user answers to questions
