@@ -1,18 +1,12 @@
-const mongoos = require("mongoose");
-const { Schema } = mongoos;
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const classSchema = new Schema({
-  professor: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  name: {
-    type: String,
-    required: true,
+  host: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
-  students: [
+  guest: [
     {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -24,10 +18,9 @@ const classSchema = new Schema({
       ref: "Team",
     },
   ],
-  questions: [
+  questionIds: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Question",
+      type: Number,
     },
   ],
   answers: [
@@ -36,32 +29,71 @@ const classSchema = new Schema({
       ref: "Answer",
     },
   ],
-  capacity: {
-    type: Number,
-    required: false,
+  className: {
+    type: String,
+    required: true,
   },
-  startDate: {
+  classDescription: {
+    type: String,
+    required: true,
+  },
+  classType: {
+    // can be web / app / game
+    type: String,
+    required: true,
+  },
+  positionTypes: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  positionComposition: [
+    {
+      type: Number,
+      required: true,
+    },
+  ],
+  positionCounts: [
+    {
+      type: Number,
+    },
+  ],
+  recruitStartDate: {
     type: Date,
-    required: false,
+    required: true,
   },
-  endDate: {
+  recruitEndDate: {
     type: Date,
-    required: false,
+    required: true,
   },
-  endQuestion: {
-    type: Boolean,
-    default: false,
-    required: false,
+  activityStartDate: {
+    type: Date,
+    required: true,
   },
-  endAnswer: {
+  activityEndDate: {
+    type: Date,
+    required: true,
+  },
+  isSecret: {
     type: Boolean,
+    required: true,
     default: false,
-    required: false,
+  },
+  isHostParticipating: {
+    type: Boolean,
+    required: true,
   },
   accessKey: {
-      type: Number,
-      required: true
+    type: String,
+    required: false,
   },
+  hasAccess: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
-module.exports = mongoos.model("Class", classSchema);
+module.exports = mongoose.model("Class", classSchema);

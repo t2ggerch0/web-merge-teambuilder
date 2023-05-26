@@ -2,19 +2,14 @@ const mongoos = require("mongoose");
 const { Schema } = mongoos;
 
 const answerSchema = new Schema({
-  student: {
+  guest: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  question: {
-    type: Schema.Types.ObjectId,
-    ref: "Question",
-    required: true,
-  },
   answer: [
     {
-      type: String,
+      type: Schema.Types.Mixed,
       required: true,
     },
   ],

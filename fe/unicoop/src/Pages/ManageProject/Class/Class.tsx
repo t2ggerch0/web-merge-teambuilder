@@ -22,7 +22,7 @@ const Class: FC<ClassProps> = ({ classInfo, order, onClickClass }) => {
     "#50b4db",
   ];
   const onClickBox = () => {
-    onClickClass(classInfo?.id);
+    onClickClass(classInfo?._id);
   };
   return (
     <div className={styles.class_box} onClick={onClickBox}>

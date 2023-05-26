@@ -8,8 +8,8 @@ describe("Login API Tests", () => {
   describe("POST /auth/login", () => {
     it("should return status 200 if email and password are valid", (done) => {
       const loginData = {
-        email: "juns98@g.skku.edu",
-        password: "1234",
+        email: "juns98@naver.com",
+        password: "abc123!!",
       };
 
       request(app)

@@ -26,6 +26,12 @@
     .question_weight {
       width: 100px;
     }
+    .question_delete {
+      cursor: pointer;
+      &:hover {
+        font-weight: bold;
+      }
+    }
   }
 
   .question_answers {

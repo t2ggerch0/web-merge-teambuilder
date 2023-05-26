@@ -6,42 +6,109 @@ dotenv.config();
 
 const User = require("../../models/User");
 const Class = require("../../models/Class");
-
+const Question = require("../../models/Question");
 const verifyJwt = require("../../utils/verifyJwt");
 const verifyUserType = require("../../utils/verifyUserType");
 
+const questionLists = require("../../data/questionsList");
+const Answer = require("../../models/Answer");
+
 router.post("/create-class", verifyJwt, async (req, res) => {
   try {
+    //------ Verify User ------//
     // Verify JWT
     const userId = req.userId;
+    const user = await User.findById(userId);
 
-    // Check if the user is a professor. returns user if verified
-    const user = await verifyUserType(userId, "professor");
+    // add access keys for secret class
+    let targetKey = 0;
 
-    let keys = (await Class.find({},"accessKey")).map((doc) => doc.accessKey);
-    let targetKey;
-    while(true){
-      const accessKey = Math.floor(Math.random() * 1000000);
-      if(!keys.includes(accessKey)){
-        targetKey = accessKey;
-        break;
+    if (req.body.isSecret) {
+      let keys = (await Class.find({}, "accessKey")).map((doc) => doc.accessKey);
+      while (true) {
+        const accessKey = Math.floor(Math.random() * 1000000);
+        if (!keys.includes(accessKey)) {
+          targetKey = accessKey;
+          break;
+        }
+      }
+    }
+
+    //------ Verify Positions ------//
+    // check if position types and composition are valid
+    if (req.body.positionTypes.length !== req.body.positionComposition.length) {
+      return res.status(403).json({ message: "Invalid position types and composition" });
+    }
+
+    // create position counts
+    let positionCounts = [];
+    let answerObject;
+    for (let i = 0; i < req.body.positionTypes.length; i++) {
+      positionCounts.push(0);
+    }
+
+    // check if host is participating
+    if (req.body.isHostParticipating) {
+      const hostPosition = req.body.hostPosition;
+
+      // check if host position is one of the position types
+      if (!req.body.positionTypes.includes(hostPosition)) {
+        return res.status(403).json({ message: "Invalid host position" });
+      }
+
+      // get answer of host
+      const hostAnswer = req.body.hostAnswer;
+      answerObject = new Answer({
+        guest: userId,
+        answers: hostAnswer,
+      });
+
+      // save answer to database
+      await answerObject.save();
+
+      // add position counts of host position
+      const hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
+      positionCounts[hostPositionIndex] += 1;
+
+      // add user position index
+      user.positionIndexes.push(hostPositionIndex);
+    }
+
+    //------ Create Questions ------//
+    // check question ids are valid
+    const questionIds = req.body.questionIds;
+    for (let i = 0; i < questionIds.length; i++) {
+      if (questionIds[i] < 0 || questionIds[i] >= questionLists.length) {
+        return res.status(403).json({ message: "Invalid question id" });
       }
     }
 
     // Create the new class with the request data
     const newClass = new Class({
-      professor: userId,
-      name: req.body.name,
-      capacity: req.body.capacity,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      accessKey: targetKey
+      host: userId,
+      guest: req.body.isHostParticipating ? [userId] : [],
+      questionIds: questionIds,
+      className: req.body.className,
+      classType: req.body.classType,
+      classDescription: req.body.classDescription,
+      positionTypes: req.body.positionTypes,
+      positionComposition: req.body.positionComposition,
+      positionCounts: positionCounts,
+      recruitStartDate: req.body.recruitStartDate,
+      recruitEndDate: req.body.recruitEndDate,
+      activityStartDate: req.body.activityStartDate,
+      activityEndDate: req.body.activityEndDate,
+      isSecret: req.body.isSecret,
+      isHostParticipating: req.body.isHostParticipating,
+      accessKey: targetKey,
+      answers: req.body.isHostParticipating ? [answerObject._id] : [],
     });
 
     // Save the new class to the database
     const savedClass = await newClass.save();
 
-    // Add the new class to the professor's list of classes
+    // Add the new class to the host's list of classes
+
     user.classes.push(savedClass._id);
     await user.save();
 
@@ -60,7 +127,21 @@ router.post("/create-class", verifyJwt, async (req, res) => {
 // example
 /*
 {
-  "name": "Software Engineering"
+  "className": "Creating web application using pubilc API",
+  "classType": "web",
+  "classDescription": "This is a class about web development",
+  "positionTypes": ["frontend", "backend"],
+  "positionComposition": [2, 2],
+  "hostPosition": "frontend",
+  "recruitStartDate": "2021-05-01",
+  "recruitEndDate": "2021-05-10",
+  "activityStartDate": "2021-05-11",
+  "activityEndDate": "2021-06-11",
+  "isSecret": false,
+  "isHostParticipating": true
+  "questionIds": [0, 1, 2, 3],
+  "hostAnswer": [0, 1, [2,5], 3],
+
 }
 
 */

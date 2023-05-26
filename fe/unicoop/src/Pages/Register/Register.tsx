@@ -11,21 +11,17 @@ type RegisterProps = {
 const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
     name: "",
-    studentId: 0,
     email: "",
-    major: "",
     password: "",
-    userType: "",
     verifyCode: 0,
   });
-  const { name, studentId, major, password, verifyCode, email, userType } =
-    registerInfo;
+  const { name, password, verifyCode, email } = registerInfo;
   const [registerStep, setRegisterStep] = useState<number>(1);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
 
   const onChange = (name: string, value: string) => {
-    if (name === "studentId" || name === "verifyCode") {
+    if (name === "verifyCode") {
       setRegisterInfo({ ...registerInfo, [name]: parseInt(value) });
     } else {
       setRegisterInfo({ ...registerInfo, [name]: value });
@@ -42,7 +38,6 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
 
       {registerStep === 1 ? (
         <StepOne
-          userType={userType}
           name={name}
           email={email}
           verifyCode={verifyCode}
@@ -51,8 +46,6 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
         />
       ) : (
         <StepTwo
-          studentId={studentId}
-          major={major}
           password={password}
           isPasswordValid={isPasswordValid}
           setIsPasswordValid={setIsPasswordValid}
@@ -64,14 +57,6 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
           registerInfo={registerInfo}
         />
       )}
-
-      {/* <ToastContainer
-        className={styles.toast}
-        position="top-center"
-        hideProgressBar
-        closeButton={false}
-        rtl={false}
-      /> */}
     </div>
   );
 };

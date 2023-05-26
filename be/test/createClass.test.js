@@ -6,10 +6,10 @@ describe("Create Class API Tests", () => {
   let token = null;
 
   before(async () => {
-    // get token
+    // get professor login data
     const loginData = {
-      email: "juns98@g.skku.edu",
-      password: "1234",
+      email: "juns98@naver.com",
+      password: "abc123!!",
     };
 
     const res = await request(app).post("/auth/login").send(loginData);
@@ -18,15 +18,26 @@ describe("Create Class API Tests", () => {
 
   after(() => {
     server.close();
+    process.exit();
   });
 
   describe("POST /class/create-class", () => {
     it("should return status 201 and success true if class created successfully", (done) => {
       const classData = {
-        name: "testClss",
-        capacity: 100,
-        startDate: "2023-04-26",
-        endDate: "2023-07-26",
+        className: "testClass2",
+        classType: "web",
+        classDescription: "test create class",
+        positionTypes: ["frontend", "backend"],
+        positionComposition: [2, 2],
+        hostPosition: "frontend",
+        recruitStartDate: "2021-05-01",
+        recruitEndDate: "2021-05-10",
+        activityStartDate: "2021-05-11",
+        activityEndDate: "2021-06-11",
+        isSecret: false,
+        isHostParticipating: true,
+        questionIds: [0, 1, 2, 3],
+        hostAnswer: [0, 1, [2, 5], 3],
       };
 
       request(app)

@@ -3,7 +3,6 @@ import styles from "./EditProject.module.scss";
 import { ClassType } from "../../../interface";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { QuestionType } from "../../../interface";
-import { api } from "../../../API/api";
 
 type EditProjectProps = {
   classInfo: ClassType;
@@ -19,20 +18,21 @@ const EditProject: FC<EditProjectProps> = ({
   const [question, setQuestion] = useState<QuestionType[]>([]);
 
   const getQuestion = async () => {
-    const result = await Promise.all(
+    /*const result = await Promise.all(
       classInfo.questions.map((id) => {
-        return api.getQuestionInfo(id).then((res: unknown) => {
+        return authApi.getQuestionInfo(id).then((res: unknown) => {
           return res as QuestionType;
         });
       })
     );
-    setQuestion(result);
+    setQuestion(result);*/
   };
 
   console.log("question", question);
   useEffect(() => {
-    getQuestion();
+    getQuestion().then();
   }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.header_container}>
@@ -64,7 +64,7 @@ const EditProject: FC<EditProjectProps> = ({
           <button className={styles.btn}>질문 삭제</button>
           <button
             className={styles.btn}
-            onClick={() => onFinishEditQuestion(classInfo.id)}
+            onClick={() => onFinishEditQuestion(classInfo._id)}
           >
             질문 편집 완료
           </button>
@@ -87,7 +87,7 @@ const EditProject: FC<EditProjectProps> = ({
                     return <div>{option}</div>;
                   })}
                 </div>
-                <div>{q.isMandatory ? q.isMandatory : "X"}</div>
+
                 <div>{q.weight}</div>
                 <div>{q.countScore}</div>
               </div>
