@@ -59,11 +59,11 @@ router.post("/form-team", verifyJwt, async (req, res) => {
 
     // get valid guest by time order
     const allGuests = targetClass.guest;
-    const allAnswers = targetClass.answers;
     let validGuests = [];
     let validAnswers = [];
     let positionCounter = [];
     let maxPositionCounter = [];
+    console.log(allGuests.length);
     for (let i = 0; i < positionComposition.length; i++) {
       positionCounter.push(0);
       maxPositionCounter.push(positionComposition[i]);
@@ -71,15 +71,23 @@ router.post("/form-team", verifyJwt, async (req, res) => {
 
     // add valid guests
     for (let i = 0; i < allGuests.length; i++) {
-      const guest = await User.findById(allGuests[i]);
+      const guest = await User.findById(allGuests[i].user);
+      console.log(guest.positionIndexByClass);
       // update position counter
-      const classIndex = guest.classes.indexOf(targetClass._id);
-      const positionIndex = guest.positionIndexes[classIndex];
+      const classIndex = guest.positionIndexByClass.findIndex((element) => {
+        //console.log(element.class._id.toString(), targetClass._id.toString());
+        return element.class._id.toString() == targetClass._id.toString();
+      });
+
+      const positionIndex =
+        guest.positionIndexByClass[classIndex].positionIndex;
+
+      console.log(positionIndex);
 
       if (positionCounter[positionIndex] < maxPositionCounter[positionIndex]) {
         validGuests.push(guest);
         // get answer of guest
-        const answerObject = await Answer.findById(allAnswers[i]);
+        const answerObject = await Answer.findById(allGuests[i].answer);
         validAnswers.push(answerObject);
         positionCounter[positionIndex] += 1;
       }

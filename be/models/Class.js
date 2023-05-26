@@ -8,8 +8,14 @@ const classSchema = new Schema({
   },
   guest: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      answer: {
+        type: Schema.Types.ObjectId,
+        ref: "Answer",
+      },
     },
   ],
   teams: [
@@ -21,12 +27,6 @@ const classSchema = new Schema({
   questionIds: [
     {
       type: Number,
-    },
-  ],
-  answers: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Answer",
     },
   ],
   className: {
