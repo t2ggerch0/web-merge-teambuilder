@@ -17,19 +17,22 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
 
   const enterCode = (inputKey: string) => {
     if (inputKey === projectInfo.accessKey.toString()) {
-      navigate(`/apply/${projectInfo._id}`);
+      navigate(`/apply/${projectInfo._id}/${inputKey}`);
       console.log("yes");
+    } else {
+      setIsPopOn(false);
     }
   };
+  console.log("open", isPopOn);
 
   return (
     <Modal
       isOpen={isPopOn}
       className={styles.modal}
       overlayClassName={styles.overlay}
-      onRequestClose={() => {
-        setIsPopOn(false);
-      }}
+      // onRequestClose={() => {
+      //   setIsPopOn(false);
+      // }}
     >
       <div className={styles.codePopUp}>
         <div className={styles.text}>
@@ -46,8 +49,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
           backgroundColor={"navy"}
           onClick={() => {
             enterCode(inputKey);
-          }}
-        >
+          }}>
           입장하기
         </UnicoopButton>
       </div>

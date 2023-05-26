@@ -37,6 +37,11 @@ const Layout: FC<LayoutProps> = ({
     }, 3000);
   };
 
+  const onClickJoinProject = () => {
+    onChangeMenu(Menu.JoinProject);
+    navigate("/participateproject");
+  };
+
   const onClickManageProject = () => {
     onChangeMenu(Menu.ManagementProject);
     navigate("/manageproject");
@@ -53,10 +58,19 @@ const Layout: FC<LayoutProps> = ({
         <div className={styles.menu}>
           <div
             className={`${styles.menu_item} ${
+              selectedMenu === Menu.JoinProject && styles.selected
+            }`}
+            onClick={onClickJoinProject}>
+            <span className={styles.text}>프로젝트 참여</span>
+            {selectedMenu === Menu.JoinProject && (
+              <div className={styles.circle} />
+            )}
+          </div>
+          <div
+            className={`${styles.menu_item} ${
               selectedMenu === Menu.ManagementProject && styles.selected
             }`}
-            onClick={onClickManageProject}
-          >
+            onClick={onClickManageProject}>
             <span className={styles.text}>프로젝트 관리</span>
             {selectedMenu === Menu.ManagementProject && (
               <div className={styles.circle} />
@@ -67,8 +81,7 @@ const Layout: FC<LayoutProps> = ({
             className={`${styles.menu_item} ${
               selectedMenu === Menu.RegisterProject && styles.selected
             }`}
-            onClick={onClickRegisterProject}
-          >
+            onClick={onClickRegisterProject}>
             <span className={styles.text}>프로젝트 등록</span>
             {selectedMenu === Menu.RegisterProject && (
               <div className={styles.circle} />
@@ -79,8 +92,7 @@ const Layout: FC<LayoutProps> = ({
           className={styles.myPage}
           onClick={() => {
             navigate("/mypage");
-          }}
-        >
+          }}>
           Go to My Page
         </div>
       </div>

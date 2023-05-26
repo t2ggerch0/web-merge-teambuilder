@@ -6,7 +6,7 @@ export const teamApi = {
   getTeamInfo: async (classId: string, token: string) => {
     try {
       const response = await axios.get(`team/${classId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `${token}` },
       });
       return response.data ?? "";
     } catch (e) {

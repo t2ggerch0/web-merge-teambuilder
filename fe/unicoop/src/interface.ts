@@ -7,6 +7,7 @@ export type UnicoopContext = {
 };
 
 export enum Menu {
+  JoinProject,
   ManagementProject,
   RegisterProject,
   Activity,

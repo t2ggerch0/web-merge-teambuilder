@@ -5,7 +5,9 @@ import ProjectBox from "../../Components/ProjectBox/ProjectBox";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import { hostApi } from "../../API/hostApi";
 import { guestApi } from "../../API/guestApi";
-import { Menu, NewClassType } from "../../interface";
+import { ClassType, Menu, NewClassType } from "../../interface";
+import EditProject from "./EditProject/EditProject";
+import Class from "./Class/Class";
 
 type ManageProjectProps = {
   selectedMenu: Menu;
@@ -20,7 +22,16 @@ const ManageProject: FC<ManageProjectProps> = ({
   const { myInfo, setMyInfo } = useAuthContext();
   const [hostProjects, setHostProjects] = useState<Array<NewClassType>>([]);
   const [guestProjects, setGuestProjects] = useState<Array<NewClassType>>([]);
+  const [classes, setClasses] = useState<Array<ClassType>>([]);
+  const [currentClass, setCurrentClass] = useState<undefined | ClassType>(
+    undefined
+  );
+  const onClickClass = (classId?: string) => {
+    let target = classes.find((item) => item._id === classId);
+    setCurrentClass(target);
+  };
 
+  const onFinishEditQuestion = (classId?: string) => {};
   useEffect(() => {
     hostApi.getHostClass(myInfo?.token ?? "").then((res) => {
       console.log("host class", res.hostClasses);
@@ -40,15 +51,8 @@ const ManageProject: FC<ManageProjectProps> = ({
     <Layout
       pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
-        <div className={styles.btn_wrapper}>
-          <button className={styles.btn} onClick={onClickModal}>
-            프로젝트 입장하기
-          </button>
-        </div>
-
         <div className={styles.class_container}>
           <div className={styles.title}>내가 호스트인 프로젝트</div>
           <div className={styles.class_wrapper}>
@@ -61,23 +65,25 @@ const ManageProject: FC<ManageProjectProps> = ({
             {guestProjects.map((project, index) => (
               <ProjectBox projectInfo={project} />
             ))}
-            {/*currentClass === undefined ? (
-            classes.map((item, index) => (
-              <Class
-                key={`class_${item?._id}`}
-                classInfo={item}
-                order={index}
-                onClickClass={onClickClass}
-              />
-            ))
-          ) : (
-            <EditProject
-              classInfo={currentClass}
-              onClickClass={onClickClass}
-              onFinishEditQuestion={onFinishEditQuestion}
-            />
-          )*/}
           </div>
+          {/* <div>
+            {currentClass === undefined ? (
+              classes.map((item, index) => (
+                <Class
+                  key={`class_${item?._id}`}
+                  classInfo={item}
+                  order={index}
+                  onClickClass={onClickClass}
+                />
+              ))
+            ) : (
+              <EditProject
+                classInfo={currentClass}
+                onClickClass={onClickClass}
+                onFinishEditQuestion={onFinishEditQuestion}
+              />
+            )}
+          </div> */}
         </div>
         {/*<ProjectBox projectInfo={data.hostClasses[0]} />*/}
         {/*isPopOn && (

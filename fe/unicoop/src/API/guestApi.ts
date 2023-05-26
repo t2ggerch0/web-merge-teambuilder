@@ -60,4 +60,34 @@ export const guestApi = {
       );
     }
   },
+  getAllClasses: async () => {
+    try {
+      const response = await axios.get(`class/all`);
+      return response.data ?? "";
+    } catch (e) {
+      viewToastError(
+        "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+      );
+    }
+  },
+  getQuestions: async (classId: string) => {
+    try {
+      const response = await axios.get(`question?classId=${classId}`);
+      return response.data ?? "";
+    } catch (e) {
+      viewToastError(
+        "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+      );
+    }
+  },
+  getClass: async (classId: string) => {
+    try {
+      const response = await axios.get(`/class?classId=${classId}`);
+      return response.data ?? "";
+    } catch (e) {
+      viewToastError(
+        "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+      );
+    }
+  },
 };
