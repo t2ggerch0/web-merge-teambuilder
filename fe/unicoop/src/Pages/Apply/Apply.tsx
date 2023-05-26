@@ -14,7 +14,8 @@ import { useAuthContext } from "../../Context/UnicoopContext";
 
 const Apply = () => {
   const { projectId, accessKey } = useParams();
-  const [data, setData] = useState<QuestionType[]>([]);
+  // const [data, setData] = useState<QuestionType[]>([]);
+
   const [classInfo, setClassInfo] = useState<NewClassType>();
   const { myInfo, setMyInfo } = useAuthContext();
   const [position, setPosition] = useState<number>(0);
@@ -22,6 +23,18 @@ const Apply = () => {
   const [answers, setAnswers] = useState<
     Array<{ questionId: string; answer: number }>
   >([]);
+
+  const { data, error, isValidating } = useSWR<{
+    filteredQuestions: Array<QuestionType>;
+  }>(`/question?classId=${projectId}`, swrFetcher);
+  // if (!data || isValidating) {
+  //   return <Loader />;
+  // }
+  // if (error) {
+  //   viewToastError(error);
+  // }
+
+  console.log("data", data);
 
   const onClickJoinClassButton = () => {
     console.log(answers.map((item) => typeof item.questionId));
@@ -43,23 +56,27 @@ const Apply = () => {
   };
 
   useEffect(() => {
-    guestApi.getQuestions(projectId ?? "").then((res) => {
-      console.log(res.filteredQuestions);
-      setData(res.filteredQuestions);
+    if (data?.filteredQuestions) {
+      console.log("set answer");
       setAnswers(
-        res.filteredQuestions.map((item: any) => {
+        data.filteredQuestions.map((item: any) => {
           return {
             questionId: item.id,
             answer: 0,
           };
         })
       );
-    });
+    }
+    // guestApi.getQuestions(projectId ?? "").then((res) => {
+    //   console.log("get axios", res.filteredQuestions);
+    //   setData(res.filteredQuestions);
+
+    // });
     guestApi.getClass(projectId ?? "").then((res) => {
-      console.log(res.targetClass);
+      // console.log(res.targetClass);
       setClassInfo(res.targetClass);
     });
-  }, []);
+  }, [data]);
 
   return (
     <div className={styles.apply}>
@@ -97,14 +114,14 @@ const Apply = () => {
           subtitle=""
           title="포지션"
         />
-        {data.map((q, index) => (
+        {data?.filteredQuestions.map((q, index) => (
           <OptionRadios
             title={q.title}
             subtitle={""}
             name={q.title}
             isHorizontal={true}
             options={q.options}
-            checkedOption={answers[index].answer}
+            checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
               const newOptions = answers.slice();
               newOptions[index].answer = e;

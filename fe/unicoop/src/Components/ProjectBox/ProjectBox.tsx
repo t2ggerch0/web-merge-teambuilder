@@ -16,8 +16,10 @@ const ProjectBox: FC<ProjectBoxProps> = ({
 }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
+    console.log("e", e);
   };
 
   const goToProject = () => {
