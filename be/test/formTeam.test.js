@@ -45,7 +45,11 @@ describe("Form team  API Tests", () => {
         hostAnswer: [0, 1, [2, 5], 3],
       };
 
-      const createClassResponse = await request(app).post("/class/create-class").set("Authorization", `Bearer ${token}`).send(classData).expect(201);
+      const createClassResponse = await request(app)
+        .post("/class/create-class")
+        .set("Authorization", `Bearer ${token}`)
+        .send(classData)
+        .expect(201);
       console.log("create Class success");
 
       // save class
@@ -117,7 +121,11 @@ describe("Form team  API Tests", () => {
             ],
           };
 
-          await request(app).post("/class/join-class").set("Authorization", `Bearer ${token}`).send(joinClassData).expect(201);
+          await request(app)
+            .post("/class/join-class")
+            .set("Authorization", `Bearer ${token}`)
+            .send(joinClassData)
+            .expect(201);
           console.log("user " + i + " join class success");
         } catch (error) {
           console.log(error);
@@ -150,7 +158,11 @@ describe("Form team  API Tests", () => {
           classId: classId,
         };
 
-        const response = await request(app).post("/class/form-team").set("Authorization", `Bearer ${token}`).send(data).expect(201);
+        const response = await request(app)
+          .post("/class/form-team")
+          .set("Authorization", `Bearer ${token}`)
+          .send(data)
+          .expect(201);
         console.log(response.body);
       } catch (error) {
         console.error(error);
