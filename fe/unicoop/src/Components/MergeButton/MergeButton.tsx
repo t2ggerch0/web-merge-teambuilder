@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, MouseEvent } from "react";
-import styles from "./UnicoopButton.module.scss";
+import styles from "./MergeButton.module.scss";
 
-type UnicoopButtonProps = {
+type MergeButtonProps = {
   children: ReactNode;
   width?: number;
   height?: number;
@@ -12,7 +12,7 @@ type UnicoopButtonProps = {
   onClick(e: MouseEvent<HTMLButtonElement>): void;
 };
 
-const UnicoopButton: FC<UnicoopButtonProps> = ({
+const MergeButton: FC<MergeButtonProps> = ({
   children,
   width,
   height,
@@ -24,7 +24,7 @@ const UnicoopButton: FC<UnicoopButtonProps> = ({
 }) => {
   return (
     <button
-      className={styles.unicoopButton}
+      className={styles.mergeButton}
       style={{
         width,
         height,
@@ -40,4 +40,4 @@ const UnicoopButton: FC<UnicoopButtonProps> = ({
   );
 };
 
-export default UnicoopButton;
+export default MergeButton;

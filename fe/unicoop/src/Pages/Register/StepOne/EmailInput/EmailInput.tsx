@@ -1,7 +1,7 @@
 import React, { FormEvent, FC } from "react";
 import styles from "./EmailInput.module.scss";
 import LabelInput from "../../../../Components/LabelInput/LabelInput";
-import UnicoopButton from "../../../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../../../Components/MergeButton/MergeButton";
 
 type EmailInputProps = {
   email: string;
@@ -29,7 +29,7 @@ const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
         height={30}
         onChange={onChange}
       />
-      <UnicoopButton
+      <MergeButton
         fontSize={14}
         backgroundColor={"#cc4730"}
         borderRadius={8}
@@ -37,7 +37,7 @@ const EmailInput: FC<EmailInputProps> = ({ email, setEmail, sendCode }) => {
         onClick={() => sendCode(email)}
       >
         인증받기
-      </UnicoopButton>
+      </MergeButton>
     </form>
   );
 };

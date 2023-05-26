@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./EditProfile.module.scss";
 import LabelInput from "../../../Components/LabelInput/LabelInput";
-import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../../Components/MergeButton/MergeButton";
 import { authApi } from "../../../API/authApi";
 import { useAuthContext } from "../../../Context/UnicoopContext";
 import { useNavigate } from "react-router-dom";
@@ -49,17 +49,17 @@ const EditProfile = () => {
         />
       </div>
       <div className={styles.buttons}>
-        <UnicoopButton backgroundColor={"#6E43A4"} onClick={() => {}}>
+        <MergeButton backgroundColor={"#6E43A4"} onClick={() => {}}>
           수정 완료
-        </UnicoopButton>
-        <UnicoopButton
+        </MergeButton>
+        <MergeButton
           backgroundColor={"#292929"}
           onClick={() => {
             deleteAccount(myInfo?.email ?? "");
           }}
         >
           회원 탈퇴
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </div>
   );

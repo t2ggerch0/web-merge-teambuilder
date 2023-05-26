@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ViewProjects.module.scss";
-import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../../Components/MergeButton/MergeButton";
 
 const ViewProjects = () => {
   return (
@@ -25,12 +25,12 @@ const ViewProjects = () => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <UnicoopButton backgroundColor={"navy"} onClick={() => {}}>
+        <MergeButton backgroundColor={"navy"} onClick={() => {}}>
           Share
-        </UnicoopButton>
-        <UnicoopButton backgroundColor={"red"} onClick={() => {}}>
+        </MergeButton>
+        <MergeButton backgroundColor={"red"} onClick={() => {}}>
           Export
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </div>
   );

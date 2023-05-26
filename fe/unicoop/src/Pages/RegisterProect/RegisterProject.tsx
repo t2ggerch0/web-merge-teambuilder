@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./RegisterProject.module.scss";
-import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../Components/MergeButton/MergeButton";
 import { Dayjs } from "dayjs";
 import Layout from "../../Components/Layout/Layout";
 import ClassInfo from "./ClassInfo/ClassInfo";
@@ -103,7 +103,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     <Layout
       pageTitle="프로젝트 등록"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <ClassInfo
           onChangeClassInfo={onChangeClassInfo}
@@ -119,9 +120,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           <hr />
         </div>
         <div className={styles.button}>
-          <UnicoopButton onClick={onClickRegisterButton}>
-            수업 만들기
-          </UnicoopButton>
+          <MergeButton onClick={onClickRegisterButton}>수업 만들기</MergeButton>
         </div>
         <ToastContainer
           className={styles.toast}
