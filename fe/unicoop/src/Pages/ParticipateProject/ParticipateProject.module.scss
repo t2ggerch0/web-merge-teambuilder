@@ -1,0 +1,18 @@
+.container {
+  animation: fadeIn 1s;
+  .class_container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .class_wrapper {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 50px;
+    }
+  }
+}

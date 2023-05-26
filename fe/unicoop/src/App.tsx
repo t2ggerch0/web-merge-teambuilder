@@ -8,6 +8,7 @@ import Activity from "./Pages/Activity/Activity";
 import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Menu } from "./interface";
+import ParticipateProject from "./Pages/ParticipateProject/ParticipateProject";
 
 const App = () => {
   const [menu, setMenu] = useState<Menu>(Menu.ManagementProject);
@@ -22,6 +23,15 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
+            path="/participateproject"
+            element={
+              <ParticipateProject
+                selectedMenu={menu}
+                onChangeMenu={onClickMenu}
+              />
+            }
+          />
+          <Route
             path="/registerproject"
             element={
               <RegisterProject selectedMenu={menu} onChangeMenu={onClickMenu} />
@@ -33,7 +43,7 @@ const App = () => {
               <ManageProject selectedMenu={menu} onChangeMenu={onClickMenu} />
             }
           />
-          <Route path={"/apply/:projectId"} element={<Apply />} />
+          <Route path={"/apply/:projectId/:accessKey"} element={<Apply />} />
           <Route path={"/activity/:projectId"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>

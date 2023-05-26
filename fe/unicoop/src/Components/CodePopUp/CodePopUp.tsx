@@ -17,7 +17,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
 
   const enterCode = (inputKey: string) => {
     if (inputKey === projectInfo.accessKey.toString()) {
-      navigate(`/apply/${projectInfo._id}`);
+      navigate(`/apply/${projectInfo._id}/${inputKey}`);
       console.log("yes");
     }
   };
@@ -29,8 +29,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
       overlayClassName={styles.overlay}
       onRequestClose={() => {
         setIsPopOn(false);
-      }}
-    >
+      }}>
       <div className={styles.codePopUp}>
         <div className={styles.text}>
           교수님으로부터 전달받은 6자리의 입장코드를 입력해주세요.
@@ -46,8 +45,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
           backgroundColor={"navy"}
           onClick={() => {
             enterCode(inputKey);
-          }}
-        >
+          }}>
           입장하기
         </UnicoopButton>
       </div>
