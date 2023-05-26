@@ -6,6 +6,7 @@ import "dayjs/locale/ko"; // 한국어 가져오기
 import { useNavigate } from "react-router-dom";
 import { NewClassType } from "../../interface";
 import CodePopUp from "../CodePopUp/CodePopUp";
+import { viewToastInfo } from "../../helper";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
@@ -28,15 +29,19 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   };
 
   const goToProject = () => {
-    if (withAccessKey) {
-      navigate(`/activity/${projectInfo._id}`);
+    if (isOver) {
+      viewToastInfo("해당 프로젝트의 모집기간이 지났습니다.");
     } else {
-      if (projectInfo.isSecret) {
-        // check access key
-        onChangeOpen(true);
-        // navigate
+      if (withAccessKey) {
+        navigate(`/activity/${projectInfo._id}`);
       } else {
-        navigate(`/apply/${projectInfo._id}/0`);
+        if (projectInfo.isSecret) {
+          // check access key
+          onChangeOpen(true);
+          // navigate
+        } else {
+          navigate(`/apply/${projectInfo._id}/0`);
+        }
       }
     }
   };
