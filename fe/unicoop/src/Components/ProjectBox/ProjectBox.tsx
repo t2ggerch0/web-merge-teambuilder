@@ -1,6 +1,8 @@
 import React, { FC, useState } from "react";
 import styles from "./ProjectBox.module.scss";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko"; // 한국어 가져오기
 import { useNavigate } from "react-router-dom";
 import { NewClassType } from "../../interface";
 import CodePopUp from "../CodePopUp/CodePopUp";
@@ -16,6 +18,9 @@ const ProjectBox: FC<ProjectBoxProps> = ({
 }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  dayjs.extend(relativeTime);
+  const isOver = dayjs().to(dayjs(projectInfo?.recruitEndDate)).includes("ago");
+  // console.log("is over?", isOver);
 
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
@@ -37,7 +42,9 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   };
 
   return (
-    <div className={styles.projectBox} onClick={goToProject}>
+    <div
+      className={`${styles.projectBox} ${isOver && styles.projectBox_gray}`}
+      onClick={goToProject}>
       <div className={styles.class_info}>
         <div className={styles.class_name}>{projectInfo.className}</div>
         <div className={styles.class_description}>

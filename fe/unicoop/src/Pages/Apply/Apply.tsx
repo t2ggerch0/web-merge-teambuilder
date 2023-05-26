@@ -10,10 +10,13 @@ import Loader from "../../Components/Loader/Loader";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
 import { guestApi } from "../../API/guestApi";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko"; // 한국어 가져오기
 import { useAuthContext } from "../../Context/UnicoopContext";
 
 const Apply = () => {
   const { projectId, accessKey } = useParams();
+
   // const [data, setData] = useState<QuestionType[]>([]);
 
   // const [classInfo, setClassInfo] = useState<NewClassType>();

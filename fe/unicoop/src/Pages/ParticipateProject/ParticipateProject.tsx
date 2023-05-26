@@ -30,7 +30,7 @@ const ParticipateProject: FC<ParticipateProjectProps> = ({
         <div className={styles.class_container}>
           <div className={styles.title}>전체 프로젝트</div>
           <div className={styles.class_wrapper}>
-            {projects.reverse().map((project) => (
+            {projects.map((project) => (
               <ProjectBox projectInfo={project} withAccessKey={false} />
             ))}
           </div>
