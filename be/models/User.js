@@ -22,9 +22,15 @@ const userSchema = new Schema(
         ref: "Class",
       },
     ],
-    positionIndexes: [
+    positionIndexByClass: [
       {
-        type: Number,
+        class: {
+          type: Schema.Types.ObjectId,
+          ref: "Class",
+        },
+        positionIndex: {
+          type: Number,
+        },
       },
     ],
     name: String,
