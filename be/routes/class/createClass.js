@@ -24,7 +24,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     let targetKey = 0;
 
     if (req.body.isSecret) {
-      let keys = (await Class.find({}, "accessKey")).map((doc) => doc.accessKey);
+      let keys = (await Class.find({}, "accessKey")).map(
+        (doc) => doc.accessKey
+      );
       while (true) {
         const accessKey = Math.floor(Math.random() * 1000000);
         if (!keys.includes(accessKey)) {
@@ -37,7 +39,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     //------ Verify Positions ------//
     // check if position types and composition are valid
     if (req.body.positionTypes.length !== req.body.positionComposition.length) {
-      return res.status(403).json({ message: "Invalid position types and composition" });
+      return res
+        .status(403)
+        .json({ message: "Invalid position types and composition" });
     }
 
     // create position counts
@@ -48,6 +52,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     }
 
     // check if host is participating
+    let hostPositionIndex;
     if (req.body.isHostParticipating) {
       const hostPosition = req.body.hostPosition;
 
@@ -67,11 +72,8 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       await answerObject.save();
 
       // add position counts of host position
-      const hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
+      hostPositionIndex = req.body.positionTypes.indexOf(hostPosition);
       positionCounts[hostPositionIndex] += 1;
-
-      // add user position index
-      user.positionIndexes.push(hostPositionIndex);
     }
 
     //------ Create Questions ------//
@@ -86,7 +88,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Create the new class with the request data
     const newClass = new Class({
       host: userId,
-      guest: req.body.isHostParticipating ? [userId] : [],
+      guest: req.body.isHostParticipating
+        ? [{ user: userId, answer: answerObject._id }]
+        : [],
       questionIds: questionIds,
       className: req.body.className,
       classType: req.body.classType,
@@ -101,14 +105,20 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       isSecret: req.body.isSecret,
       isHostParticipating: req.body.isHostParticipating,
       accessKey: targetKey,
-      answers: req.body.isHostParticipating ? [answerObject._id] : [],
     });
 
     // Save the new class to the database
     const savedClass = await newClass.save();
 
+    //------ Add Class to User ------//
+    if (req.body.isHostParticipating) {
+      // add user position index
+      user.positionIndexByClass.push({
+        class: savedClass._id,
+        positionIndex: hostPositionIndex,
+      });
+    }
     // Add the new class to the host's list of classes
-
     user.classes.push(savedClass._id);
     await user.save();
 
@@ -120,7 +130,9 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while creating the class" });
   }
 });
 
