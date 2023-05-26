@@ -16,29 +16,22 @@ const Apply = () => {
   const { projectId, accessKey } = useParams();
   // const [data, setData] = useState<QuestionType[]>([]);
 
-  const [classInfo, setClassInfo] = useState<NewClassType>();
+  // const [classInfo, setClassInfo] = useState<NewClassType>();
   const { myInfo, setMyInfo } = useAuthContext();
   const [position, setPosition] = useState<number>(0);
 
   const [answers, setAnswers] = useState<
     Array<{ questionId: string; answer: number }>
   >([]);
+  const classInfo = useSWR<{
+    targetClass: NewClassType;
+  }>(`/class?classId=${projectId}`, swrFetcher)?.data?.targetClass;
 
   const { data, error, isValidating } = useSWR<{
     filteredQuestions: Array<QuestionType>;
   }>(`/question?classId=${projectId}`, swrFetcher);
-  // if (!data || isValidating) {
-  //   return <Loader />;
-  // }
-  // if (error) {
-  //   viewToastError(error);
-  // }
-
-  console.log("data", data);
 
   const onClickJoinClassButton = () => {
-    console.log(answers.map((item) => typeof item.questionId));
-
     guestApi.joinClass(
       {
         accessKey: parseInt(accessKey ?? "0"),
@@ -57,7 +50,6 @@ const Apply = () => {
 
   useEffect(() => {
     if (data?.filteredQuestions) {
-      console.log("set answer");
       setAnswers(
         data.filteredQuestions.map((item: any) => {
           return {
@@ -67,16 +59,15 @@ const Apply = () => {
         })
       );
     }
-    // guestApi.getQuestions(projectId ?? "").then((res) => {
-    //   console.log("get axios", res.filteredQuestions);
-    //   setData(res.filteredQuestions);
-
-    // });
-    guestApi.getClass(projectId ?? "").then((res) => {
-      // console.log(res.targetClass);
-      setClassInfo(res.targetClass);
-    });
   }, [data]);
+
+  if (!data || isValidating) {
+    return <Loader />;
+  }
+  if (error) {
+    viewToastError(error);
+  } else {
+  }
 
   return (
     <div className={styles.apply}>
