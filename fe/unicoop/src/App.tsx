@@ -9,6 +9,7 @@ import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Menu } from "./interface";
 import ParticipateProject from "./Pages/ParticipateProject/ParticipateProject";
+import WhatIsMerge from "./Pages/WhatIsMerge/WhatIsMerge";
 
 const App = () => {
   const [menu, setMenu] = useState<Menu>(Menu.ManagementProject);
@@ -46,6 +47,7 @@ const App = () => {
           <Route path={"/apply/:projectId/:accessKey"} element={<Apply />} />
           <Route path={"/activity/:projectId"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path={"/whatismerge"} element={<WhatIsMerge />} />
         </Routes>
       </BrowserRouter>
     </div>

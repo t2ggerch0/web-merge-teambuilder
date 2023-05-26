@@ -58,7 +58,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
           navigate("/manageproject");
         }}
       >
-        UNICOOP
+        merge
       </div>
     </div>
   );

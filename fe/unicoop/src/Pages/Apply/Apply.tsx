@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
-import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../Components/MergeButton/MergeButton";
 import { guestApi } from "../../API/guestApi";
 import dayjs from "dayjs";
 import { useAuthContext } from "../../Context/UnicoopContext";
@@ -132,12 +132,13 @@ const Apply = () => {
         ))}
       </div>
       <div className={styles.button}>
-        <UnicoopButton
+        <MergeButton
           width={300}
           backgroundColor={"darkBlue"}
-          onClick={onClickJoinClassButton}>
+          onClick={onClickJoinClassButton}
+        >
           제출
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </div>
   );

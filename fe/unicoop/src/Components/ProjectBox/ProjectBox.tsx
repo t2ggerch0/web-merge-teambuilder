@@ -7,28 +7,25 @@ import CodePopUp from "../CodePopUp/CodePopUp";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
-  withAccessKey?: boolean;
+  withAccessKey: boolean;
 };
 
-const ProjectBox: FC<ProjectBoxProps> = ({
-  projectInfo,
-  withAccessKey = true,
-}) => {
+const ProjectBox: FC<ProjectBoxProps> = ({ projectInfo, withAccessKey }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onChangeOpen = (e: boolean) => {
+  /*const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
     console.log("e", e);
-  };
+  };*/
 
   const goToProject = () => {
-    if (withAccessKey) {
+    if (!withAccessKey) {
       navigate(`/activity/${projectInfo._id}`);
     } else {
       if (projectInfo.isSecret) {
         // check access key
-        onChangeOpen(true);
+        setIsOpen(true);
         // navigate
       } else {
         navigate(`/apply/${projectInfo._id}/0`);
@@ -60,8 +57,8 @@ const ProjectBox: FC<ProjectBoxProps> = ({
       {isOpen && (
         <CodePopUp
           isPopOn={isOpen}
+          setIsPopOn={setIsOpen}
           projectInfo={projectInfo}
-          setIsPopOn={onChangeOpen}
         />
       )}
     </div>
