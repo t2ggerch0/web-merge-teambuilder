@@ -14,9 +14,16 @@ function calculateGroupWeight(group) {
 const CreateTeam = (users, edges, positionComposition) => {
   // numGroups == users length / sum of positionComposition
   const numGroups = users.length / positionComposition.reduce((a, b) => a + b, 0);
-  const resultGreedy = CreateGroupsGreedy(users, edges, numGroups);
-  console.log("Groups: ", resultGreedy);
+  const resultGreedy = CreateGroupsGreedy(users, edges, numGroups, positionComposition);
+  //console.log("Groups: ", resultGreedy);
   return resultGreedy;
 };
-
 module.exports = CreateTeam;
+
+const CreateTeamOptimal = (users, edges, positionCompositions) => {
+  const numGroups = teams.length;
+  const resultGreedy = CreateGroupsGreedy(users, edges, numGroups, positionCompositions);
+  //console.log("Groups: ", resultGreedy);
+  return resultGreedy;
+};
+module.exports = CreateTeamOptimal;

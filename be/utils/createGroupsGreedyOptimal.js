@@ -1,15 +1,5 @@
-function CreateGroupsGreedy(students, edges, numGroups, positionComposition) {
+function CreateGroupsGreedy(students, edges, numGroups, teams) {
   const groupSize = Math.floor(students.length / numGroups);
-
-  // set position counter for each group
-  let positionCounter = [];
-  for (let i = 0; i < numGroups; i++) {
-    let positionCounterPerGroup = [];
-    for (let j = 0; j < positionComposition.length; j++) {
-      positionCounterPerGroup.push(0);
-    }
-    positionCounter.push(positionCounterPerGroup);
-  }
 
   // Sort edges in descending order by weight
   const sortedEdges = edges.sort((a, b) => b.weight - a.weight);
@@ -34,7 +24,7 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition) {
       let availableGroup = -1;
       let minSize = Infinity;
       groups.forEach((group, index) => {
-        if (group.length < groupSize && group.length < minSize && positionCounter[index][edge.from.position] < positionComposition[edge.from.position]) {
+        if (group.length < groupSize && group.length < minSize) {
           availableGroup = index;
           minSize = group.length;
         }
@@ -42,19 +32,16 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition) {
 
       if (availableGroup !== -1) {
         groups[availableGroup].push(edge.from, edge.to);
-        positionCounter[availableGroup][edge.from.position] += 1;
       }
     } else if (srcGroup === -1 && destGroup !== -1) {
       // One student is unassigned and the other student is in a group
       if (groups[destGroup].length < groupSize) {
         groups[destGroup].push(edge.from);
-        positionCounter[destGroup][edge.from.position] += 1;
       }
     } else if (srcGroup !== -1 && destGroup === -1) {
       // One student is in a group and the other student is unassigned
       if (groups[srcGroup].length < groupSize) {
         groups[srcGroup].push(edge.to);
-        positionCounter[srcGroup][edge.to.position] += 1;
       }
     }
   });
