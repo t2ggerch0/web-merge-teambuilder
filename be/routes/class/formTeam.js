@@ -190,3 +190,10 @@ module.exports = router;
     "optimalComposition": true
 }
 */
+
+/*
+{
+  "classId": "60b9b0b9b3b3b3b3b3b3b3b3",
+  "deletedQuestionId" : 0
+}
+*/
