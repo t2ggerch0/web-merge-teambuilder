@@ -32,9 +32,11 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     }
 
     // check if recruit end date past
-    if (targetClass.recruitEndDate > Date.now()) {
-      return res.status(403).json({ message: "Recruit end date did not pass" });
-    }
+
+    // test때 주석 처리
+    // if (targetClass.recruitEndDate > Date.now()) {
+    //   return res.status(403).json({ message: "Recruit end date did not pass" });
+    // }
 
     // check if team is already formed
     if (targetClass.teams.length > 0) {
