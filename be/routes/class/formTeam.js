@@ -24,7 +24,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     const user = await User.findById(userId);
 
     // verify class id
-    const targetClass = await verifyClassId(req.body.classId);
+    const targetClass = await verifyClassId(req.body.classId, res);
 
     // check if user is host
     if (targetClass.host != userId) {
