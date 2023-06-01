@@ -15,7 +15,7 @@ app.use(
     ],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*",
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
