@@ -49,8 +49,9 @@ export const hostApi = {
     optimalComposition: boolean
   ) => {
     try {
+      setHeaders(token);
       return await axios
-        .get("class/form-team", {
+        .post("class/form-team", {
           headers: { Authorization: `Bearer ${token}` },
           data: { classId, optimalComposition },
         })
@@ -58,7 +59,9 @@ export const hostApi = {
           return res.data ?? "";
         });
     } catch (e) {
-      console.log(e);
+      if (axios.isAxiosError(e) && e.response) {
+        viewToastError(e?.response?.data.message);
+      }
     }
   },
 };

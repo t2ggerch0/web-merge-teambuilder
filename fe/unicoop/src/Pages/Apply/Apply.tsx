@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { viewToastError } from "../../helper";
+import { getMyToken, viewToastError } from "../../helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
@@ -66,9 +66,23 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
   };
 
   useEffect(() => {
+    // update my info
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+
     if (projectId)
       guestApi.getQuestions(projectId).then((res) => {
         console.log(res.filteredQuestions);
+
         setData(res.filteredQuestions);
         setAnswers(
           res.filteredQuestions.map((item: any) => {
@@ -82,6 +96,39 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
   }, []);
 
   console.log("answer", answers);
+
+  const parseTextFromOptions = (options: number[]) => {
+    let res: string[] = [];
+    options.map((o) => {
+      let temp = "";
+
+      if (o < 3) {
+        temp += "월요일 ";
+      } else if (o < 6) {
+        temp += "화요일 ";
+      } else if (o < 9) {
+        temp += "수요일 ";
+      } else if (o < 12) {
+        temp += "목요일 ";
+      } else if (o < 15) {
+        temp += "금요일 ";
+      } else if (o < 18) {
+        temp += "토요일 ";
+      } else {
+        temp += "일요일 ";
+      }
+
+      if (o % 3 === 0) {
+        temp += "오전";
+      } else if (o % 3 === 1) {
+        temp += "오후";
+      } else {
+        temp += "저녁";
+      }
+      res.push(temp);
+    });
+    return res;
+  };
 
   // if (!data || isValidating) {
   //   return <Loader />;
@@ -144,7 +191,11 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
             subtitle={""}
             name={q.title}
             isHorizontal={true}
-            options={q.options}
+            options={
+              q.id === 2
+                ? parseTextFromOptions(q.options as number[])
+                : q.options
+            }
             checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
               console.log(e, answers, index);

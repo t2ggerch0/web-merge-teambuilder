@@ -11,10 +11,12 @@ import { viewToastInfo } from "../../helper";
 type ProjectBoxProps = {
   projectInfo: NewClassType;
   withAccessKey?: boolean;
+  isHost: boolean;
 };
 
 const ProjectBox: FC<ProjectBoxProps> = ({
   projectInfo,
+  isHost,
   withAccessKey = true,
 }) => {
   const navigate = useNavigate();
@@ -27,16 +29,15 @@ const ProjectBox: FC<ProjectBoxProps> = ({
 
   const isOver =
     endDate.includes("hour") || endDate.includes("days") ? false : true;
+
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
-    console.log("e", e);
   };
 
-  console.log(projectInfo.className, endDate, isOver);
   const goToProject = () => {
     // 프로젝트 관리
     if (withAccessKey) {
-      navigate(`/activity/${projectInfo._id}`);
+      navigate(`/activity/${projectInfo._id}/${isHost}`);
     }
     //프로젝트 입장
     else {
@@ -79,13 +80,13 @@ const ProjectBox: FC<ProjectBoxProps> = ({
           </div>
         )}
       </div>
-      {isOpen && (
+      {
         <CodePopUp
           isPopOn={isOpen}
           projectInfo={projectInfo}
           setIsPopOn={onChangeOpen}
         />
-      )}
+      }
     </div>
   );
 };

@@ -57,9 +57,7 @@ const Home = () => {
       <div className={styles.body}>
         <div className={styles.title}>
           <div className={styles.logo}>UNICOOP</div>
-          <div className={styles.text}>
-            대학교 팀 프로젝트 빌딩 및 협업 플랫폼!
-          </div>
+          <div className={styles.text}>팀 빌딩 및 협업 플랫폼!</div>
         </div>
         <div className={styles.join}>
           {isLogin ? (

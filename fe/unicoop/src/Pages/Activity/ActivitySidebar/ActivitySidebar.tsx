@@ -45,8 +45,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}
-            >
+              }}>
               {activity}
             </div>
           ))}
@@ -56,9 +55,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         className={styles.unicoop}
         onClick={() => {
           navigate("/manageproject");
-        }}
-      >
-        UNICOOP
+        }}>
+        👈 프로젝트 관리
       </div>
     </div>
   );

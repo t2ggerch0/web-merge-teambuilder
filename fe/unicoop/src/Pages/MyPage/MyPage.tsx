@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./MyPage.module.scss";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
@@ -6,12 +6,27 @@ import ViewProjects from "./ViewProjects/ViewProjects";
 import EditProfile from "./EditProfile/EditProfile";
 import { ArrowForward } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { getMyToken } from "../../helper";
+import { authApi } from "../../API/authApi";
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const { myInfo } = useAuthContext();
+  const { myInfo, setMyInfo } = useAuthContext();
   const [isViewProject, setIsViewProject] = useState<boolean>(true);
-
+  useEffect(() => {
+    // update my info
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+  }, []);
   return (
     <div className={styles.myPage}>
       <div className={styles.header}>

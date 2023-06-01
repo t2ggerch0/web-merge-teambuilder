@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MyInfoType } from "./interface";
+import { authApi } from "./API/authApi";
 
 export const viewToastSuccess = (message: string) => {
   toast.success(message, { autoClose: 3000, toastId: "success-message" });
@@ -24,5 +26,28 @@ export const parseSemesterFromStartDate = (date: string) => {
 };
 
 export const getMyToken = () => {
-  return window.localStorage.getItem("accessToken");
+  return window.localStorage.getItem("token");
+};
+
+export const setMyInfo = (myInfo: MyInfoType) => {
+  window.localStorage.setItem("myInfo", JSON.stringify(myInfo));
+};
+
+export const getMyInfo = () => {
+  let temp = window.localStorage.getItem("myInfo");
+  let token = getMyToken() ?? "";
+  if (temp == null) {
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token,
+      });
+    });
+  } else {
+    return JSON.parse(temp);
+  }
 };

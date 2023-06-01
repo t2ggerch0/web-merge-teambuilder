@@ -8,6 +8,8 @@ import { guestApi } from "../../API/guestApi";
 import { ClassType, Menu, NewClassType } from "../../interface";
 import EditProject from "./EditProject/EditProject";
 import Class from "./Class/Class";
+import { getMyToken } from "../../helper";
+import { authApi } from "../../API/authApi";
 
 type ManageProjectProps = {
   selectedMenu: Menu;
@@ -34,20 +36,27 @@ const ManageProject: FC<ManageProjectProps> = ({
   const onFinishEditQuestion = (classId?: string) => {};
 
   useEffect(() => {
-    // console.log(myInfo?.token);
-    hostApi.getHostClass(myInfo?.token ?? "").then((res) => {
+    // update my info
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+    hostApi.getHostClass(token).then((res) => {
       console.log("host class", res.hostClasses);
       setHostProjects(res.hostClasses);
     });
-    guestApi.getGuestClass(myInfo?.token ?? "").then((res) => {
+    guestApi.getGuestClass(token).then((res) => {
       console.log("guest class", res.guestClasses);
       setGuestProjects(res.guestClasses);
     });
   }, []);
-
-  const onClickModal = () => {
-    setIsPopOn(!isPopOn);
-  };
 
   return (
     <Layout
@@ -59,13 +68,13 @@ const ManageProject: FC<ManageProjectProps> = ({
           <div className={styles.title}>내가 호스트인 프로젝트</div>
           <div className={styles.class_wrapper}>
             {hostProjects.map((project) => (
-              <ProjectBox projectInfo={project} />
+              <ProjectBox projectInfo={project} isHost />
             ))}
           </div>
           <div className={styles.title}>내가 게스트인 프로젝트</div>
           <div className={styles.class_wrapper}>
             {guestProjects.map((project, index) => (
-              <ProjectBox projectInfo={project} />
+              <ProjectBox projectInfo={project} isHost={false} />
             ))}
           </div>
           {/* <div>
