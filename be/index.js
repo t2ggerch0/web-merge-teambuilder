@@ -15,7 +15,7 @@ app.use(
     ],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: "*"
   })
 );
 
@@ -85,7 +85,6 @@ const getQuestions = require("./routes/question/getQuestions");
 //======team api======//
 const getTeam = require("./routes/team/getTeam");
 const postMessage = require("./routes/team/postMessage");
-
 //======Signing API======//
 
 app.use("/auth", checkEmail);
