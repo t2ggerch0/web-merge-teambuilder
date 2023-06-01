@@ -63,6 +63,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       viewToastSuccess("수업을 생성했습니다.");
 
       updateUserInfo();
+      onChangeMenu(Menu.ManagementProject);
       navigate("../manageproject");
     }
   };

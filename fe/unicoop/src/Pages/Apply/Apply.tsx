@@ -3,8 +3,8 @@ import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
 import { viewToastError } from "../../helper";
-import { useParams } from "react-router-dom";
-import { NewClassType, QuestionType } from "../../interface";
+import { useNavigate, useParams } from "react-router-dom";
+import { Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
 import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
@@ -14,10 +14,15 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko"; // 한국어 가져오기
 import { useAuthContext } from "../../Context/UnicoopContext";
 
-const Apply = () => {
-  const { projectId, accessKey } = useParams();
+type ApplyProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
 
-  // const [data, setData] = useState<QuestionType[]>([]);
+const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
+  const { projectId, accessKey } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState<QuestionType[]>([]);
 
   // const [classInfo, setClassInfo] = useState<NewClassType>();
   const { myInfo, setMyInfo } = useAuthContext();
@@ -30,48 +35,72 @@ const Apply = () => {
     targetClass: NewClassType;
   }>(`/class?classId=${projectId}`, swrFetcher)?.data?.targetClass;
 
-  const { data, error, isValidating } = useSWR<{
-    filteredQuestions: Array<QuestionType>;
-  }>(`/question?classId=${projectId}`, swrFetcher);
+  // const { data, error, isValidating } = useSWR<{
+  //   filteredQuestions: Array<QuestionType>;
+  // }>(`/question?classId=${projectId}`, swrFetcher);
 
   const onClickJoinClassButton = () => {
     console.log("clicked");
-    guestApi.joinClass(
-      {
-        accessKey: parseInt(accessKey ?? "0"),
-        answers: answers.map((item) => {
-          return {
-            questionId: item.questionId.toString(),
-            answer: item.answer,
-          };
-        }),
-        classId: projectId ?? "",
-        position: classInfo?.positionTypes[position] ?? "",
-      },
-      myInfo?.token ?? ""
-    );
+    guestApi
+      .joinClass(
+        {
+          accessKey: accessKey ?? "0",
+          answers: answers.map((item) => {
+            return {
+              questionId: item.questionId.toString(),
+              answer: item.answer,
+            };
+          }),
+          classId: projectId ?? "",
+          position: classInfo?.positionTypes[position] ?? "",
+        },
+        myInfo?.token ?? ""
+      )
+      .then((res) => {
+        console.log(res);
+        if (res === 201) {
+          onChangeMenu(Menu.JoinProject);
+          navigate("../participateproject");
+        }
+      });
   };
 
   useEffect(() => {
-    if (data?.filteredQuestions) {
-      setAnswers(
-        data.filteredQuestions.map((item: any) => {
-          return {
-            questionId: item.id,
-            answer: 0,
-          };
-        })
-      );
-    }
+    if (projectId)
+      guestApi.getQuestions(projectId).then((res) => {
+        console.log(res.filteredQuestions);
+        setData(res.filteredQuestions);
+        setAnswers(
+          res.filteredQuestions.map((item: any) => {
+            return {
+              questionId: item.id,
+              answer: 0,
+            };
+          })
+        );
+      });
   }, []);
 
-  if (!data || isValidating) {
-    return <Loader />;
-  }
-  if (error) {
-    viewToastError(error);
-  } else {
-  }
+  console.log("answer", answers);
+
+  // if (!data || isValidating) {
+  //   return <Loader />;
+  // }
+  // if (error) {
+  //   viewToastError(error);
+  // }
+  //  else {
+  //   if (data?.filteredQuestions) {
+  //     setAnswers(
+  //       data.filteredQuestions.map((item: any) => {
+  //         return {
+  //           questionId: item.id,
+  //           answer: 0,
+  //         };
+  //       })
+  //     );
+  //   }
+  // }
 
   return (
     <div className={styles.apply}>
@@ -109,7 +138,7 @@ const Apply = () => {
           subtitle=""
           title="포지션"
         />
-        {data?.filteredQuestions.map((q, index) => (
+        {data?.map((q, index) => (
           <OptionRadios
             title={q.title}
             subtitle={""}
@@ -118,9 +147,9 @@ const Apply = () => {
             options={q.options}
             checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
-              const newOptions = answers.slice();
-              newOptions[index].answer = e;
-              setAnswers(newOptions);
+              console.log(e, answers, index);
+              answers[index].answer = e;
+              setAnswers([...answers]);
             }}
             onChange={(e) => {}}
           />

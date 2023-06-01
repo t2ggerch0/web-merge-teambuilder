@@ -36,7 +36,7 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
     >
       <div className={styles.codePopUp}>
         <div className={styles.text}>
-          교수님으로부터 전달받은 6자리의 입장코드를 입력해주세요.
+          호스트로부터 전달받은 6자리의 입장코드를 입력해주세요.
         </div>
         <input
           className={styles.keyInput}

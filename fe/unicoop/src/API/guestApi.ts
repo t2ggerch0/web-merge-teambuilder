@@ -1,6 +1,7 @@
 import axios from "axios";
 import { viewToastSuccess, viewToastError } from "../helper";
 import { JoinProjectType } from "../interface";
+import { setHeaders } from "./authApi";
 
 export const guestApi = {
   joinClass: async (data: JoinProjectType, token: string) => {
@@ -11,7 +12,7 @@ export const guestApi = {
       if (response.status === 201) {
         viewToastSuccess("성공적으로 프로젝트에 등록되었습니다.");
       }
-      return response.data ?? "";
+      return response.status ?? "";
     } catch (e) {
       console.log("axios erro?", e);
       if (axios.isAxiosError(e) && e.response) {
@@ -39,6 +40,7 @@ export const guestApi = {
   },
   getGuestClass: async (token: string) => {
     try {
+      setHeaders(token);
       const response = await axios.get("class/guest", {
         headers: { Authorization: `Bearer ${token}` },
       });

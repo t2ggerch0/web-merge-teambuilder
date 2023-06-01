@@ -218,7 +218,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
           }
         />
         {isHostParticipating && (
-          <Box sx={{ maxWidth: 120 }}>
+          <Box sx={{ maxWidth: 120, minWidth: 100 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 호스트 포지션

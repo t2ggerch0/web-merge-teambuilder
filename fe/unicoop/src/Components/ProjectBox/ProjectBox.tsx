@@ -25,17 +25,14 @@ const ProjectBox: FC<ProjectBoxProps> = ({
     dayjs(projectInfo?.recruitEndDate).format("YYYY-MM-DD")
   );
 
-  const isOver = endDate.includes("hours")
-    ? false
-    : dayjs()
-        .to(dayjs(projectInfo?.recruitEndDate).format("YYYY-MM-DD"))
-        .includes("ago");
-
+  const isOver =
+    endDate.includes("hour") || endDate.includes("days") ? false : true;
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
     console.log("e", e);
   };
 
+  console.log(projectInfo.className, endDate, isOver);
   const goToProject = () => {
     // 프로젝트 관리
     if (withAccessKey) {

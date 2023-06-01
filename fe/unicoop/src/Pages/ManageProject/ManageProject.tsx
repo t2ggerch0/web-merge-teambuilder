@@ -32,7 +32,9 @@ const ManageProject: FC<ManageProjectProps> = ({
   };
 
   const onFinishEditQuestion = (classId?: string) => {};
+
   useEffect(() => {
+    // console.log(myInfo?.token);
     hostApi.getHostClass(myInfo?.token ?? "").then((res) => {
       console.log("host class", res.hostClasses);
       setHostProjects(res.hostClasses);
