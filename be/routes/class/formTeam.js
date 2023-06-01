@@ -8,14 +8,14 @@ dotenv.config();
 const verifyClassId = require("../../utils/verifyClassId");
 const User = require("../../models/User");
 const CreateGraph = require("../../utils/createGraph");
-const CreateTeam = require("../../utils/createTeam");
+const { CreateTeam } = require("../../utils/createTeam");
 const Answer = require("../../models/Answer");
 const { all } = require("axios");
 const Class = require("../../models/Class");
 const CreateGroupsGreedy = require("../../utils/createGroupsGreedy");
 const Team = require("../../models/Team");
 const getMaxPositionCounter = require("../../utils/getMaxPositionCounter");
-const CreateTeamOptimal = require("../../utils/createTeam");
+const { CreateTeamOptimal } = require("../../utils/createTeam");
 
 router.post("/form-team", verifyJwt, async (req, res) => {
   try {
@@ -48,16 +48,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // get position counts
     const positionCounts = targetClass.positionCounts;
 
-    // get maximum number of teams
-    let maxTeams = 0;
-    for (let i = 0; i < positionComposition.length; i++) {
-      teamNum = Math.floor(positionCounts[i] / positionComposition[i]);
-      if (maxTeams < teamNum) {
-        maxTeams = teamNum;
-      }
-    }
-
-    console.log(targetClass);
+    // console.log(targetClass);
 
     // get valid guest by time order
     const allGuests = targetClass.guest;
@@ -65,11 +56,12 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     let validAnswers = [];
     let positionCounter = [];
     let maxPositionCounter = [];
-    console.log(allGuests.length);
+    console.log("total guests: ", allGuests.length);
+    console.log("Position counts: ", positionCounts);
 
     let optimalComposition;
     // check if using optimal team forming composition
-    if (req.body.optimalComposition) {
+    if (req.body.optimalComposition === true) {
       for (let i = 0; i < positionComposition.length; i++) {
         positionCounter.push(0);
       }
@@ -80,7 +72,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
       // add valid guests
       for (let i = 0; i < optimalComposition.totalGuests; i++) {
         const guest = await User.findById(allGuests[i].user);
-        console.log(guest.positionIndexByClass);
+        console.log("guest position index: ", guest.positionIndexByClass);
 
         // update position counter
         const classIndex = guest.positionIndexByClass.findIndex((element) => {
@@ -100,15 +92,24 @@ router.post("/form-team", verifyJwt, async (req, res) => {
         }
       }
     } else {
+      // get maximum number of teams
+      let maxTeams = 10000;
+      for (let i = 0; i < positionComposition.length; i++) {
+        teamNum = Math.floor(positionCounts[i] / positionComposition[i]);
+        if (maxTeams > teamNum) {
+          maxTeams = teamNum;
+        }
+      }
       for (let i = 0; i < positionComposition.length; i++) {
         positionCounter.push(0);
-        maxPositionCounter.push(positionComposition[i]);
+        maxPositionCounter.push(positionComposition[i] * maxTeams);
       }
+      console.log("max position counter: ", maxPositionCounter);
 
       // add valid guests
       for (let i = 0; i < allGuests.length; i++) {
         const guest = await User.findById(allGuests[i].user);
-        console.log(guest.positionIndexByClass);
+        //console.log(guest.positionIndexByClass);
         // update position counter
         const classIndex = guest.positionIndexByClass.findIndex((element) => {
           //console.log(element.class._id.toString(), targetClass._id.toString());
@@ -117,7 +118,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
 
         const positionIndex = guest.positionIndexByClass[classIndex].positionIndex;
 
-        console.log(positionIndex);
+        //console.log("guest position index: ", positionIndex);
 
         if (positionCounter[positionIndex] < maxPositionCounter[positionIndex]) {
           validGuests.push(guest);
@@ -132,7 +133,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // get question ids
     const questionIds = targetClass.questionIds;
 
-    // console.log("validGuests: ", validGuests);
+    console.log("validGuests length: ", validGuests.length);
     // console.log("validAnswers: ", validAnswers);
     console.log("questionIds: ", questionIds);
 
@@ -141,11 +142,13 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // console.log(graph);
 
     let teams;
-    if (req.body.optimalComposition) {
-      teams = CreateTeamOptimal(graph.guests, graph.edges, optimalComposition.teams);
+    if (req.body.optimalComposition === true) {
+      console.log("forming team using optimal composition");
+      teams = CreateTeamOptimal(graph.guests, graph.edges, optimalComposition.teams, targetClass._id);
     } else {
+      console.log("forming team without optimal composition");
       // create team using graph
-      teams = CreateTeam(graph.guests, graph.edges, positionComposition);
+      teams = CreateTeam(graph.guests, graph.edges, positionComposition, targetClass._id);
     }
 
     // console.log("teams: ", teams);
@@ -154,11 +157,17 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     //====== Create Teams ======//
     // create teams
     teamNum = teams.length;
-    let teamLength = teams[0].length;
+    console.log("Team num: ", teamNum);
+    let allTeamLengths = [];
+    for (let i = 0; i < teamNum; i++) {
+      allTeamLengths.push(teams[i].length);
+    }
+    console.log("allTeamLengths: ", allTeamLengths);
     for (let i = 0; i < teamNum; i++) {
       let team = teams[i];
+      console.log("team: ", i, team);
       let members = [];
-      for (let j = 0; j < teamLength; j++) {
+      for (let j = 0; j < allTeamLengths[i]; j++) {
         members.push(team[j]._id);
       }
       let teamObject = new Team({
@@ -166,6 +175,20 @@ router.post("/form-team", verifyJwt, async (req, res) => {
         class: targetClass._id,
         members: members,
       });
+
+      // get position indexes of each members
+      let positionIndexes = [];
+      for (let j = 0; j < allTeamLengths[i]; j++) {
+        const member = team[j];
+        const classIndex = member.positionIndexByClass.findIndex((element) => {
+          return element.class._id.toString() == targetClass._id.toString();
+        });
+        const positionIndex = member.positionIndexByClass[classIndex].positionIndex;
+        positionIndexes.push(positionIndex);
+      }
+      console.log("object position indexes: ", positionIndexes);
+
+      console.log(teamObject);
       await teamObject.save();
       await targetClass.teams.push(teamObject._id);
     }
