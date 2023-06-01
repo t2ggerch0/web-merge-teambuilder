@@ -35,6 +35,7 @@ const Apply = () => {
   }>(`/question?classId=${projectId}`, swrFetcher);
 
   const onClickJoinClassButton = () => {
+    console.log("clicked");
     guestApi.joinClass(
       {
         accessKey: parseInt(accessKey ?? "0"),
@@ -62,7 +63,7 @@ const Apply = () => {
         })
       );
     }
-  }, [data]);
+  }, []);
 
   if (!data || isValidating) {
     return <Loader />;

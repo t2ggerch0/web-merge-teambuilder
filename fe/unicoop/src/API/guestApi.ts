@@ -13,18 +13,22 @@ export const guestApi = {
       }
       return response.data ?? "";
     } catch (e) {
+      console.log("axios erro?", e);
       if (axios.isAxiosError(e) && e.response) {
+        console.log(e.response.data.message);
         const statusCode = e.response.status;
         if (statusCode === 403) {
-          viewToastError("입장 코드가 올바르지 않습니다.");
+          // viewToastError("입장 코드가 올바르지 않습니다.");
+          viewToastError(e.response.data.message);
         } else if (statusCode === 500) {
           viewToastError(
             "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
           );
         } else {
-          viewToastError(
-            "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
-          );
+          // viewToastError(
+          //   "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          // );
+          viewToastError(e.response.data.message);
         }
       } else {
         viewToastError(

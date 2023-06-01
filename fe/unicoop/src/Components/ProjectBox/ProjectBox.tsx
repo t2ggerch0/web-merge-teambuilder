@@ -20,8 +20,16 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   dayjs.extend(relativeTime);
-  const isOver = dayjs().to(dayjs(projectInfo?.recruitEndDate)).includes("ago");
-  // console.log("is over?", isOver);
+  // TODO : 오늘 날짜는 false로 설정
+  let endDate = dayjs().to(
+    dayjs(projectInfo?.recruitEndDate).format("YYYY-MM-DD")
+  );
+
+  const isOver = endDate.includes("hours")
+    ? false
+    : dayjs()
+        .to(dayjs(projectInfo?.recruitEndDate).format("YYYY-MM-DD"))
+        .includes("ago");
 
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
@@ -29,16 +37,19 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   };
 
   const goToProject = () => {
-    if (isOver) {
-      viewToastInfo("해당 프로젝트의 모집기간이 지났습니다.");
-    } else {
-      if (withAccessKey) {
-        navigate(`/activity/${projectInfo._id}`);
+    // 프로젝트 관리
+    if (withAccessKey) {
+      navigate(`/activity/${projectInfo._id}`);
+    }
+    //프로젝트 입장
+    else {
+      // 모집기간 지남
+      if (isOver) {
+        viewToastInfo("해당 프로젝트의 모집기간이 지났습니다.");
       } else {
         if (projectInfo.isSecret) {
           // check access key
           onChangeOpen(true);
-          // navigate
         } else {
           navigate(`/apply/${projectInfo._id}/0`);
         }
@@ -48,7 +59,9 @@ const ProjectBox: FC<ProjectBoxProps> = ({
 
   return (
     <div
-      className={`${styles.projectBox} ${isOver && styles.projectBox_gray}`}
+      className={`${styles.projectBox} ${
+        isOver && !withAccessKey && styles.projectBox_gray
+      }`}
       onClick={goToProject}>
       <div className={styles.class_info}>
         <div className={styles.class_name}>{projectInfo.className}</div>
