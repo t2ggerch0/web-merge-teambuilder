@@ -158,5 +158,23 @@ describe("Form team  API Tests", () => {
       }
       done();
     });
+
+    it("test form team with options", async function (done) {
+      console.log("----------------Forming Teams----------------");
+
+      try {
+        const data = {
+          classId: classId,
+          optimalComposition: true,
+          deletedQuestionId: 0,
+        };
+
+        const response = await request(app).get("/class/form-team-with-option").set("Authorization", `Bearer ${token}`).send(data).expect(201);
+        console.log("result: ", response.body);
+      } catch (error) {
+        console.error(error);
+      }
+      done();
+    });
   });
 });

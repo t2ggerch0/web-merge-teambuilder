@@ -1,8 +1,8 @@
 /**
  * @swagger
- * /class/form-team:
+ * /class/form-team-with-option:
  *   post:
- *     summary: 클래스의 호스트로서 팀을 생성합니다.
+ *     summary: 특정 질문을 제거 했을 때의 결과값 반환
  *     tags:
  *       - class
  *     parameters:
@@ -24,6 +24,9 @@
  *             optimalComposition:
  *               type: boolean
  *               example: true
+ *             deletedQuestionId:
+ *              type: number
+ *              example: 0
  *     responses:
  *       201:
  *         description: Successfully formed a team
