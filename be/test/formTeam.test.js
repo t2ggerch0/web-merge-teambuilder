@@ -170,7 +170,7 @@ describe("Form team  API Tests", () => {
         };
 
         const response = await request(app).get("/class/form-team-with-option").set("Authorization", `Bearer ${token}`).send(data).expect(201);
-        console.log(response.body);
+        console.log("result: ", response.body);
       } catch (error) {
         console.error(error);
       }
