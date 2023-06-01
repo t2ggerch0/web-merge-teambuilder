@@ -32,9 +32,9 @@ router.get("/form-team-with-option", verifyJwt, async (req, res) => {
     }
 
     // check if recruit end date past
-    if (targetClass.recruitEndDate > Date.now()) {
-      return res.status(403).json({ message: "Recruit end date did not pass" });
-    }
+    // if (targetClass.recruitEndDate > Date.now()) {
+    //   return res.status(403).json({ message: "Recruit end date did not pass" });
+    // }
 
     //====== Get Valid Guests ======//
     // get position composition

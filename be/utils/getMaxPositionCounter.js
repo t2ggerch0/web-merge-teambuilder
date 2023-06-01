@@ -16,6 +16,10 @@ const getMaxPositionCounter = (positionCounter, positionComposition) => {
   console.log("average: ", average);
   const maxTeams = average;
 
+  if (average === 0) {
+    maxTeams = 1;
+  }
+
   // get min position composition per team
   let minPositionComposition = [];
   for (let i = 0; i < positionComposition.length; i++) {
