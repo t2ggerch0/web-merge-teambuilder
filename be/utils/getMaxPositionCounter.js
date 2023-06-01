@@ -14,7 +14,7 @@ const getMaxPositionCounter = (positionCounter, positionComposition) => {
   }
   average = Math.floor(average / rates.length);
   console.log("average: ", average);
-  const maxTeams = average;
+  let maxTeams = average;
 
   if (average === 0) {
     maxTeams = 1;
