@@ -15,7 +15,7 @@ app.use(
     ],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: "*"
   })
 );
 
@@ -84,7 +84,6 @@ const getQuestions = require("./routes/question/getQuestions");
 //======team api======//
 const getTeam = require("./routes/team/getTeam");
 const postMessage = require("./routes/team/postMessage");
-
 //======Signing API======//
 
 app.use("/auth", checkEmail);
@@ -98,8 +97,8 @@ app.use("/auth", getUsers);
 app.use("/class", createClass);
 app.use("/class", joinClass);
 app.use("/class", getClass);
-app.use("/class", getHostClasses);
-app.use("/class", getGuestClasses);
+app.use("/class", cors(), getHostClasses);
+app.use("/class", cors(), getGuestClasses);
 app.use("/class", getAllClasses);
 app.use("/class", formTeam);
 
