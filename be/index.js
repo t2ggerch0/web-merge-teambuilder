@@ -97,8 +97,8 @@ app.use("/auth", getUsers);
 app.use("/class", createClass);
 app.use("/class", joinClass);
 app.use("/class", getClass);
-app.use("/class", cors(), getHostClasses);
-app.use("/class", cors(), getGuestClasses);
+app.use("/class", getHostClasses);
+app.use("/class", getGuestClasses);
 app.use("/class", getAllClasses);
 app.use("/class", formTeam);
 
