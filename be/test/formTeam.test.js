@@ -5,7 +5,7 @@ const createMultipleUsers = require("./createMultipleUsers");
 const Class = require("../models/Class");
 const User = require("../models/User");
 
-const userCount = 17;
+const userCount = 13;
 let userList = [];
 let classId = null;
 
@@ -90,7 +90,7 @@ describe("Form team  API Tests", () => {
           answers.push(answer);
         }
 
-        console.log(answers);
+        // console.log(answers);
 
         // input random answers
         try {
@@ -127,7 +127,7 @@ describe("Form team  API Tests", () => {
       console.log("join class success");
       // get class
       let currentClass = await Class.findById(classId);
-      console.log(currentClass);
+      //console.log(currentClass);
     }
 
     await setup().catch((error) => {
@@ -143,12 +143,12 @@ describe("Form team  API Tests", () => {
 
   describe("POST /class/form-team", () => {
     it("should return status 201", async function (done) {
-      console.log("forming success");
+      console.log("----------------Forming Teams----------------");
 
       try {
         const data = {
           classId: classId,
-          optimalComposition: true,
+          optimalComposition: false,
         };
 
         const response = await request(app).post("/class/form-team").set("Authorization", `Bearer ${token}`).send(data).expect(201);
