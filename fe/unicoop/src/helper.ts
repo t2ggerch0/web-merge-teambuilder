@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const viewToastSuccess = (message: string) => {
   toast.success(message, { autoClose: 3000, toastId: "success-message" });

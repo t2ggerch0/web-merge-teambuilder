@@ -17,9 +17,9 @@
   }
   &:hover {
     -webkit-animation: shadow-drop-2-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    animation: shadow-drop-2-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: shadow-drop-2-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      both;
   }
 
   .colorBox {
@@ -54,7 +54,9 @@
     }
   }
 }
-
+.projectBox_gray {
+  background-color: lightgray;
+}
 @-webkit-keyframes shadow-drop-2-center {
   0% {
     -webkit-transform: translateZ(0);

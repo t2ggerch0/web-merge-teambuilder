@@ -57,7 +57,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
   } = projectRegisterInfo;
   const [newPositionType, setNewPositionType] = useState<string>("");
   const onChangeInfo = (name: string, value: string | Dayjs) => {
-    console.log(name, value);
+    // console.log(name, value);
     onChangeClassInfo({ name, value });
   };
 
@@ -101,8 +101,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
             defaultValue={isSecret ? "비공개" : "공개"}
             onChange={() => {
               onChangeClassInfo({ name: "isSecret", value: !isSecret });
-            }}
-          >
+            }}>
             <FormControlLabel value="공개" control={<Radio />} label="공개" />
             <FormControlLabel
               value="비공개"
@@ -139,8 +138,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
                       name: "positionTypes",
                       value: newPositionType,
                     });
-                  }}
-                >
+                  }}>
                   삭제
                 </Button>
               </div>
@@ -169,8 +167,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
                   });
 
                   setNewPositionType("");
-                }}
-              >
+                }}>
                 추가
               </Button>
             </div>
@@ -221,7 +218,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
           }
         />
         {isHostParticipating && (
-          <Box sx={{ maxWidth: 120 }}>
+          <Box sx={{ maxWidth: 120, minWidth: 100 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 호스트 포지션
@@ -237,8 +234,7 @@ const ClassInfo: FC<ClassInfoProps> = ({
                     name: "hostPosition",
                     value: e.target.value as string,
                   });
-                }}
-              >
+                }}>
                 {positionTypes.map((position) => (
                   <MenuItem value={position.typeName}>
                     {position.typeName}

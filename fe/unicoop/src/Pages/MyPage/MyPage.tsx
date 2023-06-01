@@ -21,16 +21,14 @@ const MyPage = () => {
             backgroundColor={"#2c220d"}
             onClick={() => {
               setIsViewProject(true);
-            }}
-          >
+            }}>
             참여한 프로젝트 보기
           </UnicoopButton>
           <UnicoopButton
             backgroundColor={"darkGreen"}
             onClick={() => {
               setIsViewProject(false);
-            }}
-          >
+            }}>
             회원 정보 수정
           </UnicoopButton>
         </div>
@@ -41,9 +39,8 @@ const MyPage = () => {
       <div
         className={styles.project}
         onClick={() => {
-          navigate("/manageProject");
-        }}
-      >
+          navigate("/manageproject");
+        }}>
         <ArrowForward />
         Go to Projects
       </div>
