@@ -21,6 +21,9 @@
  *             classId:
  *               type: string
  *               example: "6095b5f5b5ab8e1f02e4f3d4"
+ *             optimalComposition:
+ *               type: boolean
+ *               example: true
  *     responses:
  *       201:
  *         description: Successfully formed a team
