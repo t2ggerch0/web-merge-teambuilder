@@ -22,7 +22,10 @@ const App = () => {
     <div className={styles.app}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Home selectedMenu={menu} onChangeMenu={onClickMenu} />}
+          />
           <Route
             path="/participateproject"
             element={
@@ -49,7 +52,10 @@ const App = () => {
             element={<Apply selectedMenu={menu} onChangeMenu={onClickMenu} />}
           />
           <Route path={"/activity/:projectId/:isHost"} element={<Activity />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/mypage"
+            element={<MyPage selectedMenu={menu} onChangeMenu={onClickMenu} />}
+          />
           <Route path={"/whatismerge"} element={<WhatIsMerge />} />
         </Routes>
       </BrowserRouter>

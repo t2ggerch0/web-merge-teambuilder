@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./HomeMenu.module.scss";
 import { useAuthContext } from "../../../Context/UnicoopContext";
 import { useNavigate } from "react-router-dom";
 import { getMyToken } from "../../../helper";
 import { authApi } from "../../../API/authApi";
-import { MyInfoType } from "../../../interface";
+import { Menu, MyInfoType } from "../../../interface";
 
-const HomeMenu = () => {
+type HomeMenuProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
+
+const HomeMenu: FC<HomeMenuProps> = ({ onChangeMenu, selectedMenu }) => {
   // const { myInfo, setMyInfo } = useAuthContext();
   const [myInfo, setMyInfo] = useState<MyInfoType>();
   const navigate = useNavigate();
@@ -34,6 +39,7 @@ const HomeMenu = () => {
         <div
           className={styles.menu}
           onClick={() => {
+            onChangeMenu(Menu.ManagementProject);
             navigate("/manageproject");
           }}>
           Projects
@@ -41,6 +47,7 @@ const HomeMenu = () => {
         <div
           className={styles.menu}
           onClick={() => {
+            onChangeMenu(Menu.Activity);
             navigate("/mypage");
           }}>
           My Page
