@@ -28,7 +28,11 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   );
 
   const isOver =
-    endDate.includes("hour") || endDate.includes("days") ? false : true;
+    projectInfo?.teams.length > 0
+      ? true
+      : endDate.includes("hour") || endDate.includes("days")
+      ? false
+      : true;
 
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
