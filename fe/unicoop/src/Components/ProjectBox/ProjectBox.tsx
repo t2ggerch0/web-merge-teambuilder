@@ -10,10 +10,9 @@ import { viewToastInfo } from "../../helper";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
-  isHost:boolean;
+  isHost: boolean;
   withAccessKey?: boolean;
 };
-
 
 const ProjectBox: FC<ProjectBoxProps> = ({
   projectInfo,
@@ -29,21 +28,15 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   );
 
   const isOver =
-    endDate.includes("hour") || endDate.includes("days") ? false : true;
+    projectInfo?.teams.length > 0
+      ? true
+      : endDate.includes("hour") || endDate.includes("days")
+      ? false
+      : true;
 
-  /*const onChangeOpen = (e: boolean) => {
+  const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
     console.log("e", e);
-  };*/
-
-  const goToProject = () => {
-    if (!withAccessKey) {
-      navigate(`/activity/${projectInfo._id}`);
-    } else {
-      if (projectInfo.isSecret) {
-        // check access key
-        setIsOpen(true);
-        // navigate
   };
 
   const goToProject = () => {
