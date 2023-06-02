@@ -85,6 +85,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   };
 
   useEffect(() => {
+    onChangeMenu(Menu.RegisterProject);
     let token = localStorage.getItem("token") ?? "";
     if (token.length > 0) {
       authApi.getMyInfo(token).then((res) => {

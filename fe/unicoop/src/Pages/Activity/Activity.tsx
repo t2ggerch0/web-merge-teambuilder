@@ -32,7 +32,7 @@ const Activity = () => {
   // if (error) {
   //   viewToastError(error);
   // }
-  console.log(isHost, activityIndex);
+  // console.log(isHost, activityIndex);
 
   useEffect(() => {
     // update my info

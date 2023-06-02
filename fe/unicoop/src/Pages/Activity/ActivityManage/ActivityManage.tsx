@@ -6,6 +6,7 @@ import { NewClassType, QuestionType } from "../../../interface";
 import dayjs from "dayjs";
 import { hostApi } from "../../../API/hostApi";
 import { guestApi } from "../../../API/guestApi";
+import { teamApi } from "../../../API/teamApi";
 
 type ActivityManageProps = {
   data?: NewClassType;
@@ -14,24 +15,40 @@ const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
   const { projectId } = useParams();
   const [isOptimal, setIsOptimal] = useState<boolean>(true);
   const { myInfo, setMyInfo } = useAuthContext();
-  const [result, setResult] = useState<string>("결과!");
+  const [result, setResult] = useState<string>("");
+  const [teamFormButton, setTeamFormButton] = useState<boolean>(false);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const onClickButton = () => {
+    // 팀 빌딩하고
     hostApi
       .formTeam(myInfo?.token ?? "", projectId ?? "", isOptimal)
       .then((res) => {
         console.log(res);
       });
+
     setIsOptimal(false);
     guestApi.getQuestions(projectId ?? "").then((res) => {
       console.log(res.filteredQuestions);
       setQuestions(res.filteredQuestions);
     });
   };
-  console.log("아이디", data, projectId);
 
   useEffect(() => {
-    console.log(myInfo);
+    console.log("아이디", result.length, projectId, myInfo?.token);
+    teamApi.getTeamInfo(projectId ?? "", myInfo?.token ?? "").then((res) => {
+      console.log("activit team", res);
+
+      if (res === 403) {
+        setTeamFormButton(true);
+        setResult("팀 없음");
+      } else {
+        setTeamFormButton(false);
+      }
+    });
+
+    // 팀 정보 불러오기
+    // 에러나면 잽두기
+    // 에러 안 나면 버튼 보이지 말고 정보 보여주기
   }, []);
   return (
     <div className={styles.activity_manage}>
@@ -44,11 +61,14 @@ const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
         활동 기간: {dayjs(data?.activityStartDate).format("MM/DD")} -{" "}
         {dayjs(data?.activityEndDate).format("MM/DD")}
       </div>
-      <button className={styles.button} onClick={onClickButton}>
-        지금 팀 생성하기
-      </button>
+      {teamFormButton && (
+        <button className={styles.button} onClick={onClickButton}>
+          지금 팀 생성하기
+        </button>
+      )}
+      <div>팀 정보</div>
       <div>{result}</div>
-      {!isOptimal && (
+      {/* {!isOptimal && (
         <div>
           <div>질문을 삭제해보시겠어요?</div>
           <div>
@@ -62,7 +82,7 @@ const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
             })}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

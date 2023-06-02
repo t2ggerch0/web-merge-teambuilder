@@ -30,6 +30,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
     viewToastError(error);
   }
 
+  // console.log("class data", data);
+
   return (
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>

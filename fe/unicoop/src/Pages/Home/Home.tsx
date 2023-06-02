@@ -18,7 +18,7 @@ const Home = () => {
   };
   const login = ({ email, password }: { email: string; password: string }) => {
     authApi.login({ email, password }).then((token) => {
-      console.log("token", token);
+      // console.log("token", token);
       window.localStorage.setItem("token", token);
       getUserInfo({ token });
     });
@@ -28,7 +28,7 @@ const Home = () => {
     authApi
       .getMyInfo(token)
       .then((res) => {
-        console.log("userInfo", res?.user);
+        // console.log("userInfo", res?.user);
         setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",

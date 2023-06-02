@@ -51,3 +51,36 @@ export const getMyInfo = () => {
     return JSON.parse(temp);
   }
 };
+
+export const parseTextFromOptions = (options: number[]) => {
+  let res: string[] = [];
+  options.map((o) => {
+    let temp = "";
+
+    if (o < 3) {
+      temp += "월요일 ";
+    } else if (o < 6) {
+      temp += "화요일 ";
+    } else if (o < 9) {
+      temp += "수요일 ";
+    } else if (o < 12) {
+      temp += "목요일 ";
+    } else if (o < 15) {
+      temp += "금요일 ";
+    } else if (o < 18) {
+      temp += "토요일 ";
+    } else {
+      temp += "일요일 ";
+    }
+
+    if (o % 3 === 0) {
+      temp += "오전";
+    } else if (o % 3 === 1) {
+      temp += "오후";
+    } else {
+      temp += "저녁";
+    }
+    res.push(temp);
+  });
+  return res;
+};

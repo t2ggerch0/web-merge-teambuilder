@@ -29,7 +29,7 @@ export const hostApi = {
   getHostClass: async (token: string) => {
     try {
       setHeaders(token);
-      console.log("host header", token);
+      // console.log("host header", token);
       return await axios
         .get("class/host", {
           headers: { Authorization: `Bearer ${token}` },
@@ -49,12 +49,10 @@ export const hostApi = {
     optimalComposition: boolean
   ) => {
     try {
+      // console.log("classId", classId, token, optimalComposition);
       setHeaders(token);
       return await axios
-        .post("class/form-team", {
-          headers: { Authorization: `Bearer ${token}` },
-          data: { classId, optimalComposition },
-        })
+        .post("class/form-team", { classId, optimalComposition })
         .then((res) => {
           return res.data ?? "";
         });
