@@ -18,7 +18,7 @@ const Home = () => {
   };
   const login = ({ email, password }: { email: string; password: string }) => {
     authApi.login({ email, password }).then((token) => {
-      console.log("token", token);
+      // console.log("token", token);
       window.localStorage.setItem("token", token);
       getUserInfo({ token });
     });
@@ -28,7 +28,7 @@ const Home = () => {
     authApi
       .getMyInfo(token)
       .then((res) => {
-        console.log("userInfo", res?.user);
+        // console.log("userInfo", res?.user);
         setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
@@ -57,9 +57,7 @@ const Home = () => {
       <div className={styles.body}>
         <div className={styles.title}>
           <div className={styles.logo}>UNICOOP</div>
-          <div className={styles.text}>
-            대학교 팀 프로젝트 빌딩 및 협업 플랫폼!
-          </div>
+          <div className={styles.text}>팀 빌딩 및 협업 플랫폼!</div>
         </div>
         <div className={styles.join}>
           {isLogin ? (

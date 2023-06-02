@@ -23,17 +23,15 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
       setIsPopOn(false);
     }
   };
-  console.log("open", isPopOn);
 
   return (
     <Modal
       isOpen={isPopOn}
       className={styles.modal}
       overlayClassName={styles.overlay}
-      // onRequestClose={() => {
-      //   setIsPopOn(false);
-      // }}
-    >
+      onRequestClose={() => {
+        setIsPopOn(false);
+      }}>
       <div className={styles.codePopUp}>
         <div className={styles.text}>
           호스트로부터 전달받은 6자리의 입장코드를 입력해주세요.

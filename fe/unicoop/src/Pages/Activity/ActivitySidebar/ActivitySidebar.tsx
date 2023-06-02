@@ -30,6 +30,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
     viewToastError(error);
   }
 
+  // console.log("class data", data);
+
   return (
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>
@@ -45,8 +47,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}
-            >
+              }}>
               {activity}
             </div>
           ))}
@@ -56,9 +57,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         className={styles.unicoop}
         onClick={() => {
           navigate("/manageproject");
-        }}
-      >
-        UNICOOP
+        }}>
+        👈 프로젝트 관리
       </div>
     </div>
   );

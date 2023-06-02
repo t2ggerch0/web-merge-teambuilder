@@ -47,7 +47,7 @@ const App = () => {
             path={"/apply/:projectId/:accessKey"}
             element={<Apply selectedMenu={menu} onChangeMenu={onClickMenu} />}
           />
-          <Route path={"/activity/:projectId"} element={<Activity />} />
+          <Route path={"/activity/:projectId/:isHost"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </BrowserRouter>
