@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./Home.module.scss";
 import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
@@ -8,8 +8,14 @@ import { authApi } from "../../API/authApi";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getMyToken, viewToastError } from "../../helper";
+import { Menu } from "../../interface";
 
-const Home = () => {
+type HomeProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
+
+const Home: FC<HomeProps> = ({ onChangeMenu, selectedMenu }) => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
   const { myInfo, setMyInfo } = useAuthContext();
@@ -56,19 +62,20 @@ const Home = () => {
     <div className={styles.home}>
       <div className={styles.body}>
         <div className={styles.title}>
-
           <div className={styles.logo}>merge</div>
           <div className={styles.text}>
             개발자/디자이너를 위한 팀 프로젝트 빌딩 및 협업 플랫폼!
           </div>
-
         </div>
         <div className={styles.join}>
           {isLogin ? (
             !isLoginSuccess ? (
               <LogIn changeBoxContent={changeBoxContent} loginSuccess={login} />
             ) : (
-              <HomeMenu />
+              <HomeMenu
+                onChangeMenu={onChangeMenu}
+                selectedMenu={selectedMenu}
+              />
             )
           ) : (
             <Register changeBoxContent={changeBoxContent} />

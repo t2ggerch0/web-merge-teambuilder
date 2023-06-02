@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./MyPage.module.scss";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import MergeButton from "../../Components/MergeButton/MergeButton";
@@ -8,9 +8,14 @@ import { ArrowForward } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getMyToken } from "../../helper";
 import { authApi } from "../../API/authApi";
-import { MyInfoType } from "../../interface";
+import { Menu, MyInfoType } from "../../interface";
 
-const MyPage = () => {
+type MyPageProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
+
+const MyPage: FC<MyPageProps> = ({ onChangeMenu, selectedMenu }) => {
   const navigate = useNavigate();
   const [myInfo, setMyInfo] = useState<MyInfoType>();
   // const { myInfo, setMyInfo } = useAuthContext();
@@ -58,6 +63,7 @@ const MyPage = () => {
       <div
         className={styles.project}
         onClick={() => {
+          onChangeMenu(Menu.ManagementProject);
           navigate("/manageproject");
         }}>
         <ArrowForward />
