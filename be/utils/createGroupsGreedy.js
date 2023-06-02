@@ -9,7 +9,7 @@ function findPositionIndexOfStudent(student, classId) {
 function CreateGroupsGreedy(students, edges, numGroups, positionComposition, classId) {
   const groupSize = Math.floor(students.length / numGroups);
   //console.log("students: ", students);
-  console.log("test position index: ", findPositionIndexOfStudent(students[0].id, classId));
+  //console.log("test position index: ", findPositionIndexOfStudent(students[0].id, classId));
 
   // set position counter for each group
   let positionCounter = [];

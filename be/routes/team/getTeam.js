@@ -14,10 +14,11 @@ router.get("/", verifyJwt, async (req, res) => {
   try {
     // get User
     const userId = req.userId;
+    let targetUser = await User.findById(userId);
 
     // get class IDs
     let { classId } = req.query;
-    console.log(classId);
+    // console.log(classId);
     let targetClass = await Class.findById(classId).populate("teams");
     let teams = targetClass.teams;
 
@@ -30,7 +31,7 @@ router.get("/", verifyJwt, async (req, res) => {
       }
 
       // 리더 탐색
-      if (userId == teams[i].leader) {
+      if (targetUser == teams[i].leader) {
         targetTeam = teams[i];
         break;
       }
@@ -40,7 +41,7 @@ router.get("/", verifyJwt, async (req, res) => {
       // console.log("members: ", members);
       // console.log("userId: ", userId);
       for (let j = 0; j < members.length; j++) {
-        if (userId == members[j]) {
+        if (targetUser == members[j]) {
           targetTeam = teams[i];
           isFound = true;
           break;
