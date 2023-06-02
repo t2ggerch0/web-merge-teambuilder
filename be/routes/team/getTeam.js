@@ -37,8 +37,8 @@ router.get("/", verifyJwt, async (req, res) => {
 
       // 멤버 탐색
       let members = teams[i].members;
-      console.log("members: ", members);
-      console.log("userId: ", userId);
+      // console.log("members: ", members);
+      // console.log("userId: ", userId);
       for (let j = 0; j < members.length; j++) {
         if (userId == members[j]) {
           targetTeam = teams[i];
