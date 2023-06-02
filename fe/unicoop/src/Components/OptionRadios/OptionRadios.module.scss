@@ -14,7 +14,8 @@
   }
 
   .selectBox {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
     flex-direction: column;
     &.horizontal {
       flex-direction: row;
@@ -44,6 +45,7 @@
       .optionText {
         font-size: 18px;
         opacity: 0.5;
+        min-width: 90px;
         &.checked {
           opacity: 1;
         }

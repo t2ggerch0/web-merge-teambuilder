@@ -30,6 +30,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
     viewToastError(error);
   }
 
+  // console.log("class data", data);
+
   return (
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>
@@ -45,8 +47,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}
-            >
+              }}>
               {activity}
             </div>
           ))}
@@ -59,6 +60,9 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         }}
       >
         merge
+
+        }}>
+
       </div>
     </div>
   );

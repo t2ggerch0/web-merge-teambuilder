@@ -15,7 +15,7 @@ app.use(
     ],
     credentials: true,
     methods: "GET,PUT,POST,DELETE",
-    allowedHeaders: "*",
+    allowedHeaders: "*"
   })
 );
 
@@ -72,6 +72,7 @@ const getClass = require("./routes/class/getClass");
 const getHostClasses = require("./routes/class/getHostClasses");
 const getGuestClasses = require("./routes/class/getGuestClasses");
 const getAllClasses = require("./routes/class/getAllClasses");
+const getFormTeamWithOption = require("./routes/class/getFormTeamWithOption");
 
 // post
 const createClass = require("./routes/class/createClass");
@@ -84,7 +85,6 @@ const getQuestions = require("./routes/question/getQuestions");
 //======team api======//
 const getTeam = require("./routes/team/getTeam");
 const postMessage = require("./routes/team/postMessage");
-
 //======Signing API======//
 
 app.use("/auth", checkEmail);
@@ -102,6 +102,7 @@ app.use("/class", getHostClasses);
 app.use("/class", getGuestClasses);
 app.use("/class", getAllClasses);
 app.use("/class", formTeam);
+app.use("/class", getFormTeamWithOption);
 
 //======Question API======//
 app.use("/question", getQuestions);

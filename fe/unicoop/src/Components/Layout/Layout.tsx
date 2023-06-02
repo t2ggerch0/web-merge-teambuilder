@@ -1,9 +1,10 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import styles from "./Layout.module.scss";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import { useNavigate } from "react-router-dom";
-import { viewToastInfo } from "../../helper";
-import { Menu } from "../../interface";
+import { getMyToken, viewToastInfo } from "../../helper";
+import { Menu, MyInfoType } from "../../interface";
+import { authApi } from "../../API/authApi";
 
 type LayoutProps = {
   children?: ReactNode;
@@ -19,7 +20,8 @@ const Layout: FC<LayoutProps> = ({
   onChangeMenu,
 }) => {
   const navigate = useNavigate();
-  const { myInfo, setMyInfo } = useAuthContext();
+  // const { myInfo, setMyInfo } = useAuthContext();
+  const [myInfo, setMyInfo] = useState<MyInfoType>();
 
   const onClickLogout = () => {
     window.localStorage.removeItem("token");
@@ -51,6 +53,21 @@ const Layout: FC<LayoutProps> = ({
     onChangeMenu(Menu.RegisterProject);
     navigate("/registerproject");
   };
+
+  useEffect(() => {
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      console.log("asdfasdf", myInfo);
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.left_bar}>

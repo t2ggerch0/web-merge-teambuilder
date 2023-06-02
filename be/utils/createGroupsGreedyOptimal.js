@@ -6,8 +6,16 @@ function findPositionIndexOfStudent(student, classId) {
   return positionIndex;
 }
 
-function CreateGroupsGreedy(students, edges, numGroups, positionComposition, classId) {
-  const groupSize = Math.floor(students.length / numGroups);
+function CreateGroupsGreedyOptimal(students, edges, numGroups, teams, classId) {
+  let groupSizes = [];
+  for (let i = 0; i < teams.length; i++) {
+    // add all the positions in the team
+    let teamSize = 0;
+    for (let j = 0; j < teams[i].length; j++) {
+      teamSize += teams[i][j];
+    }
+    groupSizes.push(teamSize);
+  }
   //console.log("students: ", students);
   console.log("test position index: ", findPositionIndexOfStudent(students[0].id, classId));
 
@@ -15,7 +23,7 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition, cla
   let positionCounter = [];
   for (let i = 0; i < numGroups; i++) {
     let positionCounterPerGroup = [];
-    for (let j = 0; j < positionComposition.length; j++) {
+    for (let j = 0; j < teams[0].length; j++) {
       positionCounterPerGroup.push(0);
     }
     positionCounter.push(positionCounterPerGroup);
@@ -51,9 +59,9 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition, cla
       let minSize = Infinity;
       groups.forEach((group, index) => {
         if (
-          group.length < groupSize &&
+          group.length < groupSizes[index] &&
           group.length < minSize &&
-          positionCounter[index][findPositionIndexOfStudent(edge.from, classId)] < positionComposition[findPositionIndexOfStudent(edge.from, classId)]
+          positionCounter[index][findPositionIndexOfStudent(edge.from, classId)] < teams[index][findPositionIndexOfStudent(edge.from, classId)]
         ) {
           availableGroup = index;
           minSize = group.length;
@@ -63,25 +71,28 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition, cla
       if (availableGroup !== -1) {
         groups[availableGroup].push(edge.from, edge.to);
         positionCounter[availableGroup][findPositionIndexOfStudent(edge.from, classId)] += 1;
+        console.log("case 1");
       }
     } else if (srcGroup === -1 && destGroup !== -1) {
       // One student is unassigned and the other student is in a group
       if (
-        groups[destGroup].length < groupSize &&
-        positionCounter[destGroup][findPositionIndexOfStudent(edge.from, classId)] < positionComposition[findPositionIndexOfStudent(edge.from, classId)]
+        groups[destGroup].length < groupSizes[destGroup] &&
+        positionCounter[destGroup][findPositionIndexOfStudent(edge.from, classId)] < teams[destGroup][findPositionIndexOfStudent(edge.from, classId)]
       ) {
         groups[destGroup].push(edge.from);
         positionCounter[destGroup][findPositionIndexOfStudent(edge.from, classId)] += 1;
+        console.log("case 2");
       }
     } else if (
       srcGroup !== -1 &&
       destGroup === -1 &&
-      positionCounter[srcGroup][findPositionIndexOfStudent(edge.to, classId)] < positionComposition[findPositionIndexOfStudent(edge.to, classId)]
+      positionCounter[srcGroup][findPositionIndexOfStudent(edge.to, classId)] < teams[srcGroup][findPositionIndexOfStudent(edge.to, classId)]
     ) {
       // One student is in a group and the other student is unassigned
-      if (groups[srcGroup].length < groupSize) {
+      if (groups[srcGroup].length < groupSizes[srcGroup]) {
         groups[srcGroup].push(edge.to);
         positionCounter[srcGroup][findPositionIndexOfStudent(edge.to, classId)] += 1;
+        console.log("case 3");
       }
     }
   });
@@ -93,7 +104,7 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition, cla
     let minGroupIndex = -1;
     let minGroupSize = Infinity;
     groups.forEach((group, index) => {
-      if (group.length < groupSize && group.length < minGroupSize) {
+      if (group.length < groupSizes[index] && group.length < minGroupSize) {
         minGroupIndex = index;
         minGroupSize = group.length;
       }
@@ -107,4 +118,4 @@ function CreateGroupsGreedy(students, edges, numGroups, positionComposition, cla
   return groups;
 }
 
-module.exports = CreateGroupsGreedy;
+module.exports = CreateGroupsGreedyOptimal;

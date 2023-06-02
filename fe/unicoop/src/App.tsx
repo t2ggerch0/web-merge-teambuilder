@@ -44,8 +44,11 @@ const App = () => {
               <ManageProject selectedMenu={menu} onChangeMenu={onClickMenu} />
             }
           />
-          <Route path={"/apply/:projectId/:accessKey"} element={<Apply />} />
-          <Route path={"/activity/:projectId"} element={<Activity />} />
+          <Route
+            path={"/apply/:projectId/:accessKey"}
+            element={<Apply selectedMenu={menu} onChangeMenu={onClickMenu} />}
+          />
+          <Route path={"/activity/:projectId/:isHost"} element={<Activity />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path={"/whatismerge"} element={<WhatIsMerge />} />
         </Routes>

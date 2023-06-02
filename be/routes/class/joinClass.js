@@ -47,14 +47,17 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     targetClass.positionCounts[positionIndex] += 1;
 
     // update User's position
-    user.positionIndexByClass.push({class:targetClass._id, positionIndex: positionIndex});
+    user.positionIndexByClass.push({
+      class: targetClass._id,
+      positionIndex: positionIndex,
+    });
 
     //------ Verify answers ------//
     // get user answers to questions
     const answers = req.body.answers;
-    console.log("answers: ", answers);
-    console.log(answers.length);
-    console.log(targetClass.questionIds.length);
+    // console.log("answers: ", answers);
+    // console.log(answers.length);
+    // console.log(targetClass.questionIds.length);
 
     // check if answers are valid
     if (answers.length !== targetClass.questionIds.length) {
@@ -71,14 +74,13 @@ router.post("/join-class", verifyJwt, async (req, res) => {
       guest: userId,
       answer: answerChoices,
     });
-    targetClass.answers.push(answerObject);
 
     // save answerObject to the database
     await answerObject.save();
 
     // Add the user to the class's list of guests
     if (!targetClass.guest.includes(userId)) {
-      targetClass.guest.push(userId);
+      targetClass.guest.push({ user: userId, answer: answerObject._id });
     }
 
     // Save targetClass to the database
@@ -94,7 +96,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     res.status(201).json({ message: "joined class successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while joining the class" });
+    res
+      .status(500)
+      .json({ message: "An error occurred while joining the class" });
   }
 });
 

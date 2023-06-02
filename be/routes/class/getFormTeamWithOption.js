@@ -17,14 +17,14 @@ const Team = require("../../models/Team");
 const getMaxPositionCounter = require("../../utils/getMaxPositionCounter");
 const { CreateTeamOptimal } = require("../../utils/createTeam");
 
-router.post("/form-team", verifyJwt, async (req, res) => {
+router.get("/form-team-with-option", verifyJwt, async (req, res) => {
   try {
     // verify JWT
     const userId = req.userId;
     const user = await User.findById(userId);
 
     // verify class id
-    const targetClass = await verifyClassId(req.body.classId, res);
+    const targetClass = await verifyClassId(req.body.classId);
 
     // check if user is host
     if (targetClass.host != userId) {
@@ -32,16 +32,9 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     }
 
     // check if recruit end date past
-
-    // test때 주석 처리
     // if (targetClass.recruitEndDate > Date.now()) {
     //   return res.status(403).json({ message: "Recruit end date did not pass" });
     // }
-
-    // check if team is already formed
-    if (targetClass.teams.length > 0) {
-      return res.status(403).json({ message: "Team is already formed" });
-    }
 
     //====== Get Valid Guests ======//
     // get position composition
@@ -139,6 +132,16 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // console.log("validAnswers: ", validAnswers);
     console.log("questionIds: ", questionIds);
 
+    // delete question
+    if (req.body.deletedQuestionId != 0) {
+      const deletedQuestionId = req.body.deletedQuestionId;
+      const deletedQuestionIndex = questionIds.indexOf(deletedQuestionId);
+      questionIds.splice(deletedQuestionIndex, 1);
+      console.log("deleted question id: ", deletedQuestionId);
+      console.log("deleted question index: ", deletedQuestionIndex);
+      console.log("questionIds: ", questionIds);
+    }
+
     // create Graph
     let graph = CreateGraph(validGuests, validAnswers, questionIds);
     // console.log(graph);
@@ -152,9 +155,6 @@ router.post("/form-team", verifyJwt, async (req, res) => {
       // create team using graph
       teams = CreateTeam(graph.guests, graph.edges, positionComposition, targetClass._id);
     }
-
-    // console.log("teams: ", teams);
-    // console.log(teams[0].length);
 
     //====== Create Teams ======//
     // create teams
@@ -191,15 +191,11 @@ router.post("/form-team", verifyJwt, async (req, res) => {
       console.log("object position indexes: ", positionIndexes);
 
       console.log(teamObject);
-      await teamObject.save();
       await targetClass.teams.push(teamObject._id);
     }
 
-    // save class
-    await targetClass.save();
-
-    // Send a success response
-    res.status(201).json({ message: "Successfully formed a team" });
+    // return team object as response
+    res.status(201).json({ teams });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -212,13 +208,7 @@ module.exports = router;
 /*
 {
     "classId": "60b9b0b9b3b3b3b3b3b3b3b3",
-    "optimalComposition": true
-}
-*/
-
-/*
-{
-  "classId": "60b9b0b9b3b3b3b3b3b3b3b3",
-  "deletedQuestionId" : 0
+    "optimalComposition": true,
+    "deletedQuestionId" : 0
 }
 */

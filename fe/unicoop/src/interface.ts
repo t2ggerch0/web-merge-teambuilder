@@ -42,7 +42,7 @@ export type ProjectRegisterInfo = {
 
 export type JoinProjectType = {
   classId: string;
-  accessKey: number;
+  accessKey: string;
   position: string;
   answers: Array<AnswersType>;
 };
@@ -151,7 +151,7 @@ export const defaultQuestions: ProjectRegisterInfo = {
   recruitEndDate: dayjs(new Date()),
   activityStartDate: dayjs(new Date()),
   activityEndDate: dayjs(new Date()),
-  isSecret: true,
+  isSecret: false,
   isHostParticipating: true,
   questionIds: [0, 1, 2, 3],
 };

@@ -63,6 +63,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       viewToastSuccess("수업을 생성했습니다.");
 
       updateUserInfo();
+      onChangeMenu(Menu.ManagementProject);
       navigate("../manageproject");
     }
   };
@@ -84,6 +85,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   };
 
   useEffect(() => {
+    onChangeMenu(Menu.RegisterProject);
     let token = localStorage.getItem("token") ?? "";
     if (token.length > 0) {
       authApi.getMyInfo(token).then((res) => {

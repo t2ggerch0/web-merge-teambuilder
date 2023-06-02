@@ -2,81 +2,119 @@ import React, { useEffect, useState } from "react";
 import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { viewToastError } from "../../helper";
-import { useParams } from "react-router-dom";
-import { NewClassType, QuestionType } from "../../interface";
+import { getMyToken, parseTextFromOptions, viewToastError } from "../../helper";
+import { useNavigate, useParams } from "react-router-dom";
+import { Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
 import MergeButton from "../../Components/MergeButton/MergeButton";
 import { guestApi } from "../../API/guestApi";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko"; // 한국어 가져오기
 import { useAuthContext } from "../../Context/UnicoopContext";
 
-const Apply = () => {
-  const { projectId, accessKey } = useParams();
-  // const [data, setData] = useState<QuestionType[]>([]);
+type ApplyProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
 
-  const [classInfo, setClassInfo] = useState<NewClassType>();
+const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
+  const { projectId, accessKey } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState<QuestionType[]>([]);
+
+  // const [classInfo, setClassInfo] = useState<NewClassType>();
   const { myInfo, setMyInfo } = useAuthContext();
   const [position, setPosition] = useState<number>(0);
 
   const [answers, setAnswers] = useState<
     Array<{ questionId: string; answer: number }>
   >([]);
+  const classInfo = useSWR<{
+    targetClass: NewClassType;
+  }>(`/class?classId=${projectId}`, swrFetcher)?.data?.targetClass;
 
-  const { data, error, isValidating } = useSWR<{
-    filteredQuestions: Array<QuestionType>;
-  }>(`/question?classId=${projectId}`, swrFetcher);
+  // const { data, error, isValidating } = useSWR<{
+  //   filteredQuestions: Array<QuestionType>;
+  // }>(`/question?classId=${projectId}`, swrFetcher);
+
+  const onClickJoinClassButton = () => {
+    console.log("clicked");
+    guestApi
+      .joinClass(
+        {
+          accessKey: accessKey ?? "0",
+          answers: answers.map((item) => {
+            return {
+              questionId: item.questionId.toString(),
+              answer: item.answer,
+            };
+          }),
+          classId: projectId ?? "",
+          position: classInfo?.positionTypes[position] ?? "",
+        },
+        myInfo?.token ?? ""
+      )
+      .then((res) => {
+        console.log(res);
+        if (res === 201) {
+          onChangeMenu(Menu.JoinProject);
+          navigate("../participateproject");
+        }
+      });
+  };
+
+  useEffect(() => {
+    // update my info
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+
+    if (projectId)
+      guestApi.getQuestions(projectId).then((res) => {
+        console.log(res.filteredQuestions);
+
+        setData(res.filteredQuestions);
+        setAnswers(
+          res.filteredQuestions.map((item: any) => {
+            return {
+              questionId: item.id,
+              answer: 0,
+            };
+          })
+        );
+      });
+  }, []);
+
+  console.log("answer", answers);
+
   // if (!data || isValidating) {
   //   return <Loader />;
   // }
   // if (error) {
   //   viewToastError(error);
   // }
-
-  console.log("data", data);
-
-  const onClickJoinClassButton = () => {
-    console.log(answers.map((item) => typeof item.questionId));
-
-    guestApi.joinClass(
-      {
-        accessKey: parseInt(accessKey ?? "0"),
-        answers: answers.map((item) => {
-          return {
-            questionId: item.questionId.toString(),
-            answer: item.answer,
-          };
-        }),
-        classId: projectId ?? "",
-        position: classInfo?.positionTypes[position] ?? "",
-      },
-      myInfo?.token ?? ""
-    );
-  };
-
-  useEffect(() => {
-    if (data?.filteredQuestions) {
-      console.log("set answer");
-      setAnswers(
-        data.filteredQuestions.map((item: any) => {
-          return {
-            questionId: item.id,
-            answer: 0,
-          };
-        })
-      );
-    }
-    // guestApi.getQuestions(projectId ?? "").then((res) => {
-    //   console.log("get axios", res.filteredQuestions);
-    //   setData(res.filteredQuestions);
-
-    // });
-    guestApi.getClass(projectId ?? "").then((res) => {
-      // console.log(res.targetClass);
-      setClassInfo(res.targetClass);
-    });
-  }, [data]);
+  //  else {
+  //   if (data?.filteredQuestions) {
+  //     setAnswers(
+  //       data.filteredQuestions.map((item: any) => {
+  //         return {
+  //           questionId: item.id,
+  //           answer: 0,
+  //         };
+  //       })
+  //     );
+  //   }
+  // }
 
   return (
     <div className={styles.apply}>
@@ -114,18 +152,22 @@ const Apply = () => {
           subtitle=""
           title="포지션"
         />
-        {data?.filteredQuestions.map((q, index) => (
+        {data?.map((q, index) => (
           <OptionRadios
             title={q.title}
             subtitle={""}
             name={q.title}
             isHorizontal={true}
-            options={q.options}
+            options={
+              q.id === 2
+                ? parseTextFromOptions(q.options as number[])
+                : q.options
+            }
             checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
-              const newOptions = answers.slice();
-              newOptions[index].answer = e;
-              setAnswers(newOptions);
+              console.log(e, answers, index);
+              answers[index].answer = e;
+              setAnswers([...answers]);
             }}
             onChange={(e) => {}}
           />
