@@ -57,8 +57,12 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         className={styles.unicoop}
         onClick={() => {
           navigate("/manageproject");
+        }}
+      >
+        merge
+
         }}>
-        👈 프로젝트 관리
+
       </div>
     </div>
   );

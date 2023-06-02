@@ -40,14 +40,15 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: 20px;
     .title {
       font-size: 24px;
       font-weight: bold;
     }
     .class_wrapper {
       padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      flex-wrap: wrap;
       gap: 50px;
     }
   }

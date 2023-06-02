@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import styles from "./StepOne.module.scss";
 import LabelInput from "../../../Components/LabelInput/LabelInput";
 import EmailInput from "./EmailInput/EmailInput";
-import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../../Components/MergeButton/MergeButton";
 import { authApi } from "../../../API/authApi";
 
 type StepOneProps = {
@@ -58,9 +58,9 @@ const StepOne: FC<StepOneProps> = ({
         onChange={onChange}
       />
 
-      <UnicoopButton backgroundColor={"blue"} onClick={onClickNext}>
+      <MergeButton backgroundColor={"blue"} onClick={onClickNext}>
         다음
-      </UnicoopButton>
+      </MergeButton>
     </div>
   );
 };

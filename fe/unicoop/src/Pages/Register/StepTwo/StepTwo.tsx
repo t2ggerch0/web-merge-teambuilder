@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styles from "./StepTwo.module.scss";
 import PasswordInput from "./PasswordInput/PasswordInput";
-import UnicoopButton from "../../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../../Components/MergeButton/MergeButton";
 import { authApi } from "../../../API/authApi";
 import { RegisterInfo } from "../../../interface";
 import { useNavigate } from "react-router-dom";
@@ -52,10 +52,10 @@ const StepTwo: FC<StepTwoProps> = ({
       </div>
 
       <div className={styles.buttons}>
-        <UnicoopButton width={190} onClick={onClickPrevious}>
+        <MergeButton width={190} onClick={onClickPrevious}>
           이전
-        </UnicoopButton>
-        <UnicoopButton
+        </MergeButton>
+        <MergeButton
           backgroundColor={"#435EA4"}
           width={190}
           onClick={() => {
@@ -71,7 +71,7 @@ const StepTwo: FC<StepTwoProps> = ({
           }}
         >
           회원가입
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </div>
   );

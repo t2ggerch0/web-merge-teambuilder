@@ -1,7 +1,11 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./ParticipateProject.module.scss";
 import Layout from "../../Components/Layout/Layout";
-import { Menu, MyInfoType, NewClassType } from "../../interface";
+import useSWR from "swr";
+import { swrFetcher } from "../../API/authApi";
+import Loader from "../../Components/Loader/Loader";
+import { viewToastError } from "../../helper";
+import { Menu, MyInfoType, NewClassType,QuestionType } from "../../interface";
 import ProjectBox from "../../Components/ProjectBox/ProjectBox";
 import { guestApi } from "../../API/guestApi";
 import { getMyToken } from "../../helper";
@@ -23,30 +27,40 @@ const ParticipateProject: FC<ParticipateProjectProps> = ({
 
   useEffect(() => {
     // update my info
-
     onChangeMenu(Menu.JoinProject);
-    // let token = getMyToken() ?? "";
-    // authApi.getMyInfo(token).then((res) => {
-    //   setMyInfo({
-    //     classes: res?.user.classes ?? [],
-    //     email: res?.user.email ?? "",
-    //     id: res?.user._id ?? "",
-    //     name: res?.user.name ?? "",
-    //     password: res?.user.password ?? "",
-    //     token: token ?? "",
-    //   });
-    // });
-
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
     guestApi.getAllClasses().then((res) => {
       console.log("classes", res);
       setProjects(res.classes);
     });
   }, []);
+  const { data, error, isValidating } = useSWR<{
+    classes: Array<NewClassType>;
+  }>(`/class/all`, swrFetcher);
+//   if (!data || isValidating) {
+//     return <Loader />;
+//   }
+//   if (error) {
+//     viewToastError(error);
+//   }
+
+  console.log("data", data);
   return (
     <Layout
       pageTitle="프로젝트 참여"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <div className={styles.class_container}>
           <div className={styles.title}>전체 프로젝트</div>

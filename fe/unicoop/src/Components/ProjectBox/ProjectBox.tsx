@@ -10,9 +10,10 @@ import { viewToastInfo } from "../../helper";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
+  isHost:boolean;
   withAccessKey?: boolean;
-  isHost: boolean;
 };
+
 
 const ProjectBox: FC<ProjectBoxProps> = ({
   projectInfo,
@@ -34,8 +35,19 @@ const ProjectBox: FC<ProjectBoxProps> = ({
       ? false
       : true;
 
-  const onChangeOpen = (e: boolean) => {
+  /*const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
+    console.log("e", e);
+  };*/
+
+  const goToProject = () => {
+    if (!withAccessKey) {
+      navigate(`/activity/${projectInfo._id}`);
+    } else {
+      if (projectInfo.isSecret) {
+        // check access key
+        setIsOpen(true);
+        // navigate
   };
 
   const goToProject = () => {
@@ -87,8 +99,8 @@ const ProjectBox: FC<ProjectBoxProps> = ({
       {
         <CodePopUp
           isPopOn={isOpen}
+          setIsPopOn={setIsOpen}
           projectInfo={projectInfo}
-          setIsPopOn={onChangeOpen}
         />
       }
     </div>
