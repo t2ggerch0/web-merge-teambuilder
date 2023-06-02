@@ -62,7 +62,8 @@ const ManageProject: FC<ManageProjectProps> = ({
     <Layout
       pageTitle={"프로젝트 관리"}
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <div className={styles.class_container}>
           <div className={styles.title}>내가 호스트인 프로젝트</div>
@@ -74,6 +75,7 @@ const ManageProject: FC<ManageProjectProps> = ({
           <div className={styles.title}>내가 게스트인 프로젝트</div>
           <div className={styles.class_wrapper}>
             {guestProjects.map((project, index) => (
+
               <ProjectBox projectInfo={project} isHost={false} />
             ))}
           </div>

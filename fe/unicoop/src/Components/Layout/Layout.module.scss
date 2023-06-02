@@ -19,7 +19,9 @@
     animation: fromLeft 1s;
     .title {
       text-align: center;
-      font-size: 30px;
+      letter-spacing: 4px;
+      font-size: 36px;
+      cursor: pointer;
     }
     .menu {
       display: flex;

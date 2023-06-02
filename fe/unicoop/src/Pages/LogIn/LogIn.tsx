@@ -1,7 +1,7 @@
 import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
 import LabelInput from "../../Components/LabelInput/LabelInput";
-import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../Components/MergeButton/MergeButton";
 import { useNavigate } from "react-router-dom";
 
 type LoginProps = {
@@ -55,9 +55,9 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
         onChange={onChangePassword}
       />
 
-      <UnicoopButton backgroundColor={"#435EA4"} onClick={onClickLogin}>
+      <MergeButton backgroundColor={"#435EA4"} onClick={onClickLogin}>
         로그인
-      </UnicoopButton>
+      </MergeButton>
 
       <div className={styles.account_check} onClick={changeBoxContent}>
         아직 계정이 없으신가요?
