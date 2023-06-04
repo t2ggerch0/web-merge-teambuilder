@@ -27,13 +27,6 @@ const questionLists = [
     weight: 5,
     countScore: "different",
   },
-  {
-    id: 4,
-    title: "Most important question",
-    options: [0, 1, 2, 3],
-    weight: 5,
-    countScore: "same",
-  },
 ];
 
 module.exports = questionLists;

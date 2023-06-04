@@ -66,7 +66,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
       }
       answerObject = new Answer({
         guest: userId,
-        answers: hostAnswer,
+        answer: hostAnswer,
       });
 
       // save answer to database

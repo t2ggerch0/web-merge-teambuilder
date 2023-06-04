@@ -12,10 +12,9 @@ const { CreateTeam } = require("../../utils/createTeam");
 const Answer = require("../../models/Answer");
 const { all } = require("axios");
 const Class = require("../../models/Class");
-const CreateGroupsGreedy = require("../../utils/createGroupsGreedy");
 const Team = require("../../models/Team");
 const getMaxPositionCounter = require("../../utils/getMaxPositionCounter");
-const { CreateTeamOptimal } = require("../../utils/createTeam");
+const AnalyzeData = require("../../utils/analyzeData");
 
 router.post("/form-team", verifyJwt, async (req, res) => {
   try {
@@ -63,74 +62,39 @@ router.post("/form-team", verifyJwt, async (req, res) => {
 
     let optimalComposition;
     // check if using optimal team forming composition
-    if (req.body.optimalComposition === true) {
-      for (let i = 0; i < positionComposition.length; i++) {
-        positionCounter.push(0);
-      }
 
-      optimalComposition = getMaxPositionCounter(positionCounts, positionComposition);
-      console.log("optimalComposition: ", optimalComposition);
+    for (let i = 0; i < positionComposition.length; i++) {
+      positionCounter.push(0);
+    }
 
-      // add valid guests
-      for (let i = 0; i < optimalComposition.totalGuests; i++) {
-        const guest = await User.findById(allGuests[i].user);
-        console.log("guest position index: ", guest.positionIndexByClass);
+    optimalComposition = getMaxPositionCounter(positionCounts, positionComposition);
+    console.log("optimalComposition: ", optimalComposition);
 
-        // update position counter
-        const classIndex = guest.positionIndexByClass.findIndex((element) => {
-          //console.log(element.class._id.toString(), targetClass._id.toString());
-          return element.class._id.toString() == targetClass._id.toString();
-        });
+    // add host to guest if participating
 
-        const positionIndex = guest.positionIndexByClass[classIndex].positionIndex;
-        console.log(positionIndex);
+    // add valid guests
+    for (let i = 0; i < optimalComposition.totalGuests; i++) {
+      const guest = await User.findById(allGuests[i].user);
+      console.log("guest position index: ", guest.positionIndexByClass);
 
-        if (positionCounter[positionIndex] < optimalComposition.maxPositionCounter[positionIndex]) {
-          validGuests.push(guest);
-          // get answer of guest
-          const answerObject = await Answer.findById(allGuests[i].answer);
-          validAnswers.push(answerObject);
-          positionCounter[positionIndex] += 1;
-        }
-      }
-    } else {
-      // get maximum number of teams
-      let maxTeams = 10000;
-      for (let i = 0; i < positionComposition.length; i++) {
-        teamNum = Math.floor(positionCounts[i] / positionComposition[i]);
-        if (maxTeams > teamNum) {
-          maxTeams = teamNum;
-        }
-      }
-      for (let i = 0; i < positionComposition.length; i++) {
-        positionCounter.push(0);
-        maxPositionCounter.push(positionComposition[i] * maxTeams);
-      }
-      console.log("max position counter: ", maxPositionCounter);
+      // update position counter
+      const classIndex = guest.positionIndexByClass.findIndex((element) => {
+        //console.log(element.class._id.toString(), targetClass._id.toString());
+        return element.class._id.toString() == targetClass._id.toString();
+      });
 
-      // add valid guests
-      for (let i = 0; i < allGuests.length; i++) {
-        const guest = await User.findById(allGuests[i].user);
-        //console.log(guest.positionIndexByClass);
-        // update position counter
-        const classIndex = guest.positionIndexByClass.findIndex((element) => {
-          //console.log(element.class._id.toString(), targetClass._id.toString());
-          return element.class._id.toString() == targetClass._id.toString();
-        });
+      const positionIndex = guest.positionIndexByClass[classIndex].positionIndex;
+      console.log(positionIndex);
 
-        const positionIndex = guest.positionIndexByClass[classIndex].positionIndex;
-
-        //console.log("guest position index: ", positionIndex);
-
-        if (positionCounter[positionIndex] < maxPositionCounter[positionIndex]) {
-          validGuests.push(guest);
-          // get answer of guest
-          const answerObject = await Answer.findById(allGuests[i].answer);
-          validAnswers.push(answerObject);
-          positionCounter[positionIndex] += 1;
-        }
+      if (positionCounter[positionIndex] < optimalComposition.maxPositionCounter[positionIndex]) {
+        validGuests.push(guest);
+        // get answer of guest
+        const answerObject = await Answer.findById(allGuests[i].answer);
+        validAnswers.push(answerObject);
+        positionCounter[positionIndex] += 1;
       }
     }
+
     //====== Form Teams ======//
     // get question ids
     const questionIds = targetClass.questionIds;
@@ -140,18 +104,13 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     console.log("questionIds: ", questionIds);
 
     // create Graph
-    let graph = CreateGraph(validGuests, validAnswers, questionIds);
+    let graph = AnalyzeData(validGuests, validAnswers, questionIds);
     // console.log(graph);
 
     let teams;
-    if (req.body.optimalComposition === true) {
-      console.log("forming team using optimal composition");
-      teams = CreateTeamOptimal(graph.guests, graph.edges, optimalComposition.teams, targetClass._id);
-    } else {
-      console.log("forming team without optimal composition");
-      // create team using graph
-      teams = CreateTeam(graph.guests, graph.edges, positionComposition, targetClass._id);
-    }
+
+    // create team using graph
+    teams = CreateTeam(graph.guests, graph.edges, positionComposition, targetClass._id);
 
     // console.log("teams: ", teams);
     // console.log(teams[0].length);
@@ -212,7 +171,6 @@ module.exports = router;
 /*
 {
     "classId": "60b9b0b9b3b3b3b3b3b3b3b3",
-    "optimalComposition": true
 }
 */
 

@@ -9,6 +9,7 @@ mongoose.connect(process.env.MONGODB_URL);
 const User = require("../models/User");
 const Class = require("../models/Class");
 const Team = require("../models/Team");
+const Answer = require("../models/Answer");
 
 const deleteRandomUsers = async () => {
   try {
@@ -45,11 +46,22 @@ const deleteUser = async (email) => {
     console.error("An error occurred while deleting user:", error);
   }
 };
+
+const deleteAnswers = async () => {
+  try {
+    const deletionResult = await Answer.deleteMany({});
+    console.log("Deleted " + deletionResult.deletedCount + " answers");
+  } catch (error) {
+    console.error("An error occurred while deleting answers:", error);
+  }
+};
+
 //========Main========//
 async function main() {
   await deleteRandomUsers();
   await deleteRandomClasses();
   await deleteRandomTeams();
+  await deleteAnswers();
   //await deleteUser("juns98@naver.com");
   process.exit();
 }

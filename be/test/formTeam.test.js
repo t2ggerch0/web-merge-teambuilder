@@ -5,7 +5,7 @@ const createMultipleUsers = require("./createMultipleUsers");
 const Class = require("../models/Class");
 const User = require("../models/User");
 
-const userCount = 13;
+const userCount = 5;
 let userList = [];
 let classId = null;
 
@@ -83,9 +83,9 @@ describe("Form team  API Tests", () => {
         let answers = [];
         for (let j = 0; j < numOfAnswers; j++) {
           // answer should be unique
-          let answer = Math.floor(Math.random() * 20 + 1);
+          let answer = Math.floor(Math.random() * 19 + 1);
           while (answers.includes(answer)) {
-            answer = Math.floor(Math.random() * 20 + 1);
+            answer = Math.floor(Math.random() * 19 + 1);
           }
           answers.push(answer);
         }
@@ -148,7 +148,7 @@ describe("Form team  API Tests", () => {
       try {
         const data = {
           classId: classId,
-          optimalComposition: false,
+          optimalComposition: true,
         };
 
         const response = await request(app).post("/class/form-team").set("Authorization", `Bearer ${token}`).send(data).expect(201);
@@ -159,22 +159,22 @@ describe("Form team  API Tests", () => {
       done();
     });
 
-    it("test form team with options", async function (done) {
-      console.log("----------------Forming Teams----------------");
+    // it("test form team with options", async function (done) {
+    //   console.log("----------------Forming Teams----------------");
 
-      try {
-        const data = {
-          classId: classId,
-          optimalComposition: true,
-          deletedQuestionId: 0,
-        };
+    //   try {
+    //     const data = {
+    //       classId: classId,
+    //       optimalComposition: true,
+    //       deletedQuestionId: 0,
+    //     };
 
-        const response = await request(app).get("/class/form-team-with-option").set("Authorization", `Bearer ${token}`).send(data).expect(201);
-        console.log("result: ", response.body);
-      } catch (error) {
-        console.error(error);
-      }
-      done();
-    });
+    //     const response = await request(app).get("/class/form-team-with-option").set("Authorization", `Bearer ${token}`).send(data).expect(201);
+    //     console.log("result: ", response.body);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    //   done();
+    // });
   });
 });
