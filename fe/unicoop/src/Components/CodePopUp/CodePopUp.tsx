@@ -1,7 +1,7 @@
 import React, { useState, FC } from "react";
 import styles from "./CodePopUp.module.scss";
 import Modal from "react-modal";
-import UnicoopButton from "../UnicoopButton/UnicoopButton";
+import MergeButton from "../MergeButton/MergeButton";
 import { useNavigate } from "react-router-dom";
 import { NewClassType } from "../../interface";
 
@@ -23,17 +23,15 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
       setIsPopOn(false);
     }
   };
-  console.log("open", isPopOn);
 
   return (
     <Modal
       isOpen={isPopOn}
       className={styles.modal}
       overlayClassName={styles.overlay}
-      // onRequestClose={() => {
-      //   setIsPopOn(false);
-      // }}
-    >
+      onRequestClose={() => {
+        setIsPopOn(false);
+      }}>
       <div className={styles.codePopUp}>
         <div className={styles.text}>
           호스트로부터 전달받은 6자리의 입장코드를 입력해주세요.
@@ -45,13 +43,13 @@ const CodePopUp: FC<PopUpProps> = ({ isPopOn, setIsPopOn, projectInfo }) => {
             setInputKey(e.target.value);
           }}
         />
-        <UnicoopButton
+        <MergeButton
           backgroundColor={"navy"}
           onClick={() => {
             enterCode(inputKey);
           }}>
           입장하기
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </Modal>
   );

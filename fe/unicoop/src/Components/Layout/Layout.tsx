@@ -1,9 +1,10 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import styles from "./Layout.module.scss";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import { useNavigate } from "react-router-dom";
-import { viewToastInfo } from "../../helper";
-import { Menu } from "../../interface";
+import { getMyToken, viewToastInfo } from "../../helper";
+import { Menu, MyInfoType } from "../../interface";
+import { authApi } from "../../API/authApi";
 
 type LayoutProps = {
   children?: ReactNode;
@@ -19,7 +20,8 @@ const Layout: FC<LayoutProps> = ({
   onChangeMenu,
 }) => {
   const navigate = useNavigate();
-  const { myInfo, setMyInfo } = useAuthContext();
+  // const { myInfo, setMyInfo } = useAuthContext();
+  const [myInfo, setMyInfo] = useState<MyInfoType>();
 
   const onClickLogout = () => {
     window.localStorage.removeItem("token");
@@ -51,26 +53,39 @@ const Layout: FC<LayoutProps> = ({
     onChangeMenu(Menu.RegisterProject);
     navigate("/registerproject");
   };
+
+  useEffect(() => {
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      console.log("asdfasdf", myInfo);
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.left_bar}>
-        <div className={styles.title}>UNICOOP</div>
+        <div
+          className={styles.title}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          merge
+        </div>
         <div className={styles.menu}>
-          <div
-            className={`${styles.menu_item} ${
-              selectedMenu === Menu.JoinProject && styles.selected
-            }`}
-            onClick={onClickJoinProject}>
-            <span className={styles.text}>프로젝트 참여</span>
-            {selectedMenu === Menu.JoinProject && (
-              <div className={styles.circle} />
-            )}
-          </div>
           <div
             className={`${styles.menu_item} ${
               selectedMenu === Menu.ManagementProject && styles.selected
             }`}
-            onClick={onClickManageProject}>
+            onClick={onClickManageProject}
+          >
             <span className={styles.text}>프로젝트 관리</span>
             {selectedMenu === Menu.ManagementProject && (
               <div className={styles.circle} />
@@ -79,9 +94,22 @@ const Layout: FC<LayoutProps> = ({
 
           <div
             className={`${styles.menu_item} ${
+              selectedMenu === Menu.JoinProject && styles.selected
+            }`}
+            onClick={onClickJoinProject}
+          >
+            <span className={styles.text}>프로젝트 참여</span>
+            {selectedMenu === Menu.JoinProject && (
+              <div className={styles.circle} />
+            )}
+          </div>
+
+          <div
+            className={`${styles.menu_item} ${
               selectedMenu === Menu.RegisterProject && styles.selected
             }`}
-            onClick={onClickRegisterProject}>
+            onClick={onClickRegisterProject}
+          >
             <span className={styles.text}>프로젝트 등록</span>
             {selectedMenu === Menu.RegisterProject && (
               <div className={styles.circle} />
@@ -92,7 +120,8 @@ const Layout: FC<LayoutProps> = ({
           className={styles.myPage}
           onClick={() => {
             navigate("/mypage");
-          }}>
+          }}
+        >
           Go to My Page
         </div>
       </div>

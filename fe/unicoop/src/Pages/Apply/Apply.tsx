@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { viewToastError } from "../../helper";
+import { getMyToken, parseTextFromOptions, viewToastError } from "../../helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
-import UnicoopButton from "../../Components/UnicoopButton/UnicoopButton";
+import MergeButton from "../../Components/MergeButton/MergeButton";
 import { guestApi } from "../../API/guestApi";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -66,9 +66,23 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
   };
 
   useEffect(() => {
+    // update my info
+    let token = getMyToken() ?? "";
+    authApi.getMyInfo(token).then((res) => {
+      setMyInfo({
+        classes: res?.user.classes ?? [],
+        email: res?.user.email ?? "",
+        id: res?.user._id ?? "",
+        name: res?.user.name ?? "",
+        password: res?.user.password ?? "",
+        token: token ?? "",
+      });
+    });
+
     if (projectId)
       guestApi.getQuestions(projectId).then((res) => {
         console.log(res.filteredQuestions);
+
         setData(res.filteredQuestions);
         setAnswers(
           res.filteredQuestions.map((item: any) => {
@@ -144,7 +158,11 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
             subtitle={""}
             name={q.title}
             isHorizontal={true}
-            options={q.options}
+            options={
+              q.id === 2
+                ? parseTextFromOptions(q.options as number[])
+                : q.options
+            }
             checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
               console.log(e, answers, index);
@@ -156,12 +174,13 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
         ))}
       </div>
       <div className={styles.button}>
-        <UnicoopButton
+        <MergeButton
           width={300}
           backgroundColor={"darkBlue"}
-          onClick={onClickJoinClassButton}>
+          onClick={onClickJoinClassButton}
+        >
           제출
-        </UnicoopButton>
+        </MergeButton>
       </div>
     </div>
   );

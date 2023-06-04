@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./Home.module.scss";
 import Register from "../Register/Register";
 import LogIn from "../LogIn/LogIn";
+import HomeMenu from "./HomeMenu/HomeMenu";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import { authApi } from "../../API/authApi";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getMyToken, viewToastError } from "../../helper";
+import { Menu } from "../../interface";
 
-const Home = () => {
+type HomeProps = {
+  selectedMenu: Menu;
+  onChangeMenu(menuId: Menu): void;
+};
+
+const Home: FC<HomeProps> = ({ onChangeMenu, selectedMenu }) => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
-  const { setMyInfo } = useAuthContext();
+  const { myInfo, setMyInfo } = useAuthContext();
   const navigate = useNavigate();
   const changeBoxContent = () => {
     setIsLogin(!isLogin);
   };
   const login = ({ email, password }: { email: string; password: string }) => {
     authApi.login({ email, password }).then((token) => {
-      console.log("token", token);
+      // console.log("token", token);
       window.localStorage.setItem("token", token);
       getUserInfo({ token });
     });
@@ -28,7 +35,7 @@ const Home = () => {
     authApi
       .getMyInfo(token)
       .then((res) => {
-        console.log("userInfo", res?.user);
+        // console.log("userInfo", res?.user);
         setMyInfo({
           classes: res?.user.classes ?? [],
           email: res?.user.email ?? "",
@@ -38,7 +45,6 @@ const Home = () => {
           token: token ?? "",
         });
         setIsLoginSuccess(true);
-        navigate("/manageproject");
       })
       .catch((e) => {
         viewToastError(e);
@@ -56,15 +62,20 @@ const Home = () => {
     <div className={styles.home}>
       <div className={styles.body}>
         <div className={styles.title}>
-          <div className={styles.logo}>UNICOOP</div>
+          <div className={styles.logo}>merge</div>
           <div className={styles.text}>
-            대학교 팀 프로젝트 빌딩 및 협업 플랫폼!
+            개발자/디자이너를 위한 팀 프로젝트 빌딩 및 협업 플랫폼!
           </div>
         </div>
         <div className={styles.join}>
           {isLogin ? (
-            !isLoginSuccess && (
+            !isLoginSuccess ? (
               <LogIn changeBoxContent={changeBoxContent} loginSuccess={login} />
+            ) : (
+              <HomeMenu
+                onChangeMenu={onChangeMenu}
+                selectedMenu={selectedMenu}
+              />
             )
           ) : (
             <Register changeBoxContent={changeBoxContent} />

@@ -55,9 +55,9 @@ router.post("/join-class", verifyJwt, async (req, res) => {
     //------ Verify answers ------//
     // get user answers to questions
     const answers = req.body.answers;
-    console.log("answers: ", answers);
-    console.log(answers.length);
-    console.log(targetClass.questionIds.length);
+    // console.log("answers: ", answers);
+    // console.log(answers.length);
+    // console.log(targetClass.questionIds.length);
 
     // check if answers are valid
     if (answers.length !== targetClass.questionIds.length) {

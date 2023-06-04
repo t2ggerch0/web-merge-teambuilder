@@ -9,6 +9,7 @@ import MyPage from "./Pages/MyPage/MyPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Menu } from "./interface";
 import ParticipateProject from "./Pages/ParticipateProject/ParticipateProject";
+import WhatIsMerge from "./Pages/WhatIsMerge/WhatIsMerge";
 
 const App = () => {
   const [menu, setMenu] = useState<Menu>(Menu.ManagementProject);
@@ -21,7 +22,10 @@ const App = () => {
     <div className={styles.app}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Home selectedMenu={menu} onChangeMenu={onClickMenu} />}
+          />
           <Route
             path="/participateproject"
             element={
@@ -47,8 +51,12 @@ const App = () => {
             path={"/apply/:projectId/:accessKey"}
             element={<Apply selectedMenu={menu} onChangeMenu={onClickMenu} />}
           />
-          <Route path={"/activity/:projectId"} element={<Activity />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path={"/activity/:projectId/:isHost"} element={<Activity />} />
+          <Route
+            path="/mypage"
+            element={<MyPage selectedMenu={menu} onChangeMenu={onClickMenu} />}
+          />
+          <Route path={"/whatismerge"} element={<WhatIsMerge />} />
         </Routes>
       </BrowserRouter>
     </div>

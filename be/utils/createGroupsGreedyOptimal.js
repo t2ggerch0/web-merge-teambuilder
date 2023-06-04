@@ -17,7 +17,7 @@ function CreateGroupsGreedyOptimal(students, edges, numGroups, teams, classId) {
     groupSizes.push(teamSize);
   }
   //console.log("students: ", students);
-  console.log("test position index: ", findPositionIndexOfStudent(students[0].id, classId));
+  // console.log("test position index: ", findPositionIndexOfStudent(students[0].id, classId));
 
   // set position counter for each group
   let positionCounter = [];

@@ -23,18 +23,20 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
   const { data, error, isValidating } = useSWR<{
     targetClass: NewClassType;
   }>(`/class?classId=${projectId}`, swrFetcher);
-  if (!data || isValidating) {
-    return <Loader />;
-  }
-  if (error) {
-    viewToastError(error);
-  }
+  // if (!data || isValidating) {
+  //   return <Loader />;
+  // }
+  // if (error) {
+  //   viewToastError(error);
+  // }
+
+  // console.log("class data", data);
 
   return (
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>
-        <div className={styles.project}>{data.targetClass.className}</div>
-        <div className={styles.team}>{data.targetClass.teams[0]}</div>
+        <div className={styles.project}>{data?.targetClass.className}</div>
+        <div className={styles.team}>{data?.targetClass.teams[0]}</div>
       </div>
       <div className={styles.menu}>
         <div className={styles.tabs}>
@@ -45,8 +47,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}
-            >
+              }}>
               {activity}
             </div>
           ))}
@@ -56,9 +57,8 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
         className={styles.unicoop}
         onClick={() => {
           navigate("/manageproject");
-        }}
-      >
-        UNICOOP
+        }}>
+        merge
       </div>
     </div>
   );

@@ -2,6 +2,11 @@ import React, { FC, useState, useEffect } from "react";
 import styles from "./DefaultQuestion.module.scss";
 import { Dayjs } from "dayjs";
 import { QuestionType } from "../../../interface";
+import {
+  getMyToken,
+  parseTextFromOptions,
+  viewToastError,
+} from "../../../helper";
 
 type DefaultQuestionProps = {
   questionIds: number[];
@@ -75,17 +80,28 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
               <div className={styles.question_content}>{item.title}</div>
               <div
                 className={styles.question_delete}
-                onClick={() => onDeleteQuestion(item.id)}
-              >
+                onClick={() => onDeleteQuestion(item.id)}>
                 삭제하기
               </div>
             </div>
             <div className={styles.question_answers}>
-              {item.options.map((option, index) => (
-                <div key={`q_${index}`} className={styles.answer}>
-                  {option}
-                </div>
-              ))}
+              {item.id === 2
+                ? parseTextFromOptions(item.options as number[]).map(
+                    (option, index) => {
+                      return (
+                        <div key={`q_${index}`} className={styles.answer}>
+                          {option}
+                        </div>
+                      );
+                    }
+                  )
+                : item.options.map((option, index) => {
+                    return (
+                      <div key={`q_${index}`} className={styles.answer}>
+                        {option}
+                      </div>
+                    );
+                  })}
             </div>
           </div>
         ))}

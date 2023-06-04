@@ -17,6 +17,9 @@ const CreateTeam = (users, edges, positionComposition, classId) => {
   const numGroups = users.length / positionComposition.reduce((a, b) => a + b, 0);
   console.log("Num groups : ", numGroups);
   console.log("Position composition: ", positionComposition);
+  if (numGroups === 0 ) {
+    numGroups = 1;
+  }
   const resultGreedy = CreateGroupsGreedy(users, edges, numGroups, positionComposition, classId);
   //console.log("Groups: ", resultGreedy);
   return resultGreedy;
