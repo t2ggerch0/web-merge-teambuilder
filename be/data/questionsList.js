@@ -16,7 +16,7 @@ const questionLists = [
   {
     id: 2,
     title: "Preferred Date and Time",
-    options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+    options: [0, 1, 2, 3, 4, 5, 6, 7, 8],
     weight: 10,
     countScore: "same",
   },
@@ -26,13 +26,6 @@ const questionLists = [
     options: ["Leader", "Follower"],
     weight: 5,
     countScore: "different",
-  },
-  {
-    id: 4,
-    title: "Most important question",
-    options: [0, 1, 2, 3],
-    weight: 5,
-    countScore: "same",
   },
 ];
 

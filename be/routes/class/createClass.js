@@ -24,9 +24,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     let targetKey = 0;
 
     if (req.body.isSecret) {
-      let keys = (await Class.find({}, "accessKey")).map(
-        (doc) => doc.accessKey
-      );
+      let keys = (await Class.find({}, "accessKey")).map((doc) => doc.accessKey);
       while (true) {
         const accessKey = Math.floor(Math.random() * 1000000);
         if (!keys.includes(accessKey)) {
@@ -39,9 +37,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     //------ Verify Positions ------//
     // check if position types and composition are valid
     if (req.body.positionTypes.length !== req.body.positionComposition.length) {
-      return res
-        .status(403)
-        .json({ message: "Invalid position types and composition" });
+      return res.status(403).json({ message: "Invalid position types and composition" });
     }
 
     // create position counts
@@ -63,9 +59,14 @@ router.post("/create-class", verifyJwt, async (req, res) => {
 
       // get answer of host
       const hostAnswer = req.body.hostAnswer;
+
+      // check if host answer is valid
+      if (hostAnswer.length !== questionLists.length) {
+        return res.status(403).json({ message: "Invalid host answer" });
+      }
       answerObject = new Answer({
         guest: userId,
-        answers: hostAnswer,
+        answer: hostAnswer,
       });
 
       // save answer to database
@@ -88,9 +89,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Create the new class with the request data
     const newClass = new Class({
       host: userId,
-      guest: req.body.isHostParticipating
-        ? [{ user: userId, answer: answerObject._id }]
-        : [],
+      guest: req.body.isHostParticipating ? [{ user: userId, answer: answerObject._id }] : [],
       questionIds: questionIds,
       className: req.body.className,
       classType: req.body.classType,
@@ -130,9 +129,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while creating the class" });
+    res.status(500).json({ message: "An error occurred while creating the class" });
   }
 });
 
