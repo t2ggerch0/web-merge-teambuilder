@@ -36,17 +36,22 @@ const AnalyzeData = (guests, answers, questionIds) => {
   console.log("preferredTime", preferredTime);
 
   // Q4
-  let leaders = [];
-  let followers = [];
+  let preferredRole = [0, 0];
   for (let i = 0; i < guests.length; i++) {
     if (answers[i].answer[3] === 0) {
-      leaders.push(guests[i]);
+      preferredRole[0] += 1;
     } else {
-      followers.push(guests[i]);
+      preferredRole[1] += 1;
     }
   }
-  console.log("leaders", leaders.length);
-  console.log("followers", followers.length);
+  console.log("preferredRole", preferredRole);
+
+  return {
+    experiences: experiences,
+    timeSpend: timeSpend,
+    preferredTime: preferredTime,
+    preferredRole: preferredRole,
+  };
 };
 
 module.exports = AnalyzeData;

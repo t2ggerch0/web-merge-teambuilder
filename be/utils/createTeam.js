@@ -1,23 +1,13 @@
+const CreateGroupOptimal = require("./createGroup");
+const CreateGroup = require("./createGroup");
 const CreateGroupsGreedy = require("./createGroupsGreedy");
-const CreateGroupsGreedyOptimal = require("./createGroupsGreedyOptimal");
-
-function calculateGroupWeight(group) {
-  let groupWeight = 0;
-  for (let i = 0; i < group.length; i++) {
-    for (let j = i + 1; j < group.length; j++) {
-      groupWeight += parseFloat(edgeMap.get(`${group[i]}_${group[j]}`)) || 0;
-      //console.log(groupWeight);
-    }
-  }
-  return groupWeight;
-}
 
 const CreateTeam = (users, edges, positionComposition, classId) => {
   // numGroups == users length / sum of positionComposition
   const numGroups = users.length / positionComposition.reduce((a, b) => a + b, 0);
   console.log("Num groups : ", numGroups);
   console.log("Position composition: ", positionComposition);
-  if (numGroups === 0 ) {
+  if (numGroups === 0) {
     numGroups = 1;
   }
   const resultGreedy = CreateGroupsGreedy(users, edges, numGroups, positionComposition, classId);
@@ -25,12 +15,13 @@ const CreateTeam = (users, edges, positionComposition, classId) => {
   return resultGreedy;
 };
 
-const CreateTeamOptimal = (users, edges, teams, classId) => {
-  console.log("Num groups : ", teams.length);
+const CreateTeamOptimal = (users, answers, teams, classId, questionIds, analyzedData) => {
   console.log("Position compositions: ", teams);
-  const numGroups = teams.length;
-  const resultGreedy = CreateGroupsGreedyOptimal(users, edges, numGroups, teams, classId);
-  return resultGreedy;
+  console.log("class ids: ", classId);
+  const result = CreateGroupOptimal(users, answers, teams, classId, questionIds, analyzedData);
+  console.log("groups: ", result.fullGroups);
+  console.log("full groups form condition id: ", result.fullGroupsFormConditionId);
+  return result;
 };
 
 module.exports = { CreateTeam, CreateTeamOptimal };

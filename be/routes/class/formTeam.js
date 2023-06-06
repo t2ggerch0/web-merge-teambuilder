@@ -8,7 +8,7 @@ dotenv.config();
 const verifyClassId = require("../../utils/verifyClassId");
 const User = require("../../models/User");
 const CreateGraph = require("../../utils/createGraph");
-const { CreateTeam } = require("../../utils/createTeam");
+const { CreateTeam, CreateTeamOptimal } = require("../../utils/createTeam");
 const Answer = require("../../models/Answer");
 const { all } = require("axios");
 const Class = require("../../models/Class");
@@ -104,16 +104,15 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     console.log("questionIds: ", questionIds);
 
     // create Graph
-    let graph = AnalyzeData(validGuests, validAnswers, questionIds);
-    // console.log(graph);
+    let analyzedData = AnalyzeData(validGuests, validAnswers, questionIds);
 
     let teams;
 
     // create team using graph
-    teams = CreateTeam(graph.guests, graph.edges, positionComposition, targetClass._id);
+    teams = CreateTeamOptimal(validGuests, validAnswers, optimalComposition, targetClass._id, questionIds, analyzedData);
 
-    // console.log("teams: ", teams);
-    // console.log(teams[0].length);
+    console.log("teams: ", teams);
+    console.log(teams[0].length);
 
     //====== Create Teams ======//
     // create teams
