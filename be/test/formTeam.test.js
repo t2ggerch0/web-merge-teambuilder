@@ -5,7 +5,7 @@ const createMultipleUsers = require("./createMultipleUsers");
 const Class = require("../models/Class");
 const User = require("../models/User");
 
-const userCount = 5;
+const userCount = 19;
 let userList = [];
 let classId = null;
 
@@ -26,14 +26,16 @@ describe("Form team  API Tests", () => {
       token = res.body.token;
 
       console.log("login success");
+      let positionList = ["frontend", "backend"];
+      let positionComposition = [2, 2];
 
       // host create class
       const classData = {
         className: "testClass" + Math.floor(Math.random() * 100000 + 1),
         classType: "web",
         classDescription: "test create class",
-        positionTypes: ["frontend", "backend"],
-        positionComposition: [2, 2],
+        positionTypes: positionList,
+        positionComposition: positionComposition,
         hostPosition: "frontend",
         recruitStartDate: "2021-05-01",
         recruitEndDate: "2021-05-10",
@@ -74,8 +76,6 @@ describe("Form team  API Tests", () => {
         // q3 answers: 0~20 multiple
         // q4 answers: 0, 1
 
-        let positionList = ["frontend", "backend"];
-
         // random num of answers for q3 (max 10)
         let numOfAnswers = Math.floor(Math.random() * 4) + 1;
 
@@ -83,9 +83,9 @@ describe("Form team  API Tests", () => {
         let answers = [];
         for (let j = 0; j < numOfAnswers; j++) {
           // answer should be unique
-          let answer = Math.floor(Math.random() * 19 + 1);
+          let answer = Math.floor(Math.random() * 8 + 1);
           while (answers.includes(answer)) {
-            answer = Math.floor(Math.random() * 19 + 1);
+            answer = Math.floor(Math.random() * 8 + 1);
           }
           answers.push(answer);
         }
@@ -96,7 +96,7 @@ describe("Form team  API Tests", () => {
         try {
           const joinClassData = {
             classId: classId,
-            position: positionList[Math.floor(Math.random() * 2)],
+            position: positionList[Math.floor(Math.random() * positionList.length)],
             answers: [
               {
                 questionId: "0",
