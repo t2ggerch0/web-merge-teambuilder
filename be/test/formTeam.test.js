@@ -5,7 +5,10 @@ const createMultipleUsers = require("./createMultipleUsers");
 const Class = require("../models/Class");
 const User = require("../models/User");
 
-const userCount = 19;
+// === 이 부분 수정해서 진행 ===//
+const userCount = 39;
+// === 이 부분 수정해서 진행 ===//
+
 let userList = [];
 let classId = null;
 
@@ -26,8 +29,11 @@ describe("Form team  API Tests", () => {
       token = res.body.token;
 
       console.log("login success");
-      let positionList = ["frontend", "backend"];
-      let positionComposition = [2, 2];
+
+      //============= 원하는 대로 고쳐 쓰시면 됩니다. =============//
+      let positionList = ["frontend", "backend", "designer"];
+      let positionComposition = [2, 2, 1];
+      //============= 원하는 대로 고쳐 쓰시면 됩니다. =============//
 
       // host create class
       const classData = {

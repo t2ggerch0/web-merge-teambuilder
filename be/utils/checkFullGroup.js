@@ -22,6 +22,7 @@ function CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormCondi
         followers.pop(groups[i][j]);
       }
       console.log("left members: ", followers.length);
+      // 리더를 추가하는 코드도 필요
       fullGroups.push(groups[i]);
       // delete positionCounter[i]
       positionCounter.splice(i, 1);

@@ -111,50 +111,50 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     // create team using graph
     teams = CreateTeamOptimal(validGuests, validAnswers, optimalComposition, targetClass._id, questionIds, analyzedData);
 
-    console.log("teams: ", teams);
-    console.log(teams[0].length);
+    // console.log("teams: ", teams);
+    // console.log(teams[0].length);
 
-    //====== Create Teams ======//
-    // create teams
-    teamNum = teams.length;
-    console.log("Team num: ", teamNum);
-    let allTeamLengths = [];
-    for (let i = 0; i < teamNum; i++) {
-      allTeamLengths.push(teams[i].length);
-    }
-    console.log("allTeamLengths: ", allTeamLengths);
-    for (let i = 0; i < teamNum; i++) {
-      let team = teams[i];
-      console.log("team: ", i, team);
-      let members = [];
-      for (let j = 0; j < allTeamLengths[i]; j++) {
-        members.push(team[j]._id);
-      }
-      let teamObject = new Team({
-        name: "Team " + (i + 1).toString(),
-        class: targetClass._id,
-        members: members,
-      });
+    // //====== Create Teams ======//
+    // // create teams
+    // teamNum = teams.length;
+    // console.log("Team num: ", teamNum);
+    // let allTeamLengths = [];
+    // for (let i = 0; i < teamNum; i++) {
+    //   allTeamLengths.push(teams[i].length);
+    // }
+    // console.log("allTeamLengths: ", allTeamLengths);
+    // for (let i = 0; i < teamNum; i++) {
+    //   let team = teams[i];
+    //   console.log("team: ", i, team);
+    //   let members = [];
+    //   for (let j = 0; j < allTeamLengths[i]; j++) {
+    //     members.push(team[j]._id);
+    //   }
+    //   let teamObject = new Team({
+    //     name: "Team " + (i + 1).toString(),
+    //     class: targetClass._id,
+    //     members: members,
+    //   });
 
-      // get position indexes of each members
-      let positionIndexes = [];
-      for (let j = 0; j < allTeamLengths[i]; j++) {
-        const member = team[j];
-        const classIndex = member.positionIndexByClass.findIndex((element) => {
-          return element.class._id.toString() == targetClass._id.toString();
-        });
-        const positionIndex = member.positionIndexByClass[classIndex].positionIndex;
-        positionIndexes.push(positionIndex);
-      }
-      console.log("object position indexes: ", positionIndexes);
+    //   // get position indexes of each members
+    //   let positionIndexes = [];
+    //   for (let j = 0; j < allTeamLengths[i]; j++) {
+    //     const member = team[j];
+    //     const classIndex = member.positionIndexByClass.findIndex((element) => {
+    //       return element.class._id.toString() == targetClass._id.toString();
+    //     });
+    //     const positionIndex = member.positionIndexByClass[classIndex].positionIndex;
+    //     positionIndexes.push(positionIndex);
+    //   }
+    //   console.log("object position indexes: ", positionIndexes);
 
-      console.log(teamObject);
-      await teamObject.save();
-      await targetClass.teams.push(teamObject._id);
-    }
+    //   console.log(teamObject);
+    //   await teamObject.save();
+    //   await targetClass.teams.push(teamObject._id);
+    // }
 
-    // save class
-    await targetClass.save();
+    // // save class
+    // await targetClass.save();
 
     // Send a success response
     res.status(201).json({ message: "Successfully formed a team" });

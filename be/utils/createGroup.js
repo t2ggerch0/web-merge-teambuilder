@@ -204,6 +204,7 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
 
   console.log("teams: ", teams.teams);
 
+  // 선호하는 시간대 체크하는 함수
   function checkPreferredTime(preferredTimeOfFollowers, preferredTimeOfLeaders, targetFollowerIndex, index) {
     for (let i = 0; i < preferredTimeOfFollowers[targetFollowerIndex].length; i++) {
       for (let j = 0; j < preferredTimeOfLeaders[index].length; j++) {
@@ -311,7 +312,8 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
   let fullGroups = [];
   let fullGroupsFormConditionId = [];
   let fullGroupsIndex = [];
-  // iterate test conditions
+
+  //===================iterate test conditions======================//
   for (let i = 0; i < 13; i++) {
     console.log("\ncondition id: ", i);
     let followerIndexes = [];
@@ -348,9 +350,13 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
   console.log("left followers: ", followers.length);
   console.log("full groups form condition ids: ", fullGroupsFormConditionId);
 
+  console.log("teams:", teams.teams);
+  console.log("position counter: ", positionCounter);
+
   // ================Add left followers to groups================ //
   // 여기부터 해주세요
   if (followers.length > 0) {
+    // 남은 사람들을 팀으로 배치
   }
   //=====================================================================================================//
 

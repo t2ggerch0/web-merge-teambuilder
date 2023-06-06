@@ -19,8 +19,8 @@ const CreateTeamOptimal = (users, answers, teams, classId, questionIds, analyzed
   console.log("Position compositions: ", teams);
   console.log("class ids: ", classId);
   const result = CreateGroupOptimal(users, answers, teams, classId, questionIds, analyzedData);
-  console.log("groups: ", result.fullGroups);
-  console.log("full groups form condition id: ", result.fullGroupsFormConditionId);
+  // console.log("groups: ", result.fullGroups);
+  // console.log("full groups form condition id: ", result.fullGroupsFormConditionId);
   return result;
 };
 
