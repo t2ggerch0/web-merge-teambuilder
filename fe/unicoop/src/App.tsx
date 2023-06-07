@@ -53,7 +53,7 @@ const App = () => {
           <Route path={"/activity/:projectId/:isHost"} element={<Activity />} />
           <Route
             path="/mypage"
-            element={<MyPage selectedMenu={menu} onChangeMenu={onClickMenu} />}
+            element={<MyPage onChangeMenu={onClickMenu} />}
           />
           <Route path={"/whatismerge"} element={<WhatIsMerge />} />
         </Routes>

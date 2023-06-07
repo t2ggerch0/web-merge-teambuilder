@@ -1,12 +1,19 @@
 .container {
   width: 100%;
   padding: 20px 80px;
+  .step {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+  }
 
   .questions {
   }
 
   .button {
     display: flex;
+    gap: 24px;
     justify-content: flex-end;
   }
 }
