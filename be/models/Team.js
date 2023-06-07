@@ -24,6 +24,31 @@ const teamSchema = new Schema({
       ref: "User",
     },
   ],
+  // HACK
+  contextByUser: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      answer: [
+        {
+          type: Schema.Types.Mixed
+        },
+      ],
+      name: {
+        type: String,
+      },
+      positionIndex:
+      {
+        type: Number
+      }
+    },
+  ],
+  isDirty: {
+    type: Boolean,
+    default: false,
+  },
   chat: [
     {
       sender: {

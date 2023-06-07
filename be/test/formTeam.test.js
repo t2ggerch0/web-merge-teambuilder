@@ -6,7 +6,7 @@ const Class = require("../models/Class");
 const User = require("../models/User");
 
 // === 이 부분 수정해서 진행 ===//
-const userCount = 39;
+const userCount = 19;
 // === 이 부분 수정해서 진행 ===//
 
 let userList = [];
@@ -31,8 +31,8 @@ describe("Form team  API Tests", () => {
       console.log("login success");
 
       //============= 원하는 대로 고쳐 쓰시면 됩니다. =============//
-      let positionList = ["frontend", "backend", "designer"];
-      let positionComposition = [2, 2, 1];
+      let positionList = ["frontend", "backend"];
+      let positionComposition = [2, 1];
       //============= 원하는 대로 고쳐 쓰시면 됩니다. =============//
 
       // host create class

@@ -72,7 +72,7 @@ const getClass = require("./routes/class/getClass");
 const getHostClasses = require("./routes/class/getHostClasses");
 const getGuestClasses = require("./routes/class/getGuestClasses");
 const getAllClasses = require("./routes/class/getAllClasses");
-const getFormTeamWithOption = require("./routes/class/getFormTeamWithOption");
+// const getFormTeamWithOption = require("./routes/class/getFormTeamWithOption");
 
 // post
 const createClass = require("./routes/class/createClass");
@@ -102,7 +102,7 @@ app.use("/class", getHostClasses);
 app.use("/class", getGuestClasses);
 app.use("/class", getAllClasses);
 app.use("/class", formTeam);
-app.use("/class", getFormTeamWithOption);
+// app.use("/class", getFormTeamWithOption);
 
 //======Question API======//
 app.use("/question", getQuestions);
