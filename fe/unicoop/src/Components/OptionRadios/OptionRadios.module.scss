@@ -15,7 +15,7 @@
 
   .selectBox {
     display: grid;
-    grid-template-columns: repeat(5, 100px);
+    grid-template-columns: repeat(5, 140px);
     flex-direction: column;
     &.horizontal {
       flex-direction: row;
@@ -37,9 +37,9 @@
         height: 30px;
         cursor: pointer;
         border-radius: 50%;
-        background-color: #f8f9fb;
+        background-color: #EDF1D6;
         &.checked {
-          background-color: rgba(20, 114, 255, 0.1);
+          background-color: #9DC08B;
         }
       }
       .optionText {

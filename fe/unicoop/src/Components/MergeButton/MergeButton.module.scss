@@ -1,13 +1,17 @@
 .mergeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 16px 24px;
   border: none;
   border-radius: 16px;
-  background-color: #3c3c3c;
+  background-color: #40513B;
   font-size: 18px;
-  color: #fff;
-  opacity: 0.5;
+  color: #FFFFFF;
+  opacity: 0.9;
   cursor: pointer;
+
   &:hover {
-    opacity: 0.8;
+    opacity: 1;
   }
 }

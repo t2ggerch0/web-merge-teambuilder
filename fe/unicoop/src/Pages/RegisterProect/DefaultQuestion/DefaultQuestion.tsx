@@ -2,11 +2,8 @@ import React, { FC, useState, useEffect } from "react";
 import styles from "./DefaultQuestion.module.scss";
 import { Dayjs } from "dayjs";
 import { QuestionType } from "../../../interface";
-import {
-  getMyToken,
-  parseTextFromOptions,
-  viewToastError,
-} from "../../../helper";
+import { parseTextFromOptions } from "../../../helper";
+import { Delete } from "@mui/icons-material";
 
 type DefaultQuestionProps = {
   questionIds: number[];
@@ -80,8 +77,9 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
               <div className={styles.question_content}>{item.title}</div>
               <div
                 className={styles.question_delete}
-                onClick={() => onDeleteQuestion(item.id)}>
-                삭제하기
+                onClick={() => onDeleteQuestion(item.id)}
+              >
+                <Delete />
               </div>
             </div>
             <div className={styles.question_answers}>
