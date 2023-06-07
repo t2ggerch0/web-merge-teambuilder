@@ -99,7 +99,7 @@ export type ClassType = {
 };
 export type TeamMessage = {
   message: string;
-  teamId: number;
+  teamId: string;
 };
 export type NewClassType = {
   _id: string;
