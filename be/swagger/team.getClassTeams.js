@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /team/classTeam:
+ * /team/classTeams:
  *   get:
  *     tags:
  *       - team
