@@ -15,10 +15,10 @@ const CreateTeam = (users, edges, positionComposition, classId) => {
   return resultGreedy;
 };
 
-const CreateTeamOptimal = (users, answers, teams, classId, questionIds, analyzedData) => {
+const CreateTeamOptimal = async (users, answers, teams, classId, questionIds, analyzedData) => {
   console.log("Position compositions: ", teams);
   console.log("class ids: ", classId);
-  const result = CreateGroupOptimal(users, answers, teams, classId, questionIds, analyzedData);
+  const result = await CreateGroupOptimal(users, answers, teams, classId, questionIds, analyzedData);
   // console.log("groups: ", result.fullGroups);
   // console.log("full groups form condition id: ", result.fullGroupsFormConditionId);
   return result;

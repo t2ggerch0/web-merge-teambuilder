@@ -109,6 +109,12 @@ router.post("/create-class", verifyJwt, async (req, res) => {
     // Save the new class to the database
     const savedClass = await newClass.save();
 
+    // HACK: answer 객체에 class 추가
+    answerObject.class = savedClass._id;
+
+    // save answer to database
+    await answerObject.save();
+
     //------ Add Class to User ------//
     if (req.body.isHostParticipating) {
       // add user position index

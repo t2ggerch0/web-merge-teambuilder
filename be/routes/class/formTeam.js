@@ -109,7 +109,7 @@ router.post("/form-team", verifyJwt, async (req, res) => {
     let teams;
 
     // create team using graph
-    teams = CreateTeamOptimal(validGuests, validAnswers, optimalComposition, targetClass._id, questionIds, analyzedData);
+    teams = await CreateTeamOptimal(validGuests, validAnswers, optimalComposition, targetClass._id, questionIds, analyzedData);
 
     // console.log("teams: ", teams);
     // console.log(teams[0].length);

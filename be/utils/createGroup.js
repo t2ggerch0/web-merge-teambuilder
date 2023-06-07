@@ -12,7 +12,7 @@ function findPositionIndexOfStudent(student, classId) {
   return positionIndex;
 }
 
-const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyzedData) => {
+const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, analyzedData) => {
   // verify data
   if (guests.length !== answers.length) {
     throw new Error("Invalid data");
@@ -53,6 +53,9 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
   // push leaders into group first
   let leaders = [];
   let followers = [];
+
+  // HACK: 최종리더리스트
+  let finalLeaders = [];
 
   for (let i = 0; i < guests.length; i++) {
     console.log("answer to q: ", answers[i].answer[3]);
@@ -119,6 +122,9 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
 
       hasLeader[availableGroup] = true;
       leaders.pop(leaders[i]);
+
+      // HACK: 최종리더리스트 삽입
+      finalLeaders.push(leaders[i]);
     }
   }
 
@@ -327,7 +333,7 @@ const CreateGroupOptimal = (guests, answers, teams, classId, questionIds, analyz
     console.log("position counter", positionCounter);
     console.log("follower Indexes: ", followerIndexes);
     // check if any groups are full
-    let fullGroupIndexes = CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormConditionId, followers, teams, positionCounter, i);
+    let fullGroupIndexes = await CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormConditionId, followers, teams, positionCounter, i, classId, finalLeaders);
 
     // add full groups indexes to full groups index
     for (let j = 0; j < fullGroupIndexes.length; j++) {

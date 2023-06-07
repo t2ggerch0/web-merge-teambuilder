@@ -58,6 +58,13 @@ router.get("/", verifyJwt, async (req, res) => {
       return res.status(403).json({ message: "User has no team" });
     }
 
+    // HACK: AnswerByUser
+    let users = [];
+    users.push(targetTeam.members);
+    users.push(targetTeam.leader);
+
+    const answerObject = await Answer.findById(allGuests[i].answer);
+
     res.status(201).json({ targetTeam});
 
     // let users = [];
