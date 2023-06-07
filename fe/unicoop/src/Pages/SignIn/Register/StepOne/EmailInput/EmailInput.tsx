@@ -1,7 +1,7 @@
 import React, { FormEvent, FC } from "react";
 import styles from "./EmailInput.module.scss";
-import LabelInput from "../../../../Components/LabelInput/LabelInput";
-import MergeButton from "../../../../Components/MergeButton/MergeButton";
+import LabelInput from "../../../../../Components/LabelInput/LabelInput";
+import MergeButton from "../../../../../Components/MergeButton/MergeButton";
 
 type EmailInputProps = {
   email: string;

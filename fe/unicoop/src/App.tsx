@@ -6,10 +6,11 @@ import ManageProject from "./Pages/ManageProject/ManageProject";
 import Apply from "./Pages/Apply/Apply";
 import Activity from "./Pages/Activity/Activity";
 import MyPage from "./Pages/MyPage/MyPage";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Menu } from "./interface";
 import ParticipateProject from "./Pages/ParticipateProject/ParticipateProject";
 import WhatIsMerge from "./Pages/WhatIsMerge/WhatIsMerge";
+import SignIn from "./Pages/SignIn/SignIn";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Menu } from "./interface";
 
 const App = () => {
   const [menu, setMenu] = useState<Menu>(Menu.ManagementProject);
@@ -22,10 +23,8 @@ const App = () => {
     <div className={styles.app}>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={<Home selectedMenu={menu} onChangeMenu={onClickMenu} />}
-          />
+          <Route path="/" element={<Home onChangeMenu={onClickMenu} />} />
+          <Route path={"/signin"} element={<SignIn />} />
           <Route
             path="/participateproject"
             element={
