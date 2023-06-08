@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   font-weight: bold;
+  margin-bottom: 20px;
 
   .title {
-    font-size: 24px;
+    font-size: 20px;
     margin: 0 0 10px 5px;
   }
 
@@ -20,7 +21,7 @@
     &.horizontal {
       flex-direction: row;
       width: 100%;
-      gap: 30px;
+      gap: 10px;
     }
     .option {
       margin-top: 14px;
@@ -37,13 +38,13 @@
         height: 30px;
         cursor: pointer;
         border-radius: 50%;
-        background-color: #EDF1D6;
+        background-color: #edf1d6;
         &.checked {
-          background-color: #9DC08B;
+          background-color: #9dc08b;
         }
       }
       .optionText {
-        font-size: 18px;
+        font-size: 14px;
         opacity: 0.5;
         min-width: 90px;
         &.checked {

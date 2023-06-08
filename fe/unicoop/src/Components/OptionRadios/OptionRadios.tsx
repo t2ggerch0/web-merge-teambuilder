@@ -8,7 +8,7 @@ type OptionRadiosProps = {
   name: string;
   isHorizontal: boolean;
   options: Array<string | number>;
-  checkedOption: number;
+  checkedOption: number[];
   setCheckedOption(e: number): void;
 };
 
@@ -36,22 +36,19 @@ const OptionRadios: FC<OptionRadiosProps> = ({
       <div
         className={`${styles.selectBox} ${
           isHorizontal ? styles.horizontal : ""
-        }`}
-      >
+        }`}>
         {options.map((e, index) => (
           <div
             className={styles.option}
             key={name + e}
             onClick={() => {
               onClickOption(index);
-            }}
-          >
+            }}>
             <span
               className={`${styles.radioButton} ${
-                checkedOption === index ? styles.checked : ""
-              }`}
-            >
-              {checkedOption === index ? (
+                checkedOption?.includes(index) ? styles.checked : ""
+              }`}>
+              {checkedOption?.includes(index) ? (
                 <CheckOutlined
                   style={{
                     strokeWidth: 2,
@@ -65,9 +62,8 @@ const OptionRadios: FC<OptionRadiosProps> = ({
             </span>
             <span
               className={`${styles.optionText} ${
-                checkedOption === index ? styles.checked : ""
-              }`}
-            >
+                checkedOption?.includes(index) ? styles.checked : ""
+              }`}>
               {e}
             </span>
           </div>

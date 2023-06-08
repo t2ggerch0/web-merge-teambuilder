@@ -10,14 +10,21 @@ import { hostApi } from "../../API/hostApi";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
-import { viewToastError, viewToastSuccess } from "../../helper";
+import {
+  parseTextFromOptions,
+  viewToastError,
+  viewToastSuccess,
+} from "../../helper";
 import {
   ProjectRegisterInfo,
   Menu,
   positionTypes,
   defaultQuestions,
+  questionLists,
+  AnswersType,
 } from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
+import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 
 type RegisterProjectProps = {
@@ -44,13 +51,27 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     value:
       | string
       | number
-      | string[]
       | number[]
+      | string[]
+      | AnswersType[]
       | Dayjs
       | boolean
       | positionTypes[];
   }) => {
-    setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
+    if (name === "questionIds") {
+      let left = value as number[];
+      let newAnswers = projectRegisterInfo.hostAnswer.filter((a) =>
+        left.includes(a.questionId)
+      );
+      console.log("new host answer", newAnswers);
+      setProjectRegisterInfo({
+        ...projectRegisterInfo,
+        hostAnswer: newAnswers,
+        [name]: left,
+      });
+    } else {
+      setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
+    }
   };
 
   const onClickRegisterButton = () => {
@@ -108,9 +129,15 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     <Layout
       pageTitle="프로젝트 등록"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
+        <ToastContainer
+          className={styles.toast}
+          position="top-center"
+          hideProgressBar
+          closeButton={false}
+          rtl={false}
+        />
         <ProgressBar current={step} max={2} />
         {step === 1 ? (
           <div className={styles.step}>
@@ -123,8 +150,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
                 backgroundColor={"#609966"}
                 onClick={() => {
                   setStep(2);
-                }}
-              >
+                }}>
                 다음
               </MergeButton>
             </div>
@@ -137,13 +163,56 @@ const RegisterProject: FC<RegisterProjectProps> = ({
                 onChangeDefaultQuestionInfo={onChangeClassInfo}
               />
             </div>
+            <div className={styles.host_answer}>
+              {projectRegisterInfo.isHostParticipating && "호스트 답변"}
+            </div>
+            <div>
+              {projectRegisterInfo.isHostParticipating &&
+                questionLists
+                  .filter((q) => projectRegisterInfo.questionIds.includes(q.id))
+                  ?.map((q, index) => (
+                    <OptionRadios
+                      title={q.title}
+                      subtitle={""}
+                      name={q.title}
+                      isHorizontal={true}
+                      options={
+                        q.id === 2
+                          ? parseTextFromOptions(q.options as number[])
+                          : q.options
+                      }
+                      checkedOption={
+                        projectRegisterInfo.hostAnswer[index]?.answer
+                      }
+                      setCheckedOption={(e) => {
+                        console.log(e, projectRegisterInfo.hostAnswer, index);
+                        if (q.id === 2) {
+                          let before = projectRegisterInfo.hostAnswer[index];
+                          let res = [];
+                          if (before.answer.includes(e)) {
+                            res = before.answer.filter((a) => a !== e);
+                          } else {
+                            res = before.answer;
+                            res.push(e);
+                          }
+                          projectRegisterInfo.hostAnswer[index].answer = res;
+                        } else {
+                          projectRegisterInfo.hostAnswer[index].answer = [e];
+                        }
+                        onChangeClassInfo({
+                          name: "hostAnswer",
+                          value: projectRegisterInfo.hostAnswer,
+                        });
+                      }}
+                    />
+                  ))}
+            </div>
             <div className={styles.button}>
               <MergeButton
                 backgroundColor={"#609966"}
                 onClick={() => {
                   setStep(1);
-                }}
-              >
+                }}>
                 이전
               </MergeButton>
               <MergeButton onClick={onClickRegisterButton}>

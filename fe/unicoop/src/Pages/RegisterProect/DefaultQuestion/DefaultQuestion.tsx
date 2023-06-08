@@ -1,8 +1,12 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./DefaultQuestion.module.scss";
 import { Dayjs } from "dayjs";
-import { QuestionType } from "../../../interface";
-import { parseTextFromOptions } from "../../../helper";
+import { QuestionType, questionLists } from "../../../interface";
+import {
+  getMyToken,
+  parseTextFromOptions,
+  viewToastError,
+} from "../../../helper";
 import { Delete } from "@mui/icons-material";
 
 type DefaultQuestionProps = {
@@ -15,39 +19,6 @@ type DefaultQuestionProps = {
     value: string | number | string[] | number[] | Dayjs;
   }): void;
 };
-
-const questionLists = [
-  {
-    id: 0,
-    title: "Coding Experience",
-    options: ["0~1 yrs", "1~3 yrs", "3~5 yrs", "5~10 yrs", "10+ yrs"],
-    weight: 5,
-    countScore: "same",
-  },
-  {
-    id: 1,
-    title: "How much time to spend in a week?",
-    options: ["0 - 10 hrs", "10+ hrs"],
-    weight: 5,
-    countScore: "same",
-  },
-  {
-    id: 2,
-    title: "Preferred Date and Time",
-    options: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    ],
-    weight: 10,
-    countScore: "same",
-  },
-  {
-    id: 3,
-    title: "Preferred Role",
-    options: ["Leader", "Follower"],
-    weight: 5,
-    countScore: "different",
-  },
-];
 
 const DefaultQuestion: FC<DefaultQuestionProps> = ({
   questionIds,
@@ -77,8 +48,7 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
               <div className={styles.question_content}>{item.title}</div>
               <div
                 className={styles.question_delete}
-                onClick={() => onDeleteQuestion(item.id)}
-              >
+                onClick={() => onDeleteQuestion(item.id)}>
                 <Delete />
               </div>
             </div>

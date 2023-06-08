@@ -2,10 +2,11 @@ import React, { FC } from "react";
 import styles from "./ActivitySidebar.module.scss";
 import useSWR from "swr";
 import Loader from "../../../Components/Loader/Loader";
+import Logo from "../../../Components/Logo/Logo";
 import { NewClassType } from "../../../interface";
 import { swrFetcher } from "../../../API/authApi";
 import { viewToastError } from "../../../helper";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 type ActivitySidebarProps = {
   activityArray: Array<string>;
@@ -18,7 +19,6 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
   activityIndex,
   setActivityIndex,
 }) => {
-  const navigate = useNavigate();
   const { projectId } = useParams();
   const { data, error, isValidating } = useSWR<{
     targetClass: NewClassType;
@@ -52,14 +52,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
           ))}
         </div>
       </div>
-      <div
-        className={styles.logo}
-        onClick={() => {
-          navigate("/manageproject");
-        }}
-      >
-        merge
-      </div>
+      <Logo isClickable={true} />
     </div>
   );
 };

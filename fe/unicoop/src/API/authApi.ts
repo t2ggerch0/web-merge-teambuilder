@@ -80,6 +80,7 @@ export const authApi = {
       });
       viewToastSuccess("회원가입에 성공했습니다.");
     } catch (e) {
+      console.log(email, password, verifyCode, name);
       viewToastError("인증코드가 올바르지 않습니다.");
     }
   },
