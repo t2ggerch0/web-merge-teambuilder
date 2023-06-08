@@ -1,10 +1,9 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import styles from "./Layout.module.scss";
-import { useAuthContext } from "../../Context/UnicoopContext";
 import { useNavigate } from "react-router-dom";
 import { getMyToken, viewToastInfo } from "../../helper";
-import { Menu, MyInfoType } from "../../interface";
 import { authApi } from "../../API/authApi";
+import { Menu, MyInfoType } from "../../interface";
 
 type LayoutProps = {
   children?: ReactNode;
@@ -20,7 +19,6 @@ const Layout: FC<LayoutProps> = ({
   onChangeMenu,
 }) => {
   const navigate = useNavigate();
-  // const { myInfo, setMyInfo } = useAuthContext();
   const [myInfo, setMyInfo] = useState<MyInfoType>();
 
   const onClickLogout = () => {
@@ -68,6 +66,7 @@ const Layout: FC<LayoutProps> = ({
       });
     });
   }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.left_bar}>
@@ -130,8 +129,7 @@ const Layout: FC<LayoutProps> = ({
         <div className={styles.page_title}>
           <div>{pageTitle}</div>
           <div className={styles.user_menu}>
-            <div>{`${myInfo?.name ?? ""} 님`}</div>
-
+            <div className={styles.userName}>{`${myInfo?.name ?? ""} 님`}</div>
             <div className={styles.logout} onClick={onClickLogout}>
               로그아웃
             </div>

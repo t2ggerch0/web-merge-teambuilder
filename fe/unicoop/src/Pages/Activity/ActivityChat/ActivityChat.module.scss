@@ -45,31 +45,6 @@
       }
     }
   }
-
-  .message {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    background-color: #fff;
-    border-radius: 24px;
-    .input {
-      width: calc(100% - 30px);
-      border: none;
-      font-size: 16px;
-      &:focus {
-        outline: none;
-      }
-    }
-    .send {
-      width: 30px;
-      opacity: 0.5;
-      cursor: pointer;
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
 }
 
 @keyframes fromTop {

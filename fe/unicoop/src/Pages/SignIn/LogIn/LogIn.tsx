@@ -1,16 +1,19 @@
 import React, { useState, FC } from "react";
 import styles from "./LogIn.module.scss";
-import LabelInput from "../../Components/LabelInput/LabelInput";
-import MergeButton from "../../Components/MergeButton/MergeButton";
+import LabelInput from "../../../Components/LabelInput/LabelInput";
+import MergeButton from "../../../Components/MergeButton/MergeButton";
 import { useNavigate } from "react-router-dom";
+import { viewToastError } from "../../../helper";
+import { useAuthContext } from "../../../Context/UnicoopContext";
+import { authApi } from "../../../API/authApi";
 
-type LoginProps = {
-  changeBoxContent(): void;
-  loginSuccess({ email, password }: { email: string; password: string }): void;
+type LogInProps = {
+  setJoinMode(e: string): void;
 };
 
-const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
+const LogIn: FC<LogInProps> = ({ setJoinMode }) => {
   const navigate = useNavigate();
+  const { setMyInfo } = useAuthContext();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -22,8 +25,29 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
     setPassword(value);
   };
 
+  const getUserInfo = ({ token }: { token: string }) => {
+    authApi
+      .getMyInfo(token)
+      .then((res) => {
+        setMyInfo({
+          classes: res?.user.classes ?? [],
+          email: res?.user.email ?? "",
+          id: res?.user._id ?? "",
+          name: res?.user.name ?? "",
+          password: res?.user.password ?? "",
+          token: token ?? "",
+        });
+      })
+      .catch((e) => {
+        viewToastError(e);
+      });
+  };
+
   const onClickLogin = () => {
-    loginSuccess({ email, password });
+    authApi.login({ email, password }).then((token) => {
+      window.localStorage.setItem("token", token);
+      getUserInfo({ token });
+    });
     navigate("/");
   };
 
@@ -55,11 +79,14 @@ const LogIn: FC<LoginProps> = ({ changeBoxContent, loginSuccess }) => {
         onChange={onChangePassword}
       />
 
-      <MergeButton backgroundColor={"#435EA4"} onClick={onClickLogin}>
-        로그인
-      </MergeButton>
+      <MergeButton onClick={onClickLogin}>로그인</MergeButton>
 
-      <div className={styles.account_check} onClick={changeBoxContent}>
+      <div
+        className={styles.account_check}
+        onClick={() => {
+          setJoinMode("register");
+        }}
+      >
         아직 계정이 없으신가요?
       </div>
     </div>

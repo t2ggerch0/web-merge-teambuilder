@@ -1,4 +1,5 @@
 import axios from "axios";
+import { mutate } from "swr";
 import { viewToastError } from "../helper";
 import { TeamMessage } from "../interface";
 import { setHeaders } from "./authApi";
@@ -27,18 +28,25 @@ export const teamApi = {
   },
   createTeamMessage: async (token: string, teamMessage: TeamMessage) => {
     try {
+      console.log(token);
       const response = await axios.post("team/message", teamMessage, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(response.data);
+      await mutate(`team?classId=${teamMessage.teamId}`);
       return response.data ?? "";
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
         const statusCode = e.response.status;
         if (statusCode === 404) {
           viewToastError("해당 팀이 없습니다.");
-        } else {
+        } else if (statusCode === 500) {
           viewToastError(
             "서버에 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
+          );
+        } else {
+          viewToastError(
+            "예기치 않은 오류가 발생하였습니다. 잠시 후에 다시 시도해주세요."
           );
         }
       }

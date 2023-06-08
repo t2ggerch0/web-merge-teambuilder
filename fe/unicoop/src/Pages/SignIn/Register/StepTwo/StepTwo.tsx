@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import styles from "./StepTwo.module.scss";
 import PasswordInput from "./PasswordInput/PasswordInput";
-import MergeButton from "../../../Components/MergeButton/MergeButton";
-import { authApi } from "../../../API/authApi";
-import { RegisterInfo } from "../../../interface";
+import MergeButton from "../../../../Components/MergeButton/MergeButton";
 import { useNavigate } from "react-router-dom";
+import { authApi } from "../../../../API/authApi";
+import { RegisterInfo } from "../../../../interface";
 
 type StepTwoProps = {
   password: string;
@@ -14,7 +14,7 @@ type StepTwoProps = {
   setPasswordConfirm(e: string): void;
   onChange(name: string, value: string): void;
   setRegisterStep(e: number): void;
-  changeBoxContent(): void;
+  setJoinMode(e: string): void;
   registerInfo: RegisterInfo;
 };
 
@@ -26,7 +26,7 @@ const StepTwo: FC<StepTwoProps> = ({
   setPasswordConfirm,
   onChange,
   setRegisterStep,
-  changeBoxContent,
+  setJoinMode,
   registerInfo,
 }) => {
   const navigate = useNavigate();
@@ -61,12 +61,15 @@ const StepTwo: FC<StepTwoProps> = ({
           onClick={() => {
             authApi
               .verifyCode({
-                changeBoxContent,
                 isPasswordValid,
                 passwordConfirm,
                 registerInfo,
               })
               .then();
+
+            setTimeout(() => {
+              setJoinMode("login");
+            }, 3000);
             navigate("/");
           }}
         >

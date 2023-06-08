@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { getMyToken, parseTextFromOptions, viewToastError } from "../../helper";
+import { getMyToken, parseTextFromOptions } from "../../helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
@@ -144,7 +144,6 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
           checkedOption={position}
           isHorizontal
           name="position"
-          onChange={(e) => {}}
           options={classInfo?.positionTypes ?? [""]}
           setCheckedOption={(e) => {
             setPosition(e);
@@ -169,17 +168,12 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
               answers[index].answer = e;
               setAnswers([...answers]);
             }}
-            onChange={(e) => {}}
           />
         ))}
       </div>
       <div className={styles.button}>
-        <MergeButton
-          width={300}
-          backgroundColor={"darkBlue"}
-          onClick={onClickJoinClassButton}
-        >
-          제출
+        <MergeButton width={300} onClick={onClickJoinClassButton}>
+          제출하기
         </MergeButton>
       </div>
     </div>

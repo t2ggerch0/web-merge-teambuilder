@@ -1,5 +1,27 @@
 .homeMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0 36px;
+
   .title {
     font-weight: bold;
+    font-size: 16px;
+  }
+
+  .menuBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    .menu {
+      font-size: 24px;
+      opacity: 0.5;
+      cursor: pointer;
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }

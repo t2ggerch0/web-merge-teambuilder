@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import styles from "./StepOne.module.scss";
-import LabelInput from "../../../Components/LabelInput/LabelInput";
+import LabelInput from "../../../../Components/LabelInput/LabelInput";
 import EmailInput from "./EmailInput/EmailInput";
-import MergeButton from "../../../Components/MergeButton/MergeButton";
-import { authApi } from "../../../API/authApi";
+import MergeButton from "../../../../Components/MergeButton/MergeButton";
+import { authApi } from "../../../../API/authApi";
 
 type StepOneProps = {
   name: string;
@@ -58,9 +58,7 @@ const StepOne: FC<StepOneProps> = ({
         onChange={onChange}
       />
 
-      <MergeButton backgroundColor={"blue"} onClick={onClickNext}>
-        다음
-      </MergeButton>
+      <MergeButton onClick={onClickNext}>다음</MergeButton>
     </div>
   );
 };
