@@ -4,6 +4,10 @@ const CheckFullGroup = require("./checkFullGroup");
 const ResetGroups = require("./resetGroups");
 const ResetPositionCounter = require("./resetPositionCounter");
 
+const Team = require("../models/Team");
+const Class = require("../models/Class");
+const Answer = require("../models/Answer");
+
 function findPositionIndexOfStudent(student, classId) {
   const positionIndexByClass = student.positionIndexByClass;
   const positionIndex = positionIndexByClass.find((element) => {
@@ -17,7 +21,7 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
   if (guests.length !== answers.length) {
     throw new Error("Invalid data");
   }
-  console.log("teams: ", teams);
+  // console.log("teams: ", teams);
   let numGroups = teams.teams.length;
   let groupSizes = [];
   for (let i = 0; i < numGroups; i++) {
@@ -174,6 +178,9 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
       positionOfFollowers.pop(positionOfFollowers[i]);
       experienceOfFollowers.pop(experienceOfFollowers[i]);
       timeSpendOfFollowers.pop(timeSpendOfFollowers[i]);
+
+      // HACK: 최종리더리스트 삽입
+      finalLeaders.push(followers[i]);
     }
   }
 
@@ -208,7 +215,7 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
 
   // ======================== Add followers to group ======================== //
 
-  console.log("teams: ", teams.teams);
+  // console.log("teams: ", teams.teams);
 
   // 선호하는 시간대 체크하는 함수
   function checkPreferredTime(preferredTimeOfFollowers, preferredTimeOfLeaders, targetFollowerIndex, index) {
@@ -319,6 +326,9 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
   let fullGroupsFormConditionId = [];
   let fullGroupsIndex = [];
 
+  // HACK
+  let teamArray = [];
+
   //===================iterate test conditions======================//
   for (let i = 0; i < 13; i++) {
     console.log("\ncondition id: ", i);
@@ -333,7 +343,7 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
     console.log("position counter", positionCounter);
     console.log("follower Indexes: ", followerIndexes);
     // check if any groups are full
-    let fullGroupIndexes = await CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormConditionId, followers, teams, positionCounter, i, classId, finalLeaders);
+    let fullGroupIndexes = await CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormConditionId, followers, teams, positionCounter, i);
 
     // add full groups indexes to full groups index
     for (let j = 0; j < fullGroupIndexes.length; j++) {
@@ -353,18 +363,231 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
     }
   }
 
-  console.log("left followers: ", followers.length);
-  console.log("full groups form condition ids: ", fullGroupsFormConditionId);
-
   console.log("teams:", teams.teams);
   console.log("position counter: ", positionCounter);
+  console.log("groupLength: " + groups.length);
+  console.log("finalLeaders:", finalLeaders.length);
 
-  // ================Add left followers to groups================ //
-  // 여기부터 해주세요
-  if (followers.length > 0) {
-    // 남은 사람들을 팀으로 배치
+  console.log("prevTeamCount: ");
+  for (let i = 0; i < fullGroups.length; i++) {
+    console.log(fullGroups[i].length + " ");
   }
-  //=====================================================================================================//
+  console.log("prevTeamConditionId: " + fullGroupsFormConditionId);
+  console.log("left followers: ", followers.length);
+
+
+  // ================full Groups 처리================ //
+  let targetClass = await Class.findById(classId);
+  try {
+
+    // 일단 남은 그룹들도 추가
+    let prevFullGroupsSize = fullGroups.length;
+    for (let i = 0; i < groups.length; i++) {
+      fullGroupsFormConditionId.push(-1);
+      fullGroups.push(groups[i]);
+    }
+
+    for (let i = 0; i < fullGroups.length; i++) {
+      // 리더, 멤버 탐색
+      let targetLeader = fullGroups[i].find(v => finalLeaders.includes(v));
+      if (!targetLeader) throw (new Exception);
+      let targetMembers = [];
+      for (let k = 0; k < fullGroups[i].length; k++) {
+        if (!finalLeaders.includes(fullGroups[i][k])) {
+          targetMembers.push(fullGroups[i][k]);
+        }
+      }
+      if (!targetMembers) throw (new Exception);
+      let allUsers = [targetLeader, ...targetMembers];
+
+      // 기존에 빌딩이 안된 그룹은 conditionId -1, isDirty
+      let conditionId = fullGroupsFormConditionId[i];
+      let isDirty = false;
+      if (i >= prevFullGroupsSize) {
+        conditionId = -1;
+        isDirty = true;
+      }
+
+      // context 탐색
+      let context = [];
+      for (let j = 0; j < allUsers.length; j++) {
+        let answer = await Answer.findOne({ class: targetClass, guest: allUsers[j] });
+        positionIndex = allUsers[j].positionIndexByClass.find(
+          (v) => String(v.class) === String(classId)
+        );
+
+        context.push({
+          user: allUsers[j],
+          answer: answer.answer,
+          name: allUsers[j].name.toString(),
+          positionIndex: positionIndex.positionIndex
+        });
+      }
+
+      // Team 추가
+      let teamObject = new Team({
+        name: "UnnamedTeam",
+        class: targetClass,
+        leader: targetLeader,
+        conditionId: conditionId,
+        members: targetMembers,
+        contextByUser: context,
+        isDirty: isDirty
+      });
+      teamArray.push(teamObject);
+    }
+  } catch (error) {
+    console.debug(error);
+  }
+
+  // ================left followers 처리================ //
+
+  console.log("middleTeamArrayCount: ");
+  for (let i = 0; i < teamArray.length; i++) {
+    console.log(teamArray[i].contextByUser.length);
+  }
+
+  // 팀 별 추가된 follower의 포지션 인덱스
+  let extraPosByTeam = [];
+  teamArray.forEach(t => extraPosByTeam.push({ team: t, extraPos: null }));
+
+  while (followers.length != 0) {
+    let targetFollower = followers[0];
+
+    // 팀의 총 인원수 기준 오름차순 정렬
+    teamArray = teamArray.sort((a, b) => (a.contextByUser.length) - (b.contextByUser.length));
+
+    // 팀배열 조회
+    let isSucc = false;
+    for (let i = 0; i < teamArray.length; i++) {
+      // 성공 시 탈출
+      if (isSucc) {
+        break;
+      }
+
+      // 팀 별 추가된 follower의 포지션 조회
+      for (let j = 0; j < extraPosByTeam.length; j++) {
+        if (teamArray[i] === extraPosByTeam[j].team) {
+          // 없다면 extraByTeam 마킹 및 follower 추가
+          if (extraPosByTeam[j].extraPos == null) {
+            extraPosByTeam[j].extraPos = targetFollower.positionIndexByClass.find(
+              (v) => String(v.class) === String(classId)
+            );
+            isSucc = true;
+
+            // contextByUser
+            let answer = await Answer.findOne({ class: targetClass, guest: targetFollower });
+            let positionIndex = targetFollower.positionIndexByClass.find(
+              (v) => String(v.class) === String(classId)
+            );
+            let context = {
+              user: targetFollower,
+              answer: answer.answer,
+              name: targetFollower.name.toString(),
+              positionIndex: positionIndex.positionIndex
+            };
+
+            // follower 추가
+            teamArray[i].contextByUser.push(context);
+            teamArray[i].isDirty = true;
+            teamArray[i].dirtyMembers.push(targetFollower);
+          }
+          // extra 원소가 하나일 때
+          else if (!Array.isArray(extraPosByTeam[j].extraPos)) {
+            // 다르다면 추가 및 마킹
+            let targetFollowerPos = targetFollower.positionIndexByClass.find(
+              (v) => String(v.class) === String(classId)
+            );
+            if (targetFollowerPos != extraPosByTeam[j].extraPos) {
+              extraPosByTeam[j].extraPos = [extraPosByTeam[j].extraPos];
+              extraPosByTeam[j].extraPos.push(targetFollowerPos);
+              isSucc = true;
+
+              // contextByUser
+              let answer = await Answer.findOne({ class: targetClass, guest: targetFollower });
+              let context = {
+                user: targetFollower,
+                answer: answer.answer,
+                name: targetFollower.name.toString(),
+                positionIndex: targetFollowerPos.positionIndex
+              };
+
+              // follower 추가
+              teamArray[i].contextByUser.push(context);
+              teamArray[i].isDirty = true;
+              teamArray[i].dirtyMembers.push(targetFollower);
+            }
+          }
+          // extra 원소가 두 개 이상일 때
+          else {
+            // 포함 안되어있다면 추가 및 마킹
+            let targetFollowerPos = targetFollower.positionIndexByClass.find(
+              (v) => String(v.class) === String(classId)
+            );
+            if (!extraPosByTeam[j].extraPos.includes(targetFollowerPos)) {
+              extraPosByTeam[j].extraPos.push(targetFollowerPos);
+              isSucc = true;
+
+              // contextByUser
+              let answer = await Answer.findOne({ class: targetClass, guest: targetFollower });
+              let context = {
+                user: targetFollower,
+                answer: answer.answer,
+                name: targetFollower.name.toString(),
+                positionIndex: targetFollowerPos.positionIndex
+              };
+
+              // follower 추가
+              teamArray[i].contextByUser.push(context);
+              teamArray[i].isDirty = true;
+              teamArray[i].dirtyMembers.push(targetFollower);
+            }
+          }
+
+          break;
+        }
+      }
+    }
+
+    // teamArray 한바퀴 다 돌고도 자리 못찾으면 첫번째 자리에 넣음
+    if (!isSucc) {
+      // contextByUser
+      let answer = await Answer.findOne({ class: targetClass, guest: targetFollower });
+      let positionIndex = targetFollower.positionIndexByClass.find(
+        (v) => String(v.class) === String(classId)
+      );
+      let context = {
+        user: targetFollower,
+        answer: answer.answer,
+        name: targetFollower.name.toString(),
+        positionIndex: positionIndex.positionIndex
+      };
+
+      // follower 추가
+      teamArray[0].contextByUser.push(context);
+      teamArray[0].isDirty = true;
+      teamArray[0].dirtyMembers.push(targetFollower);
+    }
+
+    // 추가한 follower 제외
+    followers.pop(targetFollower);
+  }
+
+  // DB 저장
+  for (let i = 0; i < teamArray.length; i++) {
+    await teamArray[i].save();
+    targetClass.teams.push(teamArray[i]);
+  }
+  await targetClass.save();
+
+  console.log("teamArrayCount: ");
+  for (let i = 0; i < teamArray.length; i++) {
+    console.log(teamArray[i].members.length + 1 + teamArray[i].dirtyMembers.length);
+    console.log(teamArray[i].isDirty);
+  }
+  console.log("prevTeamConditionId: " + fullGroupsFormConditionId);
+  console.log("left followers: ", followers.length);
+
 
   return { fullGroups, fullGroupsFormConditionId };
 };
