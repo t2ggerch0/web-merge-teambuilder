@@ -47,6 +47,7 @@ const Activity = () => {
         token: token ?? "",
       });
     });
+    console.log("data", data);
   }, []);
 
   return (

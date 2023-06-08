@@ -229,7 +229,7 @@ export enum MatchingConditionId {
 export type TeamInfoType = {
   chat: string[];
   class: string;
-  condigionId: MatchingConditionId;
+  conditionId: MatchingConditionId;
   contextByUser: UserContextType[];
   dirtyMembers: string[];
   isDirty: boolean;

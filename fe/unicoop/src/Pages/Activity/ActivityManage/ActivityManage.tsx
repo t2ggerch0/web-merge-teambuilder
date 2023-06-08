@@ -61,8 +61,10 @@ const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
       )}
       <div>팀 정보</div>
       <div>
-        {result.map((data) => {
-          return <Team key={`${data._id}`} data={data} />;
+        {result.map((teamInfo) => {
+          return (
+            <Team key={`${teamInfo._id}`} data={teamInfo} projectInfo={data} />
+          );
         })}
       </div>
     </div>
