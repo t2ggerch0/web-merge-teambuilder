@@ -65,7 +65,7 @@ router.post("/create-class", verifyJwt, async (req, res) => {
         return res.status(403).json({ message: "Invalid host answer" });
       }
       answerObject = new Answer({
-        guest: userId,
+        guest: user,
         answer: hostAnswer,
       });
 
