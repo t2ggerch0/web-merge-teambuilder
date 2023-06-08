@@ -38,6 +38,7 @@ export type ProjectRegisterInfo = {
   isSecret: boolean;
   isHostParticipating: boolean;
   questionIds: number[];
+  hostAnswer: AnswersType[];
 };
 
 export type JoinProjectType = {
@@ -48,8 +49,8 @@ export type JoinProjectType = {
 };
 
 export type AnswersType = {
-  questionId: string;
-  answer: number;
+  questionId: number;
+  answer: number[];
 };
 
 export type positionTypes = {
@@ -154,6 +155,7 @@ export const defaultQuestions: ProjectRegisterInfo = {
   isSecret: false,
   isHostParticipating: true,
   questionIds: [0, 1, 2, 3],
+  hostAnswer: [0, 0, [0, 1, 2, 3, 4], 0],
 };
 
 export type AxiosRequestHeaders = Record<string, string>;
@@ -162,3 +164,34 @@ export interface CommonHeaderProperties extends HeadersDefaults {
   "Access-Control-Allow-Origin": string;
   Authorization: string;
 }
+
+export const questionLists = [
+  {
+    id: 0,
+    title: "Coding Experience(year)",
+    options: ["0~1", "1~3", "3~5", "5~10", "10+"],
+    weight: 5,
+    countScore: "same",
+  },
+  {
+    id: 1,
+    title: "How much time to spend per week?",
+    options: ["0~5", "5~10", "10~15", "15~20", "20+"],
+    weight: 5,
+    countScore: "same",
+  },
+  {
+    id: 2,
+    title: "Preferred Date and Time",
+    options: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    weight: 10,
+    countScore: "same",
+  },
+  {
+    id: 3,
+    title: "Preferred Role",
+    options: ["Leader", "Follower"],
+    weight: 5,
+    countScore: "different",
+  },
+];

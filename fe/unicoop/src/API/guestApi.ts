@@ -6,7 +6,20 @@ import { setHeaders } from "./authApi";
 export const guestApi = {
   joinClass: async (data: JoinProjectType, token: string) => {
     try {
-      const response = await axios.post("class/join-class", data, {
+      let filteredData = data.answers.map((d) => {
+        if (d.questionId === 2) {
+          return {
+            questionId: d.questionId.toString(),
+            answer: d.answer,
+          };
+        } else {
+          return {
+            questionId: d.questionId.toString(),
+            answer: d.answer[0],
+          };
+        }
+      });
+      const response = await axios.post("class/join-class", filteredData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 201) {

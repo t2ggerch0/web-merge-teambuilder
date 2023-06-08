@@ -10,14 +10,21 @@ import { hostApi } from "../../API/hostApi";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
-import { viewToastError, viewToastSuccess } from "../../helper";
+import {
+  parseTextFromOptions,
+  viewToastError,
+  viewToastSuccess,
+} from "../../helper";
 import {
   ProjectRegisterInfo,
   Menu,
   positionTypes,
   defaultQuestions,
+  questionLists,
+  AnswersType,
 } from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
+import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -32,6 +39,15 @@ const RegisterProject: FC<RegisterProjectProps> = ({
   const { myInfo, setMyInfo } = useAuthContext();
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>(defaultQuestions);
+  const [hostAnswers, setHostAnswers] = useState<AnswersType[]>([
+    ...questionLists.map((q) => {
+      if (q.id === 2) {
+        return { questionId: q.id, answer: [0, 1, 2, 3, 4, 5, 6, 7, 8] };
+      } else {
+        return { questionId: q.id, answer: [0] };
+      }
+    }),
+  ]);
 
   const onChangeClassInfo = ({
     name,
@@ -42,12 +58,22 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       | string
       | number
       | string[]
-      | number[]
+      | (number | number[])[]
       | Dayjs
       | boolean
       | positionTypes[];
   }) => {
-    setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
+    if (name === "questionIds") {
+      let left = value as number[];
+      let newAnswers = hostAnswers.filter((a) => left.includes(a.questionId));
+      setProjectRegisterInfo({
+        ...projectRegisterInfo,
+        hostAnswer: newAnswers,
+        [name]: left,
+      });
+    } else {
+      setProjectRegisterInfo({ ...projectRegisterInfo, [name]: value });
+    }
   };
 
   const onClickRegisterButton = () => {
@@ -105,8 +131,7 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     <Layout
       pageTitle="프로젝트 등록"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
         <ClassInfo
           onChangeClassInfo={onChangeClassInfo}
@@ -120,6 +145,40 @@ const RegisterProject: FC<RegisterProjectProps> = ({
             onChangeDefaultQuestionInfo={onChangeClassInfo}
           />
           <hr />
+        </div>
+        <div>
+          {questionLists?.map((q, index) => (
+            <OptionRadios
+              title={q.title}
+              subtitle={""}
+              name={q.title}
+              isHorizontal={true}
+              options={
+                q.id === 2
+                  ? parseTextFromOptions(q.options as number[])
+                  : q.options
+              }
+              checkedOption={hostAnswers[index]?.answer}
+              setCheckedOption={(e) => {
+                console.log(e, hostAnswers, index);
+                if (q.id === 2) {
+                  let before = hostAnswers[index];
+                  let res = [];
+                  if (before.answer.includes(e)) {
+                    res = before.answer.filter((a) => a !== e);
+                  } else {
+                    res = before.answer;
+                    res.push(e);
+                  }
+                  hostAnswers[index].answer = res;
+                } else {
+                  hostAnswers[index].answer = [e];
+                }
+                setHostAnswers([...hostAnswers]);
+              }}
+              onChange={(e) => {}}
+            />
+          ))}
         </div>
         <div className={styles.button}>
           <MergeButton onClick={onClickRegisterButton}>수업 만들기</MergeButton>

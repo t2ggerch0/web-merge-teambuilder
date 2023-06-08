@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
 import { getMyToken, parseTextFromOptions, viewToastError } from "../../helper";
 import { useNavigate, useParams } from "react-router-dom";
-import { Menu, NewClassType, QuestionType } from "../../interface";
+import { AnswersType, Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
 import Loader from "../../Components/Loader/Loader";
 import MergeButton from "../../Components/MergeButton/MergeButton";
@@ -28,9 +28,7 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
   const { myInfo, setMyInfo } = useAuthContext();
   const [position, setPosition] = useState<number>(0);
 
-  const [answers, setAnswers] = useState<
-    Array<{ questionId: string; answer: number }>
-  >([]);
+  const [answers, setAnswers] = useState<AnswersType[]>([]);
   const classInfo = useSWR<{
     targetClass: NewClassType;
   }>(`/class?classId=${projectId}`, swrFetcher)?.data?.targetClass;
@@ -45,12 +43,7 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
       .joinClass(
         {
           accessKey: accessKey ?? "0",
-          answers: answers.map((item) => {
-            return {
-              questionId: item.questionId.toString(),
-              answer: item.answer,
-            };
-          }),
+          answers: answers,
           classId: projectId ?? "",
           position: classInfo?.positionTypes[position] ?? "",
         },
@@ -141,7 +134,7 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
 
       <div className={styles.questions}>
         <OptionRadios
-          checkedOption={position}
+          checkedOption={[position]}
           isHorizontal
           name="position"
           onChange={(e) => {}}
@@ -166,7 +159,19 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
             checkedOption={answers[index]?.answer}
             setCheckedOption={(e) => {
               console.log(e, answers, index);
-              answers[index].answer = e;
+              if (q.id === 2) {
+                let before = answers[index];
+                let res = [];
+                if (before.answer.includes(e)) {
+                  res = before.answer.filter((a) => a !== e);
+                } else {
+                  res = before.answer;
+                  res.push(e);
+                }
+                answers[index].answer = res;
+              } else {
+                answers[index].answer = [e];
+              }
               setAnswers([...answers]);
             }}
             onChange={(e) => {}}
@@ -177,8 +182,7 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
         <MergeButton
           width={300}
           backgroundColor={"darkBlue"}
-          onClick={onClickJoinClassButton}
-        >
+          onClick={onClickJoinClassButton}>
           제출
         </MergeButton>
       </div>

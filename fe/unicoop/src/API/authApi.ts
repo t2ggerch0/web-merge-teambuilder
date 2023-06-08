@@ -85,6 +85,7 @@ export const authApi = {
         changeBoxContent();
       }, 3000);
     } catch (e) {
+      console.log(email, password, verifyCode, name);
       viewToastError("인증코드가 올바르지 않습니다.");
     }
   },
