@@ -72,6 +72,24 @@ const teamSchema = new Schema({
       },
     },
   ],
+  todos: [
+    {
+      _id: {
+        type: String,
+        required: true,
+      },
+      task: {
+        type: String,
+        required: true,
+      },
+      assignedTo: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ]
+    },
+  ],
 });
 
 module.exports = mongoos.model("Team", teamSchema);

@@ -86,6 +86,13 @@ const getQuestions = require("./routes/question/getQuestions");
 const getTeam = require("./routes/team/getTeam");
 const getClassTeams = require("./routes/team/getClassTeams");
 const postMessage = require("./routes/team/postMessage");
+const setTodo = require("./routes/team/setTodo");
+const deleteTodo = require("./routes/team/deleteTodo");
+
+//======global api======//
+const createFeedback = require("./routes/global/createFeedback");
+
+
 //======Signing API======//
 
 app.use("/auth", checkEmail);
@@ -112,5 +119,11 @@ app.use("/question", getQuestions);
 app.use("/team", getTeam);
 app.use("/team", getClassTeams);
 app.use("/team", postMessage);
+app.use("/team", setTodo);
+app.use("/team", deleteTodo);
+
+//======global api======//
+app.use("/global", createFeedback);
+
 
 module.exports = { app, server };

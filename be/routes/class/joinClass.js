@@ -72,8 +72,8 @@ router.post("/join-class", verifyJwt, async (req, res) => {
 
     // HACK: answer 객체에 class 추가
     const answerObject = new Answer({
-      class: classId,
-      guest: userId,
+      class: targetClass,
+      guest: user,
       answer: answerChoices,
     });
 
