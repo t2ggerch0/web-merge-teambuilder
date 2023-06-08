@@ -10,7 +10,7 @@ export const guestApi = {
         if (d.questionId === 2) {
           return {
             questionId: d.questionId.toString(),
-            answer: d.answer,
+            answer: d.answer.sort(),
           };
         } else {
           return {
@@ -19,9 +19,16 @@ export const guestApi = {
           };
         }
       });
-      const response = await axios.post("class/join-class", filteredData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        "class/join-class",
+        {
+          ...data,
+          answers: filteredData,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (response.status === 201) {
         viewToastSuccess("성공적으로 프로젝트에 등록되었습니다.");
       }

@@ -7,6 +7,7 @@ import { setHeaders } from "./authApi";
 export const teamApi = {
   getTeamInfo: async (classId: string, token: string) => {
     try {
+      let t = token.length === 0 ? localStorage.getItem("token") ?? "" : token;
       setHeaders(token);
       const response = await axios.get(`team?classId=${classId}`, {
         headers: { Authorization: `${token}` },
@@ -50,6 +51,14 @@ export const teamApi = {
           );
         }
       }
+    }
+  },
+  getClassTeams: async (classId: string) => {
+    try {
+      const response = await axios.get(`team/classTeams?classId=${classId}`);
+      return response.data ?? "";
+    } catch (e) {
+      console.log(e);
     }
   },
 };

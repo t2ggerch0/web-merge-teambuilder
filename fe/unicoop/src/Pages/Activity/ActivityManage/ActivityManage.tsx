@@ -13,32 +13,27 @@ type ActivityManageProps = {
 };
 const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
   const { projectId } = useParams();
-  const [isOptimal, setIsOptimal] = useState<boolean>(true);
   const { myInfo, setMyInfo } = useAuthContext();
   const [result, setResult] = useState<string>("");
   const [teamFormButton, setTeamFormButton] = useState<boolean>(false);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const onClickButton = () => {
     // 팀 빌딩하고
-    hostApi
-      .formTeam(myInfo?.token ?? "", projectId ?? "", isOptimal)
-      .then((res) => {
-        console.log(res);
-      });
-
-    setIsOptimal(false);
-    guestApi.getQuestions(projectId ?? "").then((res) => {
-      console.log(res.filteredQuestions);
-      setQuestions(res.filteredQuestions);
+    hostApi.formTeam(myInfo?.token ?? "", projectId ?? "").then((res) => {
+      console.log(res);
     });
+    // guestApi.getQuestions(projectId ?? "").then((res) => {
+    //   console.log(res.filteredQuestions);
+    //   setQuestions(res.filteredQuestions);
+    // });
   };
 
   useEffect(() => {
     console.log("아이디", result.length, projectId, myInfo?.token);
-    teamApi.getTeamInfo(projectId ?? "", myInfo?.token ?? "").then((res) => {
+    teamApi.getClassTeams(projectId ?? "").then((res) => {
       console.log("activit team", res);
 
-      if (res === 403) {
+      if (res.teams.length === 0) {
         setTeamFormButton(true);
         setResult("팀 없음");
       } else {
