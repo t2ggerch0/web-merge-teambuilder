@@ -10,7 +10,14 @@ router.get("/classTeams", async (req, res) => {
   try {
     // get class IDs
     let { classId } = req.query;
-    let targetClass = await Class.findById(classId).populate("teams");
+    
+    let targetClass = await Class.findById(classId).populate({
+      path: "teams",
+      populate: {
+        path: "chat.sender",
+        model: "User",
+      },
+    });
     let teams = targetClass.teams;
 
     res.status(201).json({ teams });
