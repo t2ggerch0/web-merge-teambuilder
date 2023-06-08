@@ -390,14 +390,9 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
     for (let i = 0; i < fullGroups.length; i++) {
       // 리더, 멤버 탐색
       let targetLeader = fullGroups[i].find(v => finalLeaders.includes(v));
-      if (!targetLeader) throw (new Exception);
-      let targetMembers = [];
-      for (let k = 0; k < fullGroups[i].length; k++) {
-        if (!finalLeaders.includes(fullGroups[i][k])) {
-          targetMembers.push(fullGroups[i][k]);
-        }
-      }
-      if (!targetMembers) throw (new Exception);
+      if (!targetLeader) throw new Error("leader not found");
+      let targetMembers = fullGroups[i].filter(v => v != targetLeader);
+      if (!targetMembers) throw new Error("member leader not found");
       let allUsers = [targetLeader, ...targetMembers];
 
       // 기존에 빌딩이 안된 그룹은 conditionId -1, isDirty
