@@ -570,7 +570,7 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
     }
 
     // 추가한 follower 제외
-    followers.pop(targetFollower);
+    followers = followers.filter(f => f !== targetFollower);
   }
 
   // DB 저장
