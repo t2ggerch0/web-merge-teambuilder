@@ -49,6 +49,12 @@ const teamSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  dirtyMembers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   chat: [
     {
       sender: {
