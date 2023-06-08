@@ -108,6 +108,7 @@ export type NewClassType = {
   guest: Array<string>;
   teams: Array<string>;
   questions: Array<string>;
+  questionIds?: number[];
   answers: Array<string>;
   className: string;
   classDescription: string;
