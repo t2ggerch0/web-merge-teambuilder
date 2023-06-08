@@ -425,8 +425,9 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
       }
 
       // Team 추가
+      let teamName = "Team " + String.fromCharCode(i + 65);
       let teamObject = new Team({
-        name: "UnnamedTeam",
+        name: teamName,
         class: targetClass,
         leader: targetLeader,
         conditionId: conditionId,
@@ -570,7 +571,7 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
     }
 
     // 추가한 follower 제외
-    followers.pop(targetFollower);
+    followers = followers.filter(f => f !== targetFollower);
   }
 
   // DB 저장

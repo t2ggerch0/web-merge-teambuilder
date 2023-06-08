@@ -18,10 +18,8 @@ router.get("/", verifyJwt, async (req, res) => {
 
     // get class IDs
     let { classId } = req.query;
-    console.log(classId);
     let targetClass = await Class.findById(classId).populate("teams");
     let teams = targetClass.teams;
-    console.log(teams);
 
     // 팀 탐색
     let targetTeam = null;
@@ -31,22 +29,17 @@ router.get("/", verifyJwt, async (req, res) => {
         break;
       }
 
-      // // 리더 탐색
-      // if (targetUser._id == teams[i].leader) {
-      //   targetTeam = teams[i];
-      //   break;
-      // }
+      // 리더 탐색
+      if (targetUser._id.toString() === teams[i].leader._id.toString()) {
+        targetTeam = teams[i];
+        break;
+      }
       
       // 멤버 탐색
       let members = teams[i].members;
-      // console.log("members: ", members);
-      // console.log("userId: ", userId);
       console.log("userID:" + targetUser._id)
       for (let j = 0; j < members.length; j++) {
-        console.log(targetUser._id);
-        console.log(members[j]._id);
         if (targetUser._id.toString() == members[j]._id.toString()) {
-          console.log("succ");
           targetTeam = teams[i];
           isFound = true;
           break;
@@ -58,13 +51,12 @@ router.get("/", verifyJwt, async (req, res) => {
       return res.status(403).json({ message: "User has no team" });
     }
 
-    // HACK: AnswerByUser
-    let users = [];
-    users.push(targetTeam.members);
-    users.push(targetTeam.leader);
-
-    const answerObject = await Answer.findById(allGuests[i].answer);
-
+    // Populate chat.sender
+    targetTeam = await targetTeam.populate({
+      path: "chat.sender",
+      model: "User",
+    });
+    
     res.status(201).json({ targetTeam});
 
     // let users = [];

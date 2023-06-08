@@ -7,6 +7,7 @@ dotenv.config();
 const verifyJwt = require("../../utils/verifyJwt");
 
 const Team = require("../../models/Team");
+const User = require("../../models/User");
 
 router.post('/message', verifyJwt, async (req, res) => {
   try {
@@ -19,8 +20,9 @@ router.post('/message', verifyJwt, async (req, res) => {
     }
 
     // 메시지 생성
+    let user = await User.findById(userId);
     let newMessage = {
-      sender: userId,
+      sender: user,
       message,
     };
     team.chat.push(newMessage);
