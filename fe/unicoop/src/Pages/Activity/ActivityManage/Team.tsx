@@ -5,7 +5,9 @@ import {
   NewClassType,
   QuestionType,
   TeamInfoType,
+  questionLists,
 } from "../../../interface";
+import { parseTextFromOptions } from "../../../helper";
 
 type TeamProps = {
   data: TeamInfoType;
@@ -14,11 +16,13 @@ type TeamProps = {
 
 const Team: FC<TeamProps> = ({ data, projectInfo }) => {
   const [condition, setCondition] = useState<string>("");
-  const [positions, setPositions] = useState<string[]>([]);
-  const [questionIds, setQuestionIds] = useState<number[]>([]);
+  const positions = projectInfo?.positionTypes ?? [];
+  const questions = questionLists.filter((q) =>
+    (projectInfo?.questionIds ?? []).includes(q.id)
+  );
 
   useEffect(() => {
-    console.log("proejct Info", projectInfo);
+    console.log("proejct Info", data);
     // get class question
 
     // get class position
@@ -56,17 +60,65 @@ const Team: FC<TeamProps> = ({ data, projectInfo }) => {
   return (
     <div className={styles.team_container}>
       <div>팀 이름: {data.name}</div>
-      <div>팀 빌딩 조건: {condition}</div>
+      <div>조건: {condition}</div>
       <div>팀원</div>
+
       <div>
-        {data.contextByUser.map((user, index) => {
-          return (
-            <div>
-              {index + 1}. {user.name}
-              {user.user === data.leader && " [리더]"}
-            </div>
-          );
-        })}
+        <table align="center" width={"100%"} border={1}>
+          <th style={{ width: "20px" }} align="center">
+            이름
+          </th>
+          <th style={{ width: "10px" }} align="center">
+            역할
+          </th>
+          <th style={{ width: "20px" }} align="center">
+            포지션
+          </th>
+          <th style={{ width: "50px" }} align="center">
+            코딩 경험(년)
+          </th>
+          <th style={{ width: "30px" }} align="center">
+            투자 시간
+          </th>
+          <th style={{ width: "100px" }} align="center">
+            선호 시간
+          </th>
+          <th style={{ width: "50px" }} align="center">
+            선호 역할
+          </th>
+          {data.contextByUser.map((user, index) => {
+            return (
+              <tr>
+                <td style={{ width: "20px" }} align="center">
+                  {user.name}
+                </td>
+                <td style={{ width: "20px" }} align="center">
+                  {user.user === data.leader ? "팀장" : "팀원"}
+                </td>
+                <td style={{ width: "20px" }} align="center">
+                  {positions[user.positionIndex]}
+                </td>
+                <td style={{ width: "50px" }} align="center">
+                  {questions[0].options[user.answer[0] as number]}
+                </td>
+                <td style={{ width: "30px" }} align="center">
+                  {questions[1].options[user.answer[1] as number]}
+                </td>
+                <td style={{ width: "100px" }} align="left">
+                  {parseTextFromOptions(
+                    (questions[2].options as number[]).filter((o) =>
+                      (user.answer[2] as number[]).includes(o)
+                    )
+                  ).join(", ")}
+                </td>
+                <td style={{ width: "50px" }} align="center">
+                  {questions[3].options[user.answer[3] as number]}
+                </td>
+              </tr>
+            );
+          })}
+          <tr></tr>
+        </table>
       </div>
     </div>
   );
