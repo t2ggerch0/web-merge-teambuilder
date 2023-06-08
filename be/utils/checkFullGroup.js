@@ -23,6 +23,7 @@ function CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormCondi
       }
       console.log("left members: ", followers.length);
       // 리더를 추가하는 코드도 필요
+      console.log("groups length: ", groups[i].length);
       fullGroups.push(groups[i]);
       // delete positionCounter[i]
       positionCounter.splice(i, 1);
@@ -31,6 +32,7 @@ function CheckFullGroup(groups, followerIndexes, fullGroups, fullGroupsFormCondi
       // delete teams.teams[i]
       teams.teams.splice(i, 1);
       console.log("position counter: ", positionCounter);
+      break;
     }
   }
   //console.log("full groups: ", fullGroups);
