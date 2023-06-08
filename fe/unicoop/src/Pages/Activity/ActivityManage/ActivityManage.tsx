@@ -9,6 +9,7 @@ import { teamApi } from "../../../API/teamApi";
 import Team from "./Team";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko"; // 한국어 가져오기
+import { viewToastSuccess } from "../../../helper";
 
 type ActivityManageProps = {
   data?: NewClassType;
@@ -23,7 +24,7 @@ const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
   const onClickButton = () => {
     // 팀 빌딩하고
     hostApi.formTeam(myInfo?.token ?? "", projectId ?? "").then((res) => {
-      console.log(res);
+      viewToastSuccess(res);
       teamApi.getClassTeams(projectId ?? "").then((res) => {
         console.log("activit team", res.teams);
         setTeamFormButton(false);
