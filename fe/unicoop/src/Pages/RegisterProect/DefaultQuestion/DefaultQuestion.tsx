@@ -7,6 +7,7 @@ import {
   parseTextFromOptions,
   viewToastError,
 } from "../../../helper";
+import { Delete } from "@mui/icons-material";
 
 type DefaultQuestionProps = {
   questionIds: number[];
@@ -48,7 +49,7 @@ const DefaultQuestion: FC<DefaultQuestionProps> = ({
               <div
                 className={styles.question_delete}
                 onClick={() => onDeleteQuestion(item.id)}>
-                삭제하기
+                <Delete />
               </div>
             </div>
             <div className={styles.question_answers}>

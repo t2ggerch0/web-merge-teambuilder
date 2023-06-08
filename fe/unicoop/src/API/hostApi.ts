@@ -9,7 +9,13 @@ export const hostApi = {
       let filteredData = data.isHostParticipating
         ? {
             ...data,
-            hostAnswer: data.hostAnswer.map((d) => d.answer),
+            hostAnswer: data.hostAnswer.map((d) => {
+              if (d.questionId === 2) {
+                return d.answer.sort();
+              } else {
+                return d.answer[0];
+              }
+            }),
             hostPosition: data.isHostParticipating ? data.hostPosition : "",
             positionComposition: data.positionTypes.map(
               (data) => data.composition

@@ -1,12 +1,12 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./ParticipateProject.module.scss";
+import dayjs from "dayjs";
 import Layout from "../../Components/Layout/Layout";
-import { Menu, MyInfoType, NewClassType } from "../../interface";
 import ProjectBox from "../../Components/ProjectBox/ProjectBox";
-import { guestApi } from "../../API/guestApi";
 import { getMyToken } from "../../helper";
+import { guestApi } from "../../API/guestApi";
 import { authApi } from "../../API/authApi";
-import { useAuthContext } from "../../Context/UnicoopContext";
+import { Menu, NewClassType } from "../../interface";
 
 type ParticipateProjectProps = {
   selectedMenu: Menu;
@@ -18,46 +18,53 @@ const ParticipateProject: FC<ParticipateProjectProps> = ({
   selectedMenu,
 }) => {
   const [projects, setProjects] = useState<Array<NewClassType>>([]);
-  // const { myInfo, setMyInfo } = useAuthContext();
-  const [myInfo, setMyInfo] = useState<MyInfoType>();
 
   useEffect(() => {
-    // update my info
-
     onChangeMenu(Menu.JoinProject);
     let token = getMyToken() ?? "";
-    authApi.getMyInfo(token).then((res) => {
-      setMyInfo({
-        classes: res?.user.classes ?? [],
-        email: res?.user.email ?? "",
-        id: res?.user._id ?? "",
-        name: res?.user.name ?? "",
-        password: res?.user.password ?? "",
-        token: token ?? "",
-      });
-    });
-
+    authApi.getMyInfo(token).then();
     guestApi.getAllClasses().then((res) => {
       console.log("classes", res);
       setProjects(res.classes);
     });
   }, []);
+
   return (
     <Layout
       pageTitle="프로젝트 참여"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}>
+      onChangeMenu={onChangeMenu}
+    >
       <div className={styles.container}>
         <div className={styles.class_container}>
-          <div className={styles.title}>전체 프로젝트</div>
+          <div className={styles.title}>참여 가능한 프로젝트</div>
           <div className={styles.class_wrapper}>
-            {projects.map((project) => (
-              <ProjectBox
-                projectInfo={project}
-                withAccessKey={false}
-                isHost={false}
-              />
-            ))}
+            {projects
+              .filter((project) => !dayjs().isAfter(project.recruitEndDate))
+              .map((projectInfo) => (
+                <ProjectBox
+                  projectInfo={projectInfo}
+                  isHost={false}
+                  withAccessKey={false}
+                  isAfter={false}
+                />
+              ))}
+          </div>
+        </div>
+
+        <div className={styles.class_container}>
+          <div className={styles.title}>이미 종료된 프로젝트</div>
+          <div className={styles.class_wrapper}>
+            {projects
+              .filter((project) => dayjs().isAfter(project.recruitEndDate))
+              .map((projectInfo) => (
+                <ProjectBox
+                  projectInfo={projectInfo}
+                  isHost={false}
+                  withAccessKey={false}
+                  isAfter={true}
+                />
+              ))}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ type MergeButtonProps = {
   width?: number;
   height?: number;
   fontSize?: number;
+  color?: string;
   backgroundColor?: string;
   borderRadius?: number;
   padding?: string;
@@ -17,6 +18,7 @@ const MergeButton: FC<MergeButtonProps> = ({
   width,
   height,
   fontSize,
+  color,
   backgroundColor,
   borderRadius,
   padding,
@@ -29,6 +31,7 @@ const MergeButton: FC<MergeButtonProps> = ({
         width,
         height,
         fontSize,
+        color,
         backgroundColor,
         borderRadius,
         padding,

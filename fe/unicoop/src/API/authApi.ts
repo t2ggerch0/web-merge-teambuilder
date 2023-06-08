@@ -57,12 +57,10 @@ export const authApi = {
     isPasswordValid,
     passwordConfirm,
     registerInfo,
-    changeBoxContent,
   }: {
     isPasswordValid: boolean;
     passwordConfirm: string;
     registerInfo: RegisterInfo;
-    changeBoxContent: () => void;
   }) => {
     const { name, password, verifyCode, email } = registerInfo;
 
@@ -81,9 +79,6 @@ export const authApi = {
         name,
       });
       viewToastSuccess("회원가입에 성공했습니다.");
-      setTimeout(() => {
-        changeBoxContent();
-      }, 3000);
     } catch (e) {
       console.log(email, password, verifyCode, name);
       viewToastError("인증코드가 올바르지 않습니다.");

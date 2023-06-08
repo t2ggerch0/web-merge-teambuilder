@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./Apply.module.scss";
 import useSWR from "swr";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { getMyToken, parseTextFromOptions, viewToastError } from "../../helper";
+import { getMyToken, parseTextFromOptions } from "../../helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnswersType, Menu, NewClassType, QuestionType } from "../../interface";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
@@ -10,7 +10,6 @@ import Loader from "../../Components/Loader/Loader";
 import MergeButton from "../../Components/MergeButton/MergeButton";
 import { guestApi } from "../../API/guestApi";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko"; // 한국어 가져오기
 import { useAuthContext } from "../../Context/UnicoopContext";
 
@@ -81,7 +80,7 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
           res.filteredQuestions.map((item: any) => {
             return {
               questionId: item.id,
-              answer: 0,
+              answer: [0],
             };
           })
         );
@@ -137,7 +136,6 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
           checkedOption={[position]}
           isHorizontal
           name="position"
-          onChange={(e) => {}}
           options={classInfo?.positionTypes ?? [""]}
           setCheckedOption={(e) => {
             setPosition(e);
@@ -174,16 +172,12 @@ const Apply = ({ onChangeMenu, selectedMenu }: ApplyProps) => {
               }
               setAnswers([...answers]);
             }}
-            onChange={(e) => {}}
           />
         ))}
       </div>
       <div className={styles.button}>
-        <MergeButton
-          width={300}
-          backgroundColor={"darkBlue"}
-          onClick={onClickJoinClassButton}>
-          제출
+        <MergeButton width={300} onClick={onClickJoinClassButton}>
+          제출하기
         </MergeButton>
       </div>
     </div>

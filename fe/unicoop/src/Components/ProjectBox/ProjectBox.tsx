@@ -1,38 +1,26 @@
 import React, { FC, useState } from "react";
 import styles from "./ProjectBox.module.scss";
 import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/ko"; // 한국어 가져오기
+import CodePopUp from "../CodePopUp/CodePopUp";
 import { useNavigate } from "react-router-dom";
 import { NewClassType } from "../../interface";
-import CodePopUp from "../CodePopUp/CodePopUp";
-import { viewToastInfo } from "../../helper";
+import "dayjs/locale/ko";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
   isHost: boolean;
   withAccessKey?: boolean;
+  isAfter?: boolean;
 };
 
 const ProjectBox: FC<ProjectBoxProps> = ({
   projectInfo,
   isHost,
   withAccessKey = true,
+  isAfter = false,
 }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  dayjs.extend(relativeTime);
-  // TODO : 오늘 날짜는 false로 설정
-  let endDate = dayjs().to(
-    dayjs(projectInfo?.recruitEndDate).format("YYYY-MM-DD")
-  );
-
-  const isOver =
-    projectInfo?.teams.length > 0
-      ? true
-      : endDate.includes("hour") || endDate.includes("days")
-      ? false
-      : true;
 
   const onChangeOpen = (e: boolean) => {
     setIsOpen(e);
@@ -46,26 +34,20 @@ const ProjectBox: FC<ProjectBoxProps> = ({
     }
     //프로젝트 입장
     else {
-      // 모집기간 지남
-      if (isOver) {
-        viewToastInfo("해당 프로젝트의 모집기간이 지났습니다.");
+      if (projectInfo.isSecret) {
+        // check access key
+        onChangeOpen(true);
       } else {
-        if (projectInfo.isSecret) {
-          // check access key
-          onChangeOpen(true);
-        } else {
-          navigate(`/apply/${projectInfo._id}/0`);
-        }
+        navigate(`/apply/${projectInfo._id}/0`);
       }
     }
   };
 
   return (
     <div
-      className={`${styles.projectBox} ${
-        isOver && !withAccessKey && styles.projectBox_gray
-      }`}
-      onClick={goToProject}>
+      className={`${styles.projectBox} ${isAfter && styles.after}`}
+      onClick={isAfter ? () => {} : goToProject}
+    >
       <div className={styles.class_info}>
         <div className={styles.class_name}>{projectInfo.className}</div>
         <div className={styles.class_description}>
@@ -85,13 +67,11 @@ const ProjectBox: FC<ProjectBoxProps> = ({
           </div>
         )}
       </div>
-      {
-        <CodePopUp
-          isPopOn={isOpen}
-          setIsPopOn={setIsOpen}
-          projectInfo={projectInfo}
-        />
-      }
+      <CodePopUp
+        isPopOn={isOpen}
+        setIsPopOn={setIsOpen}
+        projectInfo={projectInfo}
+      />
     </div>
   );
 };

@@ -1,96 +1,38 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import styles from "./Home.module.scss";
-import Register from "../Register/Register";
-import LogIn from "../LogIn/LogIn";
-import HomeMenu from "./HomeMenu/HomeMenu";
-import { useAuthContext } from "../../Context/UnicoopContext";
-import { authApi } from "../../API/authApi";
-import { ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { getMyToken, viewToastError } from "../../helper";
+import NavBar from "../../Components/NavBar/NavBar";
 import { Menu } from "../../interface";
 
 type HomeProps = {
-  selectedMenu: Menu;
   onChangeMenu(menuId: Menu): void;
 };
 
-const Home: FC<HomeProps> = ({ onChangeMenu, selectedMenu }) => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
-  const { myInfo, setMyInfo } = useAuthContext();
-  const navigate = useNavigate();
-  const changeBoxContent = () => {
-    setIsLogin(!isLogin);
-  };
-  const login = ({ email, password }: { email: string; password: string }) => {
-    authApi.login({ email, password }).then((token) => {
-      // console.log("token", token);
-      window.localStorage.setItem("token", token);
-      getUserInfo({ token });
-    });
-  };
-
-  const getUserInfo = ({ token }: { token: string }) => {
-    authApi
-      .getMyInfo(token)
-      .then((res) => {
-        // console.log("userInfo", res?.user);
-        setMyInfo({
-          classes: res?.user.classes ?? [],
-          email: res?.user.email ?? "",
-          id: res?.user._id ?? "",
-          name: res?.user.name ?? "",
-          password: res?.user.password ?? "",
-          token: token ?? "",
-        });
-        setIsLoginSuccess(true);
-      })
-      .catch((e) => {
-        viewToastError(e);
-      });
-  };
-
-  useEffect(() => {
-    let token = getMyToken();
-    if (token) {
-      getUserInfo({ token });
-    }
-  }, []);
-
+const Home: FC<HomeProps> = ({ onChangeMenu }) => {
   return (
     <div className={styles.home}>
+      <NavBar onChangeMenu={onChangeMenu} />
+
       <div className={styles.body}>
-        <div className={styles.title}>
-          <div className={styles.logo}>merge</div>
-          <div className={styles.text}>
-            개발자/디자이너를 위한 팀 프로젝트 빌딩 및 협업 플랫폼!
+        <div className={styles.slogan}>
+          <div className={styles.line}>개발자/디자이너를 위한</div>
+          <div className={styles.line}>
+            <span className={styles.highlight}>팀 프로젝트</span> 빌딩 및 협업
+            플랫폼!
           </div>
         </div>
-        <div className={styles.join}>
-          {isLogin ? (
-            !isLoginSuccess ? (
-              <LogIn changeBoxContent={changeBoxContent} loginSuccess={login} />
-            ) : (
-              <HomeMenu
-                onChangeMenu={onChangeMenu}
-                selectedMenu={selectedMenu}
-              />
-            )
-          ) : (
-            <Register changeBoxContent={changeBoxContent} />
-          )}
-          <ToastContainer
-            className={styles.toast}
-            position="top-center"
-            hideProgressBar
-            closeButton={false}
-            rtl={false}
-            theme="colored"
-          />
+        <div className={styles.functions}>
+          <div className={styles.function}>더 많은 개발자와 협업</div>
+          <div className={`${styles.function} ${styles.bottom}`}>
+            관심 있는 주제의 프로젝트를 찾아보세요!
+          </div>
+          <div className={`${styles.function}`}>
+            직접 호스트가 되어 프로젝트를 운영해보세요!
+          </div>
+          <div className={`${styles.function} ${styles.bottom}`}>
+            고도화된 알고리즘으로 팀 매칭 제공
+          </div>
         </div>
       </div>
-      <div className={styles.footer}></div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styles from "./PasswordInput.module.scss";
-import LabelInput from "../../../../Components/LabelInput/LabelInput";
+import LabelInput from "../../../../../Components/LabelInput/LabelInput";
 
 type PasswordInputProps = {
   password: string;
@@ -37,7 +37,6 @@ const PasswordInput: FC<PasswordInputProps> = ({
       setIsPasswordValid(true);
     }
     onChange(name, value);
-    // console.log(value, strength);
   };
 
   const passwordConfirmOnChange = (name: string, value: string) => {

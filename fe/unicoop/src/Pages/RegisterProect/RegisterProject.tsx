@@ -25,6 +25,7 @@ import {
 } from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
 import OptionRadios from "../../Components/OptionRadios/OptionRadios";
+import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -37,17 +38,10 @@ const RegisterProject: FC<RegisterProjectProps> = ({
 }) => {
   const navigate = useNavigate();
   const { myInfo, setMyInfo } = useAuthContext();
+
+  const [step, setStep] = useState<number>(1);
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>(defaultQuestions);
-  const [hostAnswers, setHostAnswers] = useState<AnswersType[]>([
-    ...questionLists.map((q) => {
-      if (q.id === 2) {
-        return { questionId: q.id, answer: [0, 1, 2, 3, 4, 5, 6, 7, 8] };
-      } else {
-        return { questionId: q.id, answer: [0] };
-      }
-    }),
-  ]);
 
   const onChangeClassInfo = ({
     name,
@@ -57,15 +51,19 @@ const RegisterProject: FC<RegisterProjectProps> = ({
     value:
       | string
       | number
+      | number[]
       | string[]
-      | (number | number[])[]
+      | AnswersType[]
       | Dayjs
       | boolean
       | positionTypes[];
   }) => {
     if (name === "questionIds") {
       let left = value as number[];
-      let newAnswers = hostAnswers.filter((a) => left.includes(a.questionId));
+      let newAnswers = projectRegisterInfo.hostAnswer.filter((a) =>
+        left.includes(a.questionId)
+      );
+      console.log("new host answer", newAnswers);
       setProjectRegisterInfo({
         ...projectRegisterInfo,
         hostAnswer: newAnswers,
@@ -133,56 +131,6 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       selectedMenu={selectedMenu}
       onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
-        <ClassInfo
-          onChangeClassInfo={onChangeClassInfo}
-          projectRegisterInfo={projectRegisterInfo}
-        />
-        <hr />
-
-        <div className={styles.questions}>
-          <DefaultQuestion
-            questionIds={projectRegisterInfo.questionIds}
-            onChangeDefaultQuestionInfo={onChangeClassInfo}
-          />
-          <hr />
-        </div>
-        <div>
-          {questionLists?.map((q, index) => (
-            <OptionRadios
-              title={q.title}
-              subtitle={""}
-              name={q.title}
-              isHorizontal={true}
-              options={
-                q.id === 2
-                  ? parseTextFromOptions(q.options as number[])
-                  : q.options
-              }
-              checkedOption={hostAnswers[index]?.answer}
-              setCheckedOption={(e) => {
-                console.log(e, hostAnswers, index);
-                if (q.id === 2) {
-                  let before = hostAnswers[index];
-                  let res = [];
-                  if (before.answer.includes(e)) {
-                    res = before.answer.filter((a) => a !== e);
-                  } else {
-                    res = before.answer;
-                    res.push(e);
-                  }
-                  hostAnswers[index].answer = res;
-                } else {
-                  hostAnswers[index].answer = [e];
-                }
-                setHostAnswers([...hostAnswers]);
-              }}
-              onChange={(e) => {}}
-            />
-          ))}
-        </div>
-        <div className={styles.button}>
-          <MergeButton onClick={onClickRegisterButton}>수업 만들기</MergeButton>
-        </div>
         <ToastContainer
           className={styles.toast}
           position="top-center"
@@ -190,6 +138,96 @@ const RegisterProject: FC<RegisterProjectProps> = ({
           closeButton={false}
           rtl={false}
         />
+        <ProgressBar current={step} max={2} />
+        {step === 1 ? (
+          <div className={styles.step}>
+            <ClassInfo
+              onChangeClassInfo={onChangeClassInfo}
+              projectRegisterInfo={projectRegisterInfo}
+            />
+            <div className={styles.button}>
+              <MergeButton
+                backgroundColor={"#609966"}
+                onClick={() => {
+                  setStep(2);
+                }}>
+                다음
+              </MergeButton>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.step}>
+            <div className={styles.questions}>
+              <DefaultQuestion
+                questionIds={projectRegisterInfo.questionIds}
+                onChangeDefaultQuestionInfo={onChangeClassInfo}
+              />
+            </div>
+            <div className={styles.host_answer}>
+              {projectRegisterInfo.isHostParticipating && "호스트 답변"}
+            </div>
+            <div>
+              {projectRegisterInfo.isHostParticipating &&
+                questionLists
+                  .filter((q) => projectRegisterInfo.questionIds.includes(q.id))
+                  ?.map((q, index) => (
+                    <OptionRadios
+                      title={q.title}
+                      subtitle={""}
+                      name={q.title}
+                      isHorizontal={true}
+                      options={
+                        q.id === 2
+                          ? parseTextFromOptions(q.options as number[])
+                          : q.options
+                      }
+                      checkedOption={
+                        projectRegisterInfo.hostAnswer[index]?.answer
+                      }
+                      setCheckedOption={(e) => {
+                        console.log(e, projectRegisterInfo.hostAnswer, index);
+                        if (q.id === 2) {
+                          let before = projectRegisterInfo.hostAnswer[index];
+                          let res = [];
+                          if (before.answer.includes(e)) {
+                            res = before.answer.filter((a) => a !== e);
+                          } else {
+                            res = before.answer;
+                            res.push(e);
+                          }
+                          projectRegisterInfo.hostAnswer[index].answer = res;
+                        } else {
+                          projectRegisterInfo.hostAnswer[index].answer = [e];
+                        }
+                        onChangeClassInfo({
+                          name: "hostAnswer",
+                          value: projectRegisterInfo.hostAnswer,
+                        });
+                      }}
+                    />
+                  ))}
+            </div>
+            <div className={styles.button}>
+              <MergeButton
+                backgroundColor={"#609966"}
+                onClick={() => {
+                  setStep(1);
+                }}>
+                이전
+              </MergeButton>
+              <MergeButton onClick={onClickRegisterButton}>
+                프로젝트 생성
+              </MergeButton>
+            </div>
+            <ToastContainer
+              className={styles.toast}
+              position="top-center"
+              hideProgressBar
+              closeButton={false}
+              rtl={false}
+            />
+          </div>
+        )}
       </div>
     </Layout>
   );

@@ -1,25 +1,27 @@
 .default_question {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   min-width: 700px;
+
   .question_wrapper {
     margin: 20px 0;
   }
+
   .question_title {
     display: flex;
     gap: 20px;
-    height: 50px;
     .question_content {
       align-items: center;
       display: flex;
-      width: 300px;
+      width: 100%;
       border-radius: 8px;
       border: none;
-      background-color: #f1f1f1;
-      padding: 8px 16px;
-      font-size: 16px;
+      font-size: 20px;
       font-weight: bold;
     }
     .question_index {
-      color: blue;
+      color: #40513B;
       font-weight: 800;
       width: 100px;
     }
@@ -27,53 +29,33 @@
       width: 100px;
     }
     .question_delete {
+      opacity: 0.2;
       cursor: pointer;
       &:hover {
-        font-weight: bold;
+        opacity: 0.5;
       }
     }
   }
 
   .question_answers {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 10px;
-    margin-left: 120px;
-    width: 450px;
-    gap: 5px;
+    margin-left: 110px;
+    gap: 20px;
     .answer {
       display: flex;
       justify-content: center;
       max-width: 80px;
       border-radius: 16px;
       border: none;
-      background-color: #f6f6f6;
-      padding: 3px 5px;
+      background-color: #EDF1D6;
+      padding: 8px 16px;
       font-size: 14px;
-
       .cancel {
         text-align: right;
         font-weight: 800;
       }
-    }
-  }
-  .score_type_container {
-    width: 85px;
-    .score_type {
-    }
-  }
-  .weight {
-    display: flex;
-    align-items: center;
-    width: 100px;
-    justify-content: center;
-    text-align: center;
-    .question_weight {
-      margin-left: 3px;
-      outline: none;
-      border: 1px solid black;
-      width: 80px;
-      text-align: center;
     }
   }
 }

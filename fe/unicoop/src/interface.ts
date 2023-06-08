@@ -100,7 +100,7 @@ export type ClassType = {
 };
 export type TeamMessage = {
   message: string;
-  teamId: number;
+  teamId: string;
 };
 export type NewClassType = {
   _id: string;
@@ -155,7 +155,12 @@ export const defaultQuestions: ProjectRegisterInfo = {
   isSecret: false,
   isHostParticipating: true,
   questionIds: [0, 1, 2, 3],
-  hostAnswer: [0, 0, [0, 1, 2, 3, 4], 0],
+  hostAnswer: [
+    { questionId: 0, answer: [0] },
+    { questionId: 1, answer: [0] },
+    { questionId: 2, answer: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
+    { questionId: 3, answer: [0] },
+  ],
 };
 
 export type AxiosRequestHeaders = Record<string, string>;
