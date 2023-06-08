@@ -63,7 +63,7 @@ const Activity = () => {
       ) : (
         <ActivityChat />
       )}
-      <ActivityInfo />
+      {/* <ActivityInfo /> */}
     </div>
   );
 };
