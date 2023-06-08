@@ -6,7 +6,7 @@ const Class = require("../models/Class");
 const User = require("../models/User");
 
 // === 이 부분 수정해서 진행 ===//
-const userCount = 14;
+const userCount = 9;
 // === 이 부분 수정해서 진행 ===//
 
 let userList = [];
