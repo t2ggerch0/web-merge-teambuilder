@@ -200,3 +200,41 @@ export const questionLists = [
     countScore: "different",
   },
 ];
+
+export type UserContextType = {
+  answer: (number | number[])[];
+  name: string;
+  positionIndex: number;
+  user: string;
+  _id: string;
+};
+
+export enum MatchingConditionId {
+  MatchAll, // match all
+  MatchAllLower, // match all lower condition
+  MatchPE, // match preferred time and experience
+  MatchPELower, // match preferred time and experience lower condition
+  MatchPS, // match preferred time and time spend
+  MatchPSLower, // match preferred time and time spend lower condition
+  MatchES, // match experience and time spend
+  MatchESLoswer, // match experience and time spend lower condition
+  MatchS, // match time spend
+  MatchSLoswer, // match time spend lower condition
+  MatchP, // match preferred time
+  MatchE, // match experience
+  MatchELower, // match experience lower condition
+  Random = -1,
+}
+
+export type TeamInfoType = {
+  chat: string[];
+  class: string;
+  condigionId: MatchingConditionId;
+  contextByUser: UserContextType[];
+  dirtyMembers: string[];
+  isDirty: boolean;
+  leader: string;
+  members: [];
+  name: string;
+  _id: string;
+};
