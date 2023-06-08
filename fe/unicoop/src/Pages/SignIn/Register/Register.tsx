@@ -2,13 +2,13 @@ import React, { useState, FC } from "react";
 import styles from "./Register.module.scss";
 import StepOne from "./StepOne/StepOne";
 import StepTwo from "./StepTwo/StepTwo";
-import { RegisterInfo } from "../../interface";
+import { RegisterInfo } from "../../../interface";
 
 type RegisterProps = {
-  changeBoxContent: () => void;
+  setJoinMode(e: string): void;
 };
 
-const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
+const Register: FC<RegisterProps> = ({ setJoinMode }) => {
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
     name: "",
     email: "",
@@ -32,7 +32,12 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
     <div className={styles.register}>
       <div className={styles.title}>회원가입 {registerStep} / 2</div>
 
-      <div className={styles.account_check} onClick={changeBoxContent}>
+      <div
+        className={styles.account_check}
+        onClick={() => {
+          setJoinMode("login");
+        }}
+      >
         이미 계정이 있으신가요?
       </div>
 
@@ -53,7 +58,7 @@ const Register: FC<RegisterProps> = ({ changeBoxContent }) => {
           setPasswordConfirm={setPasswordConfirm}
           onChange={onChange}
           setRegisterStep={setRegisterStep}
-          changeBoxContent={changeBoxContent}
+          setJoinMode={setJoinMode}
           registerInfo={registerInfo}
         />
       )}

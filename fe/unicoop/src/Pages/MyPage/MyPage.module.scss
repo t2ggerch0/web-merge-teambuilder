@@ -1,15 +1,16 @@
 .myPage {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
   padding-bottom: 50px;
+
   .header {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    padding: 100px;
-    background-color: rgba(0, 232, 0, 0.1);
+    padding: 150px;
+    background-color: #EDF1D6;
     font-size: 32px;
     animation: fadeIn 1s;
     .hello {
@@ -18,15 +19,16 @@
     .buttons {
       display: flex;
       gap: 24px;
-      //animation: fromBottom 1s;
     }
   }
+
   .body {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 50px 100px;
   }
+
   .project {
     display: flex;
     gap: 4px;

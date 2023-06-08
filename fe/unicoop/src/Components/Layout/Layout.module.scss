@@ -1,16 +1,13 @@
 .container {
-  width: calc(100vw - 40px);
-  //height: calc(100vh - 32px);
+  width: 100vw;
+  height: 100%;
   display: flex;
-  padding: 16px;
-  gap: 8px;
 
   .left_bar {
-    width: 13%;
-    min-width: 150px;
-    background-color: rgba(0, 232, 0, 0.2);
-    color: #292929;
-    border-radius: 24px;
+    width: 200px;
+    min-height: 100vh;
+    background-color: rgba(64, 81, 59, 0.9);
+    color: #FFFFFF;
     font-weight: 800;
     display: flex;
     flex-direction: column;
@@ -21,6 +18,7 @@
       text-align: center;
       letter-spacing: 4px;
       font-size: 36px;
+      color: #9DC088;
       cursor: pointer;
     }
     .menu {
@@ -47,7 +45,7 @@
         .circle {
           width: 8px;
           height: 8px;
-          background-color: darkgreen;
+          background-color: #EDF1D6;
           border-radius: 50%;
         }
       }
@@ -65,41 +63,30 @@
   }
 
   .right_container {
-    width: 87%;
+    width: 100%;
     min-width: 1050px;
     height: 100%;
     background-color: #FFFFFF;
-    animation: fromTop 1s;
+    animation: fadeIn 1s;
 
     .page_title {
-      height: 40px;
-      background-color: rgba(0, 232, 0, 0.1);
-      padding: 20px;
-      font-weight: 800;
-      font-size: 30px;
+      background-color: #40513B;
+      padding: 12px 24px;
+      font-size: 20px;
+      color: #FFFFFF;
       text-align: left;
       line-height: 40px;
       display: flex;
       justify-content: space-between;
-      border-radius: 24px;
 
       .user_menu {
         display: flex;
-        justify-content: space-between;
-        width: 270px;
+        gap: 16px;
         .logout {
-          border: none;
-          border-radius: 8px;
-          background-color: #dbd2e0;
-          text-align: center;
-          width: 100px;
-          font-size: 20px;
-          font-weight: 300;
+          font-size: 18px;
+          font-weight: bold;
+          color: #EDF1D6;
           cursor: pointer;
-          opacity: 0.7;
-          &:hover {
-            opacity: 1;
-          }
         }
       }
     }
@@ -119,6 +106,15 @@
   }
   to {
     transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }

@@ -10,7 +10,6 @@ type OptionRadiosProps = {
   options: Array<string | number>;
   checkedOption: number;
   setCheckedOption(e: number): void;
-  onChange(e: Object): void;
 };
 
 const OptionRadios: FC<OptionRadiosProps> = ({
@@ -21,11 +20,8 @@ const OptionRadios: FC<OptionRadiosProps> = ({
   options,
   checkedOption,
   setCheckedOption,
-  onChange,
 }) => {
-  //const [selectedOption, setSelectedOption] = useState<string>("");
   const onClickOption = (option: number) => {
-    //setSelectedOption(option);
     setCheckedOption(option);
   };
 
@@ -59,7 +55,7 @@ const OptionRadios: FC<OptionRadiosProps> = ({
                 <CheckOutlined
                   style={{
                     strokeWidth: 2,
-                    stroke: "#1472ff",
+                    stroke: "#40513B",
                     fontSize: 15,
                   }}
                 />

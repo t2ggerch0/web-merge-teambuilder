@@ -1,20 +1,8 @@
 .container {
+  display: flex;
+  flex-direction: column;
   animation: fadeIn 1s;
-
-  .noClass {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 140px 0 40px;
-    font-weight: bold;
-    .title {
-      font-size: 24px;
-    }
-    .subtitle {
-      font-size: 20px;
-    }
-  }
+  width: 100%;
 
   .btn_wrapper {
     display: flex;
@@ -40,16 +28,39 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 20px 0;
+    width: 100%;
     .title {
       font-size: 24px;
       font-weight: bold;
+      padding: 0 20px;
     }
     .class_wrapper {
+      width: 100%;
       padding: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 50px;
+      border-bottom: 1px solid #9DC088;
+
+      .noClass {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-self: center;
+        gap: 8px;
+        padding: 40px 0;
+        font-weight: bold;
+        .text {
+          font-size: 22px;
+        }
+        .subtext {
+          font-size: 16px;
+          opacity: 0.8;
+          margin-bottom: 8px;
+        }
+      }
     }
   }
 

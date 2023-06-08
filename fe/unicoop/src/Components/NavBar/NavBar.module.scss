@@ -1,0 +1,27 @@
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  .leftContainer {
+    display: flex;
+    gap: 60px;
+    font-weight: bold;
+    .logo {
+      font-size: 24px;
+      letter-spacing: 4px;
+      color: #EDF1D6;
+      cursor: pointer;
+    }
+    .menuBox {
+      display: flex;
+      gap: 40px;
+      .menu {
+        cursor: pointer;
+      }
+    }
+  }
+  .rightContainer {
+    color: #EDF1D6;
+    cursor: pointer;
+  }
+}

@@ -18,6 +18,7 @@ import {
   defaultQuestions,
 } from "../../interface";
 import "react-datepicker/dist/react-datepicker.css";
+import ProgressBar from "../../Components/ProgressBar/ProgressBar";
 
 type RegisterProjectProps = {
   selectedMenu: Menu;
@@ -30,6 +31,8 @@ const RegisterProject: FC<RegisterProjectProps> = ({
 }) => {
   const navigate = useNavigate();
   const { myInfo, setMyInfo } = useAuthContext();
+
+  const [step, setStep] = useState<number>(1);
   const [projectRegisterInfo, setProjectRegisterInfo] =
     useState<ProjectRegisterInfo>(defaultQuestions);
 
@@ -108,29 +111,54 @@ const RegisterProject: FC<RegisterProjectProps> = ({
       onChangeMenu={onChangeMenu}
     >
       <div className={styles.container}>
-        <ClassInfo
-          onChangeClassInfo={onChangeClassInfo}
-          projectRegisterInfo={projectRegisterInfo}
-        />
-        <hr />
-
-        <div className={styles.questions}>
-          <DefaultQuestion
-            questionIds={projectRegisterInfo.questionIds}
-            onChangeDefaultQuestionInfo={onChangeClassInfo}
-          />
-          <hr />
-        </div>
-        <div className={styles.button}>
-          <MergeButton onClick={onClickRegisterButton}>수업 만들기</MergeButton>
-        </div>
-        <ToastContainer
-          className={styles.toast}
-          position="top-center"
-          hideProgressBar
-          closeButton={false}
-          rtl={false}
-        />
+        <ProgressBar current={step} max={2} />
+        {step === 1 ? (
+          <div className={styles.step}>
+            <ClassInfo
+              onChangeClassInfo={onChangeClassInfo}
+              projectRegisterInfo={projectRegisterInfo}
+            />
+            <div className={styles.button}>
+              <MergeButton
+                backgroundColor={"#609966"}
+                onClick={() => {
+                  setStep(2);
+                }}
+              >
+                다음
+              </MergeButton>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.step}>
+            <div className={styles.questions}>
+              <DefaultQuestion
+                questionIds={projectRegisterInfo.questionIds}
+                onChangeDefaultQuestionInfo={onChangeClassInfo}
+              />
+            </div>
+            <div className={styles.button}>
+              <MergeButton
+                backgroundColor={"#609966"}
+                onClick={() => {
+                  setStep(1);
+                }}
+              >
+                이전
+              </MergeButton>
+              <MergeButton onClick={onClickRegisterButton}>
+                프로젝트 생성
+              </MergeButton>
+            </div>
+            <ToastContainer
+              className={styles.toast}
+              position="top-center"
+              hideProgressBar
+              closeButton={false}
+              rtl={false}
+            />
+          </div>
+        )}
       </div>
     </Layout>
   );

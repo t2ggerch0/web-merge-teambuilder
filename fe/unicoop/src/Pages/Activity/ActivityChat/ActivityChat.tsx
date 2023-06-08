@@ -1,6 +1,6 @@
 import React, { useState, FC, useEffect } from "react";
 import styles from "./ActivityChat.module.scss";
-import SendIcon from "@mui/icons-material/Send";
+import ActivityChatInput from "./ActivityChatInput/ActivityChatInput";
 import { useAuthContext } from "../../../Context/UnicoopContext";
 import { useParams } from "react-router-dom";
 import { TeamInfo } from "../../../interface";
@@ -10,13 +10,13 @@ type ActivityChatProps = {};
 
 const ActivityChat: FC<ActivityChatProps> = () => {
   const { projectId } = useParams();
-  const { myInfo, setMyInfo } = useAuthContext();
+  const { myInfo } = useAuthContext();
   const [teamInfo, setTeamInfo] = useState<{ targetTeam: TeamInfo }>();
-  const [text, setText] = useState<string>("");
 
   useEffect(() => {
     guestApi.getTeamInfo(projectId ?? "", myInfo?.token ?? "").then((res) => {
       console.log("team info", res);
+      //setTeamInfo(res);
     });
   }, []);
 
@@ -45,15 +45,7 @@ const ActivityChat: FC<ActivityChatProps> = () => {
         </div>
       </div>
 
-      <form className={styles.message}>
-        <input
-          className={styles.input}
-          placeholder={"Send message"}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <SendIcon className={styles.send} />
-      </form>
+      <ActivityChatInput />
     </div>
   );
 };

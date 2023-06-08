@@ -23,14 +23,12 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
   const { data, error, isValidating } = useSWR<{
     targetClass: NewClassType;
   }>(`/class?classId=${projectId}`, swrFetcher);
-  // if (!data || isValidating) {
-  //   return <Loader />;
-  // }
-  // if (error) {
-  //   viewToastError(error);
-  // }
-
-  // console.log("class data", data);
+  if (!data || isValidating) {
+    return <Loader />;
+  }
+  if (error) {
+    viewToastError(error);
+  }
 
   return (
     <div className={styles.activitySidebar}>
@@ -47,17 +45,19 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}>
+              }}
+            >
               {activity}
             </div>
           ))}
         </div>
       </div>
       <div
-        className={styles.unicoop}
+        className={styles.logo}
         onClick={() => {
           navigate("/manageproject");
-        }}>
+        }}
+      >
         merge
       </div>
     </div>
