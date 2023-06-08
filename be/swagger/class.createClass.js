@@ -65,6 +65,11 @@
  *               items:
  *                 type: integer
  *               example: [0, 1, 2, 3]
+ *             hostAnswer:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *               example: [0, 1, [2, 5], 3]
  *     responses:
  *       201:
  *         description: Successfully created a new class
