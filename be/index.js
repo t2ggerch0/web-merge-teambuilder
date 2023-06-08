@@ -55,6 +55,55 @@ const server = app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
+// Socket.io
+const socketio = require("socket.io");
+const io = socketio(server);
+const Team = require("./models/Team");
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  // Handle new client connection
+  socket.on("joinTeamChat", (teamId) => {
+    console.log("Client joined team chat:", teamId);
+    socket.join(teamId); // Join the team-specific chat room
+  });
+
+  // Handle client disconnection
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+
+  socket.on("teamChatMessage", (data) => {
+    const { teamId, sender, message } = data;
+    console.log("Received team chat message:", data);
+
+    // 채팅 인포 구조체
+    const chatMessage = {
+      sender,
+      message,
+      createdAt: new Date(),
+    };
+
+    // 팀채팅
+    Team.findByIdAndUpdate(
+      teamId,
+      { $push: { chat: chatMessage } },
+      { new: true },
+      (err, updatedTeam) => {
+        if (err) {
+          console.error("Error saving chat message:", err);
+          return;
+        }
+
+        // Broadcast the message to all clients in the team-specific chat room
+        io.to(teamId).emit("teamChatMessage", chatMessage);
+      }
+    );
+  });
+});
+
+
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// API ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
