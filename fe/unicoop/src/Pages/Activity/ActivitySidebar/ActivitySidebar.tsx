@@ -34,7 +34,6 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
     <div className={styles.activitySidebar}>
       <div className={styles.teamInfo}>
         <div className={styles.project}>{data?.targetClass.className}</div>
-        <div className={styles.team}>{data?.targetClass.teams[0]}</div>
       </div>
       <div className={styles.menu}>
         <div className={styles.tabs}>
@@ -45,8 +44,7 @@ const ActivitySidebar: FC<ActivitySidebarProps> = ({
               }`}
               onClick={() => {
                 setActivityIndex(index);
-              }}
-            >
+              }}>
               {activity}
             </div>
           ))}
