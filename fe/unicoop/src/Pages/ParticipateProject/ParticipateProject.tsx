@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import styles from "./ParticipateProject.module.scss";
 import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import Layout from "../../Components/Layout/Layout";
 import ProjectBox from "../../Components/ProjectBox/ProjectBox";
 import { getMyToken } from "../../helper";
@@ -33,14 +34,15 @@ const ParticipateProject: FC<ParticipateProjectProps> = ({
     <Layout
       pageTitle="프로젝트 참여"
       selectedMenu={selectedMenu}
-      onChangeMenu={onChangeMenu}
-    >
+      onChangeMenu={onChangeMenu}>
       <div className={styles.container}>
         <div className={styles.class_container}>
           <div className={styles.title}>참여 가능한 프로젝트</div>
           <div className={styles.class_wrapper}>
             {projects
-              .filter((project) => !dayjs().isAfter(project.recruitEndDate))
+              .filter((project) =>
+                dayjs().startOf("day").isBefore(project.recruitEndDate)
+              )
               .map((projectInfo) => (
                 <ProjectBox
                   projectInfo={projectInfo}
@@ -56,7 +58,10 @@ const ParticipateProject: FC<ParticipateProjectProps> = ({
           <div className={styles.title}>이미 종료된 프로젝트</div>
           <div className={styles.class_wrapper}>
             {projects
-              .filter((project) => dayjs().isAfter(project.recruitEndDate))
+              .filter(
+                (project) =>
+                  !dayjs().startOf("day").isBefore(project.recruitEndDate)
+              )
               .map((projectInfo) => (
                 <ProjectBox
                   projectInfo={projectInfo}

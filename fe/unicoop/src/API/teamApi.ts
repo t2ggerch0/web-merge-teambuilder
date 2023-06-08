@@ -52,4 +52,12 @@ export const teamApi = {
       }
     }
   },
+  getClassTeams: async (classId: string) => {
+    try {
+      const response = await axios.get(`team/classTeams?classId=${classId}`);
+      return response.data ?? "";
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };

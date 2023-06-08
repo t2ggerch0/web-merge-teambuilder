@@ -58,16 +58,12 @@ export const hostApi = {
       );
     }
   },
-  formTeam: async (
-    token: string,
-    classId: string,
-    optimalComposition: boolean
-  ) => {
+  formTeam: async (token: string, classId: string) => {
     try {
       // console.log("classId", classId, token, optimalComposition);
       setHeaders(token);
       return await axios
-        .post("class/form-team", { classId, optimalComposition })
+        .post("class/form-team", { classId, optimalComposition: true })
         .then((res) => {
           return res.data ?? "";
         });

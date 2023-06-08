@@ -57,28 +57,24 @@ export const parseTextFromOptions = (options: number[]) => {
   options.map((o) => {
     let temp = "";
 
-    if (o < 3) {
-      temp += "월요일 ";
-    } else if (o < 6) {
-      temp += "화요일 ";
-    } else if (o < 9) {
-      temp += "수요일 ";
-    } else if (o < 12) {
-      temp += "목요일 ";
-    } else if (o < 15) {
-      temp += "금요일 ";
-    } else if (o < 18) {
-      temp += "토요일 ";
+    if (o === 0) {
+      temp = "월요일 오후";
+    } else if (o === 1) {
+      temp = "화요일 오후";
+    } else if (o === 2) {
+      temp = "수요일 오후";
+    } else if (o === 3) {
+      temp = "목요일 오후";
+    } else if (o === 4) {
+      temp = "금요일 오후";
+    } else if (o === 5) {
+      temp = "토요일 오전";
+    } else if (o === 6) {
+      temp = "토요일 오후";
+    } else if (o === 7) {
+      temp = "일요일 오전";
     } else {
-      temp += "일요일 ";
-    }
-
-    if (o % 3 === 0) {
-      temp += "오전";
-    } else if (o % 3 === 1) {
-      temp += "오후";
-    } else {
-      temp += "저녁";
+      temp = "일요일 오후";
     }
     res.push(temp);
   });

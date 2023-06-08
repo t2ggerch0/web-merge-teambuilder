@@ -2,87 +2,123 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./ActivityManage.module.scss";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../../Context/UnicoopContext";
-import { NewClassType, QuestionType } from "../../../interface";
+import { NewClassType, TeamInfoType } from "../../../interface";
 import dayjs from "dayjs";
 import { hostApi } from "../../../API/hostApi";
-import { guestApi } from "../../../API/guestApi";
 import { teamApi } from "../../../API/teamApi";
+import Team from "./Team";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko"; // 한국어 가져오기
+import { viewToastSuccess } from "../../../helper";
 
 type ActivityManageProps = {
   data?: NewClassType;
 };
 const ActivityManage: FC<ActivityManageProps> = ({ data }) => {
+  dayjs.extend(relativeTime);
   const { projectId } = useParams();
-  const [isOptimal, setIsOptimal] = useState<boolean>(true);
   const { myInfo, setMyInfo } = useAuthContext();
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState<TeamInfoType[]>([]);
   const [teamFormButton, setTeamFormButton] = useState<boolean>(false);
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
+
   const onClickButton = () => {
     // 팀 빌딩하고
-    hostApi
-      .formTeam(myInfo?.token ?? "", projectId ?? "", isOptimal)
-      .then((res) => {
-        console.log(res);
+    hostApi.formTeam(myInfo?.token ?? "", projectId ?? "").then((res) => {
+      viewToastSuccess(res);
+      teamApi.getClassTeams(projectId ?? "").then((res) => {
+        console.log("activit team", res.teams);
+        setTeamFormButton(false);
       });
-
-    setIsOptimal(false);
-    guestApi.getQuestions(projectId ?? "").then((res) => {
-      console.log(res.filteredQuestions);
-      setQuestions(res.filteredQuestions);
     });
   };
 
   useEffect(() => {
     console.log("아이디", result.length, projectId, myInfo?.token);
-    teamApi.getTeamInfo(projectId ?? "", myInfo?.token ?? "").then((res) => {
-      console.log("activit team", res);
+    teamApi.getClassTeams(projectId ?? "").then((res) => {
+      console.log("activit team", res.teams);
 
-      if (res === 403) {
+      if (res.teams.length === 0) {
         setTeamFormButton(true);
-        setResult("팀 없음");
       } else {
+        setResult(res.teams as TeamInfoType[]);
         setTeamFormButton(false);
       }
     });
-
-    // 팀 정보 불러오기
-    // 에러나면 잽두기
-    // 에러 안 나면 버튼 보이지 말고 정보 보여주기
   }, []);
+
   return (
     <div className={styles.activity_manage}>
-      <div className={styles.title}>팀 관리</div>
-      <div className={styles.class_semester}>
-        모집 기간: {dayjs(data?.recruitStartDate).format("MM/DD")} -{" "}
-        {dayjs(data?.recruitEndDate).format("MM/DD")}
-      </div>
-      <div className={styles.class_semester}>
-        활동 기간: {dayjs(data?.activityStartDate).format("MM/DD")} -{" "}
-        {dayjs(data?.activityEndDate).format("MM/DD")}
-      </div>
-      {teamFormButton && (
-        <button className={styles.button} onClick={onClickButton}>
-          지금 팀 생성하기
-        </button>
-      )}
-      <div>팀 정보</div>
-      <div>{result}</div>
-      {/* {!isOptimal && (
-        <div>
-          <div>질문을 삭제해보시겠어요?</div>
-          <div>
-            {questions.map((q) => {
-              return (
-                <div className={styles.questions}>
-                  <div className={styles.question}>{q.title}</div>
-                  <button className={styles.delete_button}>삭제</button>
-                </div>
-              );
-            })}
-          </div>
+      <div className={styles.title}>프로젝트 정보</div>
+      <div className={styles.project_info}>
+        <div className={styles.name}>{`프로젝트 이름 : ${
+          data?.className ?? ""
+        }`}</div>
+        <div className={styles.name}>{`프로젝트 유형 : ${
+          data?.classType ?? ""
+        }`}</div>
+        <div className={styles.name}>{`프로젝트 설명 : ${
+          data?.classDescription ?? ""
+        }`}</div>
+        {data?.isSecret && (
+          <div className={styles.name}>{`입장 코드 : ${
+            data?.accessKey ?? ""
+          }`}</div>
+        )}
+        <div className={styles.members}>{`호스트 ${
+          data?.isHostParticipating ? "참여함" : "참여 안 함"
+        }`}</div>
+        <div className={styles.leader}>{`리크루팅 시작일 : ${
+          dayjs(data?.recruitStartDate).format("YYYY년 MM월 DD일") ?? ""
+        }`}</div>
+        <div className={styles.leader}>
+          {`리크루팅 종료일 : ${
+            dayjs(data?.recruitEndDate).format("YYYY년 MM월 DD일") ?? ""
+          } **${dayjs().to(
+            dayjs(data?.recruitEndDate).format("YYYY-MM-DD")
+          )}**`}
         </div>
-      )} */}
+        <div className={styles.leader}>{`프로젝트 시작일 : ${
+          dayjs(data?.activityStartDate).format("YYYY년 MM월 DD일") ?? ""
+        }`}</div>
+        <div className={styles.leader}>
+          {`프로젝트 종료일 : ${
+            dayjs(data?.activityEndDate).format("YYYY년 MM월 DD일") ?? ""
+          } **${
+            dayjs().to(dayjs(data?.activityEndDate).format("YYYY-MM-DD")) ?? ""
+          }**`}
+        </div>
+        <div className={styles.leader}>
+          {data?.positionTypes.map((p, index) => {
+            return (
+              <div>{`포지션 ${index + 1} : ${p} ${
+                data?.positionComposition[index]
+              }명`}</div>
+            );
+          })}
+        </div>
+        <div className={styles.class_semester}>
+          모집 기간: {dayjs(data?.recruitStartDate).format("MM/DD")} -{" "}
+          {dayjs(data?.recruitEndDate).format("MM/DD")}
+        </div>
+        <div className={styles.class_semester}>
+          활동 기간: {dayjs(data?.activityStartDate).format("MM/DD")} -{" "}
+          {dayjs(data?.activityEndDate).format("MM/DD")}
+        </div>
+        {teamFormButton && (
+          <button className={styles.button} onClick={onClickButton}>
+            지금 팀 생성하기
+          </button>
+        )}
+      </div>
+
+      <div className={styles.title}>팀 정보</div>
+      <div>
+        {result.map((teamInfo) => {
+          return (
+            <Team key={`${teamInfo._id}`} data={teamInfo} projectInfo={data} />
+          );
+        })}
+      </div>
     </div>
   );
 };

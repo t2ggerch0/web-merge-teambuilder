@@ -8,22 +8,16 @@ import ActivityInfo from "./ActivityInfo/ActivityInfo";
 import Loader from "../../Components/Loader/Loader";
 import { useParams } from "react-router-dom";
 import { authApi, swrFetcher } from "../../API/authApi";
-import { getMyToken, viewToastError } from "../../helper";
+import { getMyToken } from "../../helper";
 import { NewClassType } from "../../interface";
 import ActivityManage from "./ActivityManage/ActivityManage";
 import { useAuthContext } from "../../Context/UnicoopContext";
 
 const Activity = () => {
   const { projectId, isHost } = useParams();
-
-  // const [activityArray, setActivityArray] = useState<Array<string>>([
-  //   "팀 관리",
-  //   "팀 정보",
-  //   "팀 채팅",
-  // ]);
   const [activityIndex, setActivityIndex] = useState<number>(0);
   const { myInfo, setMyInfo } = useAuthContext();
-  const { data, error, isValidating } = useSWR<{
+  const { data } = useSWR<{
     targetClass: NewClassType;
   }>(`/class?classId=${projectId}`, swrFetcher);
   // if (!data || isValidating) {
@@ -47,6 +41,7 @@ const Activity = () => {
         token: token ?? "",
       });
     });
+    console.log("data", data);
   }, []);
 
   return (

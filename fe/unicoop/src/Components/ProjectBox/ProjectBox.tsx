@@ -5,6 +5,7 @@ import CodePopUp from "../CodePopUp/CodePopUp";
 import { useNavigate } from "react-router-dom";
 import { NewClassType } from "../../interface";
 import "dayjs/locale/ko";
+import { viewToastError, viewToastInfo } from "../../helper";
 
 type ProjectBoxProps = {
   projectInfo: NewClassType;
@@ -30,7 +31,14 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   const goToProject = () => {
     // 프로젝트 관리
     if (withAccessKey) {
-      navigate(`/activity/${projectInfo._id}/${isHost}`);
+      console.log("", projectInfo.teams.length);
+      if (!isHost && projectInfo.teams.length < 1) {
+        viewToastInfo("아직 팀이 만들어지지 않았습니다.");
+      } else {
+        navigate(`/activity/${projectInfo._id}/${isHost}`, {
+          state: projectInfo,
+        });
+      }
     }
     //프로젝트 입장
     else {
@@ -46,8 +54,7 @@ const ProjectBox: FC<ProjectBoxProps> = ({
   return (
     <div
       className={`${styles.projectBox} ${isAfter && styles.after}`}
-      onClick={isAfter ? () => {} : goToProject}
-    >
+      onClick={isAfter ? () => {} : goToProject}>
       <div className={styles.class_info}>
         <div className={styles.class_name}>{projectInfo.className}</div>
         <div className={styles.class_description}>
