@@ -1,24 +1,26 @@
 import React, { FC, useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
 import styles from "./ClassInfo.module.scss";
+import dayjs, { Dayjs } from "dayjs";
 import { ProjectRegisterInfo, positionTypes } from "../../../interface";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { Add, Delete } from "@mui/icons-material";
+import {
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Checkbox,
+  TextField,
+  FormControl,
+  FormLabel,
+  Box,
+  InputLabel,
+  MenuItem,
+  Button,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 type ClassInfoProps = {
   projectRegisterInfo: ProjectRegisterInfo;
@@ -51,7 +53,6 @@ const ClassInfo: FC<ClassInfoProps> = ({
     isHostParticipating,
     isSecret,
     positionTypes,
-
     recruitEndDate,
     recruitStartDate,
   } = projectRegisterInfo;
@@ -66,13 +67,13 @@ const ClassInfo: FC<ClassInfoProps> = ({
       <div className={styles.row}>
         <span className={styles.label}>프로젝트 이름</span>
         <TextField
-          required
+          className={styles.textField}
           value={className}
           onChange={(e) => {
             onChangeInfo("className", e.target.value.toString());
           }}
           label="프로젝트 이름"
-          variant="standard"
+          variant="outlined"
         />
       </div>
 
@@ -101,7 +102,8 @@ const ClassInfo: FC<ClassInfoProps> = ({
             defaultValue={isSecret ? "비공개" : "공개"}
             onChange={() => {
               onChangeClassInfo({ name: "isSecret", value: !isSecret });
-            }}>
+            }}
+          >
             <FormControlLabel value="공개" control={<Radio />} label="공개" />
             <FormControlLabel
               value="비공개"
@@ -138,7 +140,8 @@ const ClassInfo: FC<ClassInfoProps> = ({
                       name: "positionTypes",
                       value: newPositionType,
                     });
-                  }}>
+                  }}
+                >
                   삭제
                 </Button>
               </div>
@@ -167,7 +170,8 @@ const ClassInfo: FC<ClassInfoProps> = ({
                   });
 
                   setNewPositionType("");
-                }}>
+                }}
+              >
                 추가
               </Button>
             </div>
@@ -234,7 +238,8 @@ const ClassInfo: FC<ClassInfoProps> = ({
                     name: "hostPosition",
                     value: e.target.value as string,
                   });
-                }}>
+                }}
+              >
                 {positionTypes.map((position) => (
                   <MenuItem value={position.typeName}>
                     {position.typeName}

@@ -34,11 +34,7 @@
       .datepicker {
         outline: none;
         width: 100px;
-        // height: 20px;
-
         border: none;
-        // background-color: #f1f1f1;
-
         border-radius: 8px;
         padding: 8px;
         font-size: 14px;
@@ -74,10 +70,8 @@
 
   .position_type {
     display: flex;
-    //width: 300px;
     gap: 4px;
     align-items: center;
-    //justify-content: space-between;
   }
   .position_composition {
     width: 80px !important;

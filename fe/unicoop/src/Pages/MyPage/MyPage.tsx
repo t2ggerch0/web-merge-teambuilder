@@ -40,6 +40,7 @@ const MyPage: FC<MyPageProps> = ({ onChangeMenu }) => {
         <div className={styles.hello}>{myInfo?.name} 님의 My Page</div>
         <div className={styles.buttons}>
           <MergeButton
+            backgroundColor={"#609966"}
             onClick={() => {
               setIsViewProject(true);
             }}
