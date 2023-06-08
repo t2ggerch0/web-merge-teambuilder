@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styles from "./NavBar.module.scss";
+import Logo from "../Logo/Logo";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../Context/UnicoopContext";
 import { viewToastInfo } from "../../helper";
@@ -32,16 +33,17 @@ const NavBar: FC<NavBarProps> = ({ onChangeMenu }) => {
   return (
     <div className={styles.navBar}>
       <div className={styles.leftContainer}>
-        <div
-          className={styles.logo}
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          merge
-        </div>
-        {myInfo && (
-          <div className={styles.menuBox}>
+        <Logo isClickable={true} />
+        <div className={styles.menuBox}>
+          <div
+            className={styles.menu}
+            onClick={() => {
+              navigate("/whatismerge");
+            }}
+          >
+            What Is merge?
+          </div>
+          {myInfo && (
             <div
               className={styles.menu}
               onClick={() => {
@@ -51,6 +53,8 @@ const NavBar: FC<NavBarProps> = ({ onChangeMenu }) => {
             >
               프로젝트
             </div>
+          )}
+          {myInfo && (
             <div
               className={styles.menu}
               onClick={() => {
@@ -59,9 +63,10 @@ const NavBar: FC<NavBarProps> = ({ onChangeMenu }) => {
             >
               My Page
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
+
       <div className={styles.rightContainer}>
         {myInfo ? (
           <div className={styles.account} onClick={onClickLogout}>

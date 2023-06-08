@@ -32,22 +32,19 @@
 }
 
 .from {
-  width: 10%;
+  width: 15%;
 }
 .to {
-  width: 10%;
+  width: 15%;
 }
-.className {
+.projectName {
   width: 20%;
+}
+.hostGuest {
+  width: 10%;
 }
 .role {
   width: 10%;
-}
-.grade {
-  width: 10%;
-}
-.file {
-  width: 20%;
 }
 
 @keyframes fromBottom {
