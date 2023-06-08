@@ -425,8 +425,9 @@ const CreateGroupOptimal = async (guests, answers, teams, classId, questionIds, 
       }
 
       // Team 추가
+      let teamName = "Team " + String.fromCharCode(i + 65);
       let teamObject = new Team({
-        name: "UnnamedTeam",
+        name: teamName,
         class: targetClass,
         leader: targetLeader,
         conditionId: conditionId,
