@@ -16,11 +16,15 @@ router.get("/host", verifyJwt, async (req, res) => {
     // get class IDs
     let user = await User.findById(userId);
     let classes = user.classes;
-
+    
     // host인 클래스 가져오기
     let hostClasses = [];
     for (let index = 0; index < classes.length; index++) {
-      let targetClass = await Class.findById(classes[index]);
+      let targetClass = await Class.findById(classes[index].toString());
+      if(targetClass ==null){
+        continue;
+      }
+
       if(userId == targetClass.host){
         hostClasses.push(targetClass);
       }

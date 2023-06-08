@@ -25,8 +25,9 @@ router.get("/guest", verifyJwt, async (req, res) => {
       // console.log(classes[index].toString());
       let classId = classes[index].toString();
       let targetClass = await Class.findById(classId);
-      // console.log(targetClass);
-      
+      if(targetClass ==null){
+        continue;
+      }
       if (userId != targetClass.host) {
         guestClasses.push(targetClass);
       }
